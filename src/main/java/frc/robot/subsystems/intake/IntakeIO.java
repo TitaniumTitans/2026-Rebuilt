@@ -15,9 +15,14 @@ public interface IntakeIO {
         public double pivotVoltage = 0.0;
         public double pivotStatorCurrent = 0.0;
         public double pivotSupplyCurrent = 0.0;
+
+        public double feederVoltage = 0.0;
+        public double feederStatorCurrent = 0.0;
+        public double feederSupplyCurrent = 0.0;
     }
 
     default void setIntakeVoltage(Voltage voltage) {};
     default void setPivotVoltage(Voltage voltage) {};
     default void setPivotAngle(Angle angle) {};
+    default void setFeederVoltage(Voltage voltage) {};
 }
