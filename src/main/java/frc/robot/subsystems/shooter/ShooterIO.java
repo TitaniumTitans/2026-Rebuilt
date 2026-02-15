@@ -19,6 +19,8 @@ public interface ShooterIO {
         public double[] hoodPosition = {0.0, 0.0};
     }
 
+    default void updateInputs(ShooterIOInputsAutoLogged inputs) {};
+    default void setShooterVoltage(Voltage voltage) {};
     default void setShooterRPM(AngularVelocity velocity) {};
     default void setHoodDistance(Distance position) {};
     default void setFeederVoltage(Voltage voltage) {};
