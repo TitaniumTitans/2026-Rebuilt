@@ -37,12 +37,5 @@ public class ShooterSubsystem extends SubsystemBase {
                 () -> m_io.setShooterVoltage(Volt.of(0.0))
         );
     }
-
-    public Command setFeederVoltage(Voltage voltage) {
-        return runEnd(
-                () -> m_io.setFeederVoltage(voltage),
-                () -> m_io.setFeederVoltage(Volt.of(0.0))
-        );
-    }
 }
 
