@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
-import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
+import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
 import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
 
@@ -37,7 +34,7 @@ public class RobotContainer {
           }
           case SIM -> {
               swerve = new DriveSubsystem(
-                  new GyroIO() {},
+                  new GyroIOSim(),
                   new ModuleIO() {},
                   new ModuleIO() {},
                   new ModuleIO() {},

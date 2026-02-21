@@ -27,9 +27,13 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.processInputs("shooter", m_inputs);
     }
 
+    // Commands are what get bound to buttons
+    // They use lambas, essentially using a function as data
     public Command setShooterVoltage(Voltage voltage) {
         return runEnd(
+                // Start conditions
                 () -> m_io.setShooterVoltage(voltage),
+                // End conditions
                 () -> m_io.setShooterVoltage(Volt.of(0.0))
         );
     }
