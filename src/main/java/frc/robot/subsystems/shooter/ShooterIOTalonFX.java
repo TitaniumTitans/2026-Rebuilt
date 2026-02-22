@@ -23,6 +23,10 @@ public class ShooterIOTalonFX implements ShooterIO {
         m_shooterR = new TalonFX(ShooterConstants.SHOOTER_RIGHT_ID);
 
         m_hub = new ServoHub(ShooterConstants.SERVO_HUB_ID);
+
+        m_shooterL.getConfigurator().apply(ShooterConstants.cfg);
+        m_shooterM.getConfigurator().apply(ShooterConstants.cfg);
+        m_shooterR.getConfigurator().apply(ShooterConstants.cfg);
     }
 
     @Override

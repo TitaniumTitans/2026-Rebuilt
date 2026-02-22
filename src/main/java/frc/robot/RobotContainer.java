@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,6 +20,9 @@ public class RobotContainer {
     private final CommandXboxController driveController = new CommandXboxController(0);
 
     private final DriveSubsystem swerve;
+
+    private TalonFX indexer = new TalonFX(17);
+    private TalonFX feeder = new TalonFX(16);
 
     public RobotContainer()
     {
@@ -58,14 +62,14 @@ public class RobotContainer {
     
     
     private void configureBindings() {
-      swerve.setDefaultCommand(
-          DriveCommands.joystickDrive(
-            swerve,
-            () -> driveController.getLeftY(),
-            () -> driveController.getLeftX(),
-            () -> -driveController.getRightX()
-          )
-      );
+//      swerve.setDefaultCommand(
+//          DriveCommands.joystickDrive(
+//            swerve,
+//            () -> driveController.getLeftY(),
+//            () -> driveController.getLeftX(),
+//            () -> -driveController.getRightX()
+//          )
+//      );
 
       driveController.start().onTrue(
           Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
