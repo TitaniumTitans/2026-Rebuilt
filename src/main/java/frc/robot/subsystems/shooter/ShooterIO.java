@@ -1,23 +1,23 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.units.AngularVelocityUnit;
-
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import org.littletonrobotics.junction.AutoLog;
+
+import static edu.wpi.first.units.Units.*;
 
 public interface ShooterIO {
     // All the data from the subsystem we want to either use elsewhere
     // in robot code or log gets put here
     @AutoLog
     class ShooterIOInputs {
-        public double[] shooterSpeeds = {0.0, 0.0, 0.0};
-        public double[] shooterVoltages = {0.0, 0.0, 0.0};
-        public double[] shooterStatorCurrent = {0.0, 0.0, 0.0};
-        public double[] shooterSupplyCurrent = {0.0, 0.0, 0.0};
+        public AngularVelocity shooterSpeedL, shooterSpeedM, shooterSpeedR = RPM.of(0.0);
+        public Voltage shooterVoltageL, shooterVoltageM, shooterVoltageR = Volts.of(0.0);
+        public Current shooterStatorCurrentL, shooterStatorCurrentM, shooterStatorCurrentR = Amps.of(0.0);
+        public Current shooterSupplyCurrentL, shooterSupplyCurrentM, shooterSupplyCurrentR = Amps.of(0.0);
 
-        public double[] hoodPosition = {0.0, 0.0};
+        public double[] hoodPositionPercent = {0.0, 0.0};
     }
 
     // Required method to update all the logged inputs

@@ -109,29 +109,21 @@ public class ShooterIOTalonFX implements ShooterIO {
         );
 
         // update all our signals to log and use elsewhere
-        inputs.shooterSpeeds = new double[]{
-                m_velocityL.getValue().in(RPM),
-                m_velocityM.getValue().in(RPM),
-                m_velocityR.getValue().in(RPM)
-        };
+        inputs.shooterSpeedL = m_velocityL.getValue();
+        inputs.shooterSpeedM = m_velocityM.getValue();
+        inputs.shooterSpeedR = m_velocityR.getValue();
 
-        inputs.shooterVoltages = new double[]{
-                m_voltageL.getValue().in(Volts),
-                m_voltageM.getValue().in(Volts),
-                m_voltageR.getValue().in(Volts)
-        };
+        inputs.shooterVoltageL = m_voltageL.getValue();
+        inputs.shooterVoltageM = m_voltageM.getValue();
+        inputs.shooterVoltageR = m_voltageR.getValue();
 
-        inputs.shooterStatorCurrent = new double[]{
-                m_statorCurrentL.getValue().in(Amps),
-                m_statorCurrentM.getValue().in(Amps),
-                m_statorCurrentR.getValue().in(Amps)
-        };
+        inputs.shooterStatorCurrentL = m_statorCurrentL.getValue();
+        inputs.shooterStatorCurrentM = m_statorCurrentM.getValue();
+        inputs.shooterStatorCurrentR = m_statorCurrentR.getValue();
 
-        inputs.shooterSupplyCurrent = new double[]{
-                m_supplyCurrentL.getValue().in(Amps),
-                m_supplyCurrentM.getValue().in(Amps),
-                m_supplyCurrentR.getValue().in(Amps)
-        };
+        inputs.shooterSupplyCurrentL = m_supplyCurrentL.getValue();
+        inputs.shooterSupplyCurrentM = m_supplyCurrentM.getValue();
+        inputs.shooterSupplyCurrentR = m_supplyCurrentR.getValue();
     }
 
     // generic "open loop" control, using the WPI Units library for voltage
@@ -157,7 +149,7 @@ public class ShooterIOTalonFX implements ShooterIO {
                 .setPulseWidth(getPulseWidth(position));
     }
 
-    // servo min is 1000 and max is 1000
+    // servo min is 1000 and max is 2000
     private int getPulseWidth(double percentage) {
         return (int) (1000 * percentage) + 1000;
     }
