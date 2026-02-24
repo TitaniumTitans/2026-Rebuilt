@@ -2,12 +2,15 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.revrobotics.ResetMode;
 import com.revrobotics.servohub.ServoHub;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.*;
+import frc.robot.Constants;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -39,16 +42,18 @@ public class ShooterIOTalonFX implements ShooterIO {
     private final StatusSignal<Current> m_supplyCurrentR;
 
     public ShooterIOTalonFX() {
-        m_shooterL = new TalonFX(ShooterConstants.SHOOTER_LEFT_ID);
-        m_shooterM = new TalonFX(ShooterConstants.SHOOTER_MIDDLE_ID);
-        m_shooterR = new TalonFX(ShooterConstants.SHOOTER_RIGHT_ID);
+        m_shooterL = new TalonFX(ShooterConstants.SHOOTER_LEFT_ID, Constants.CANIVORE_BUS);
+        m_shooterM = new TalonFX(ShooterConstants.SHOOTER_MIDDLE_ID, Constants.CANIVORE_BUS);
+        m_shooterR = new TalonFX(ShooterConstants.SHOOTER_RIGHT_ID, Constants.CANIVORE_BUS);
 
         m_hub = new ServoHub(ShooterConstants.SERVO_HUB_ID);
 
         // Apply the configs to the motors
-        m_shooterL.getConfigurator().apply(ShooterConstants.cfg);
-        m_shooterM.getConfigurator().apply(ShooterConstants.cfg);
-        m_shooterR.getConfigurator().apply(ShooterConstants.cfg);
+        m_shooterL.getConfigurator().apply(ShooterConstants.TALON_FX_CONFIGURATION);
+        m_shooterM.getConfigurator().apply(ShooterConstants.TALON_FX_CONFIGURATION);
+        m_shooterR.getConfigurator().apply(ShooterConstants.TALON_FX_CONFIGURATION
+                .withMotorOutput(new MotorOutputConfigs()
+                        .withInverted(InvertedValue.Clockwise_Positive)));
 
         // get all of our signals so we can recieve data
         m_velocityL = m_shooterL.getVelocity();
@@ -70,6 +75,19 @@ public class ShooterIOTalonFX implements ShooterIO {
         m_shooterL.optimizeBusUtilization();
         m_shooterM.optimizeBusUtilization();
         m_shooterR.optimizeBusUtilization();
+
+        m_hub.configure(ShooterConstants.SERVO_HUB_CONFIG, ResetMode.kResetSafeParameters);
+
+        m_hub.getServoChannel(ShooterConstants.LEFT_SERVO_CHANNEL).setEnabled(true);
+        m_hub.getServoChannel(ShooterConstants.LEFT_SERVO_CHANNEL).setPowered(true);
+
+        m_hub.getServoChannel(ShooterConstants.RIGHT_SERVO_CHANNEL).setEnabled(true);
+        m_hub.getServoChannel(ShooterConstants.RIGHT_SERVO_CHANNEL).setPowered(true);
+
+        m_hub.getServoChannel(ShooterConstants.LEFT_SERVO_CHANNEL)
+                .setPulseWidth(getPulseWidth(0.1));
+        m_hub.getServoChannel(ShooterConstants.RIGHT_SERVO_CHANNEL)
+                .setPulseWidth(getPulseWidth(0.1));
     }
 
     @Override

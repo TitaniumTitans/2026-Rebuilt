@@ -37,5 +37,9 @@ public class ShooterSubsystem extends SubsystemBase {
                 () -> m_io.setShooterVoltage(Volt.of(0.0))
         );
     }
+
+    public Command setHoodPosition(double position) {
+        return runOnce(() -> m_io.setHoodDistance(position));
+    }
 }
 

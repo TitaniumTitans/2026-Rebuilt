@@ -14,12 +14,18 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
 import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+
+import static edu.wpi.first.units.Units.Volts;
 
 
 public class RobotContainer {
     private final CommandXboxController driveController = new CommandXboxController(0);
 
     private final DriveSubsystem swerve;
+    private final ShooterSubsystem shooter;
 
     private TalonFX indexer = new TalonFX(17);
     private TalonFX feeder = new TalonFX(16);
@@ -35,6 +41,8 @@ public class RobotContainer {
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[2]),
                   new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[3])
               );
+
+              shooter = new ShooterSubsystem(new ShooterIOTalonFX());
           }
           case SIM -> {
               swerve = new DriveSubsystem(
@@ -44,6 +52,8 @@ public class RobotContainer {
                   new ModuleIO() {},
                   new ModuleIO() {}
               );
+
+              shooter = new ShooterSubsystem(new ShooterIO() {});
           }
           case REPLAY -> {
               swerve = new DriveSubsystem(
@@ -53,6 +63,8 @@ public class RobotContainer {
                   new ModuleIO() {},
                   new ModuleIO() {}
               );
+
+              shooter = new ShooterSubsystem(new ShooterIO() {});
           }
           default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
         }
@@ -74,6 +86,11 @@ public class RobotContainer {
       driveController.start().onTrue(
           Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
       );
+
+      driveController.povUp().onTrue(shooter.setHoodPosition(0.9));
+      driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
+
+      driveController.a().whileTrue(shooter.setShooterVoltage(Volts.of(6.0)));
     }
     
     
