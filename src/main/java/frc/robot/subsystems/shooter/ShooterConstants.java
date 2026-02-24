@@ -1,8 +1,7 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.servohub.ServoChannel;
 import com.revrobotics.servohub.ServoHub;
 
@@ -20,5 +19,8 @@ public class ShooterConstants {
                     .withSupplyCurrentLimit(40)
                     .withSupplyCurrentLimitEnable(true)
                     .withStatorCurrentLimit(120)
-                    .withStatorCurrentLimitEnable(true));
+                    .withStatorCurrentLimitEnable(true))
+            .withMotorOutput(new MotorOutputConfigs()
+                    .withNeutralMode(NeutralModeValue.Coast))
+            .withTorqueCurrent(new TorqueCurrentConfigs());
 }

@@ -62,14 +62,14 @@ public class RobotContainer {
     
     
     private void configureBindings() {
-//      swerve.setDefaultCommand(
-//          DriveCommands.joystickDrive(
-//            swerve,
-//            () -> driveController.getLeftY(),
-//            () -> driveController.getLeftX(),
-//            () -> -driveController.getRightX()
-//          )
-//      );
+      swerve.setDefaultCommand(
+          DriveCommands.joystickDrive(
+            swerve,
+            () -> driveController.getLeftY(),
+            () -> driveController.getLeftX(),
+            () -> -driveController.getRightX()
+          )
+      );
 
       driveController.start().onTrue(
           Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
