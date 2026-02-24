@@ -70,6 +70,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return runOnce(() -> m_io.setPivotAngle(position.angle()));
     }
 
+    // runs the standard intake procedure
     public Command intake() {
         return startEnd(
                 () -> {
@@ -80,10 +81,11 @@ public class IntakeSubsystem extends SubsystemBase {
         );
     }
 
+    // runs the intake back until stall to home without a limit switch
     public Command homingCommand() {
         return Commands.sequence(
                         runOnce(() -> m_io.setPivotVoltage(Volts.of(1.2))),
-                        Commands.waitUntil(() -> m_inputs.pivotSupplyCurrent > 6),
+                        Commands.waitUntil(() -> m_inputs.pivotSupplyCurrent.in(Amps) > 6),
                         runOnce(() -> {
                             m_io.resetPivotAngle(Position.HOMED.angle());
                             isHomed = true;

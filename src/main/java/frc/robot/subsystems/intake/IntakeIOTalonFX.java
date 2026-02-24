@@ -18,8 +18,9 @@ public class IntakeIOTalonFX implements IntakeIO {
     private final MotionMagicVoltage m_mmVoltage = new MotionMagicVoltage(0.0);
 
     private final StatusSignal<Angle> pivotAngle;
-    private final StatusSignal<Current> pivotSupplyCurrent;
-    private final StatusSignal<Current> pivotStatorCurrent;
+    private final StatusSignal<Voltage> pivotVoltage, intakeVoltage;
+    private final StatusSignal<Current> pivotSupplyCurrent, pivotStatorCurrent,
+            intakeSupplyCurrent, intakeStatorCurrent;
 
     private final PidProperty m_pivotPID;
 
@@ -29,9 +30,16 @@ public class IntakeIOTalonFX implements IntakeIO {
 
         m_pivot.getConfigurator().apply(IntakeConstants.PIVOT_CONFIG);
 
+        // create signals for pivot motor
         pivotAngle = m_pivot.getPosition();
+        pivotVoltage = m_pivot.getMotorVoltage();
         pivotSupplyCurrent = m_pivot.getSupplyCurrent();
         pivotStatorCurrent = m_pivot.getStatorCurrent();
+
+        // create signals for intake motor
+        intakeVoltage = m_intake.getMotorVoltage();
+        intakeSupplyCurrent = m_intake.getSupplyCurrent();
+        intakeStatorCurrent = m_intake.getStatorCurrent();
 
         m_pivotPID = new Phoenix6TalonPidPropertyBuilder("Intake Pivot", false, m_pivot, 0)
                 .addP(10)
@@ -45,13 +53,22 @@ public class IntakeIOTalonFX implements IntakeIO {
     public void updateInputs(IntakeIOInputsAutoLogged inputs) {
         BaseStatusSignal.refreshAll(
                 pivotAngle,
+                pivotVoltage,
                 pivotSupplyCurrent,
-                pivotStatorCurrent
+                pivotStatorCurrent,
+                intakeVoltage,
+                intakeSupplyCurrent,
+                intakeStatorCurrent
         );
 
-        inputs.pivotAngleDegrees = pivotAngle.getValue().in(Degree);
-        inputs.pivotSupplyCurrent = pivotSupplyCurrent.getValue().in(Amps);
-        inputs.pivotStatorCurrent = pivotStatorCurrent.getValue().in(Amps);
+        inputs.pivotAngleDegrees = pivotAngle.getValue();
+        inputs.pivotVoltage = pivotVoltage.getValue();
+        inputs.pivotSupplyCurrent = pivotSupplyCurrent.getValue();
+        inputs.pivotStatorCurrent = pivotStatorCurrent.getValue();
+
+        inputs.intakeVoltage = intakeVoltage.getValue();
+        inputs.intakeSupplyCurrent = intakeSupplyCurrent.getValue();
+        inputs.intakeStatorCurrent = intakeStatorCurrent.getValue();
 
         m_pivotPID.updateIfChanged();
     }
