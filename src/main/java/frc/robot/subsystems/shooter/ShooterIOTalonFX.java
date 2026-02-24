@@ -7,6 +7,8 @@ import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.gos.lib.phoenix6.properties.pid.Phoenix6TalonPidPropertyBuilder;
+import com.gos.lib.properties.pid.PidProperty;
 import com.revrobotics.ResetMode;
 import com.revrobotics.servohub.ServoHub;
 import edu.wpi.first.units.measure.*;
@@ -40,6 +42,10 @@ public class ShooterIOTalonFX implements ShooterIO {
     private final StatusSignal<Current> m_supplyCurrentL;
     private final StatusSignal<Current> m_supplyCurrentM;
     private final StatusSignal<Current> m_supplyCurrentR;
+
+    private final PidProperty m_pidL;
+    private final PidProperty m_pidM;
+    private final PidProperty m_pidR;
 
     public ShooterIOTalonFX() {
         m_shooterL = new TalonFX(ShooterConstants.SHOOTER_LEFT_ID, Constants.CANIVORE_BUS);
@@ -75,6 +81,26 @@ public class ShooterIOTalonFX implements ShooterIO {
         m_shooterL.optimizeBusUtilization();
         m_shooterM.optimizeBusUtilization();
         m_shooterR.optimizeBusUtilization();
+
+        // create GoS PID things for motors, lets you update PID on-the-fly
+        m_pidL = new Phoenix6TalonPidPropertyBuilder("Shooter Left", false, m_shooterL, 0)
+                .addP(0.0)
+                .addI(0.0)
+                .addD(0.0)
+                .addKV(0.0)
+                .build();
+        m_pidM = new Phoenix6TalonPidPropertyBuilder("Shooter Middle", false, m_shooterM, 0)
+                .addP(0.0)
+                .addI(0.0)
+                .addD(0.0)
+                .addKV(0.0)
+                .build();
+        m_pidR = new Phoenix6TalonPidPropertyBuilder("Shooter Right", false, m_shooterR, 0)
+                .addP(0.0)
+                .addI(0.0)
+                .addD(0.0)
+                .addKV(0.0)
+                .build();
 
         // servo hub needs to set minimum and maximum pulse width
         m_hub.configure(ShooterConstants.SERVO_HUB_CONFIG, ResetMode.kResetSafeParameters);
@@ -125,6 +151,15 @@ public class ShooterIOTalonFX implements ShooterIO {
         inputs.shooterSupplyCurrentL = m_supplyCurrentL.getValue();
         inputs.shooterSupplyCurrentM = m_supplyCurrentM.getValue();
         inputs.shooterSupplyCurrentR = m_supplyCurrentR.getValue();
+
+        inputs.hoodPositionPercent = new double[]{
+                (m_hub.getServoChannel(ShooterConstants.LEFT_SERVO_CHANNEL).getPulseWidth() - 1000.0) / 1000.0,
+                (m_hub.getServoChannel(ShooterConstants.RIGHT_SERVO_CHANNEL).getPulseWidth() - 1000.0) / 1000.0
+        };
+
+        m_pidL.updateIfChanged();
+        m_pidM.updateIfChanged();
+        m_pidR.updateIfChanged();
     }
 
     // generic "open loop" control, using the WPI Units library for voltage
