@@ -76,6 +76,7 @@ public class ShooterIOTalonFX implements ShooterIO {
         m_shooterM.optimizeBusUtilization();
         m_shooterR.optimizeBusUtilization();
 
+        // servo hub needs to set minimum and maximum pulse width
         m_hub.configure(ShooterConstants.SERVO_HUB_CONFIG, ResetMode.kResetSafeParameters);
 
         m_hub.getServoChannel(ShooterConstants.LEFT_SERVO_CHANNEL).setEnabled(true);
