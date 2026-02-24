@@ -13,7 +13,7 @@ import static edu.wpi.first.units.Units.*;
 public class IntakeSubsystem extends SubsystemBase {
     public enum Speed {
         STOP(0),
-        INTAKE(0.8);
+        INTAKE(0.55);
 
         private final double percentOutput;
 
@@ -27,8 +27,8 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public enum Position {
-        HOMED(110),
-        STOWED(100),
+        HOMED(130),
+        STOWED(120),
         INTAKE(-4),
         AGITATE(20);
 
@@ -68,6 +68,16 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command setPivotPosition(Position position) {
         return runOnce(() -> m_io.setPivotAngle(position.angle()));
+    }
+
+    public Command intake() {
+        return startEnd(
+                () -> {
+                    m_io.setPivotAngle(Position.INTAKE.angle());
+                    m_io.setIntakeVoltage(Speed.INTAKE.voltage());
+                },
+                () -> m_io.setIntakeVoltage(Speed.STOP.voltage())
+        );
     }
 
     public Command homingCommand() {

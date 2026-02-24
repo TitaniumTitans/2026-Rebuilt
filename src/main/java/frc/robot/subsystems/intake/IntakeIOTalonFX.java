@@ -67,6 +67,11 @@ public class IntakeIOTalonFX implements IntakeIO {
     }
 
     @Override
+    public void setIntakeVoltage(Voltage voltage) {
+        m_intake.setVoltage(voltage.in(Volts));
+    }
+
+    @Override
     public void resetPivotAngle(Angle angle) {
         m_pivot.setPosition(angle);
     }

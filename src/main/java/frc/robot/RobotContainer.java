@@ -103,7 +103,7 @@ public class RobotContainer {
       driveController.x().whileTrue(intake.setPivotVoltage(Volts.of(3)));
       driveController.y().whileTrue(intake.setPivotVoltage(Volts.of(-3)));
 
-      driveController.rightBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.INTAKE));
+      driveController.rightBumper().whileTrue(intake.intake());
       driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
     }
     
