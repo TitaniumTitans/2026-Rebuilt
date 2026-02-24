@@ -14,6 +14,9 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
 import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -26,6 +29,7 @@ public class RobotContainer {
 
     private final DriveSubsystem swerve;
     private final ShooterSubsystem shooter;
+    private final IntakeSubsystem intake;
 
     private TalonFX indexer = new TalonFX(17);
     private TalonFX feeder = new TalonFX(16);
@@ -43,6 +47,7 @@ public class RobotContainer {
               );
 
               shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+              intake = new IntakeSubsystem(new IntakeIOTalonFX());
           }
           case SIM -> {
               swerve = new DriveSubsystem(
@@ -54,6 +59,7 @@ public class RobotContainer {
               );
 
               shooter = new ShooterSubsystem(new ShooterIO() {});
+              intake = new IntakeSubsystem(new IntakeIO() {});
           }
           case REPLAY -> {
               swerve = new DriveSubsystem(
@@ -65,6 +71,7 @@ public class RobotContainer {
               );
 
               shooter = new ShooterSubsystem(new ShooterIO() {});
+              intake = new IntakeSubsystem(new IntakeIO() {});
           }
           default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
         }
@@ -91,6 +98,13 @@ public class RobotContainer {
       driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
       driveController.a().whileTrue(shooter.setShooterVoltage(Volts.of(6.0)));
+      driveController.b().onTrue(intake.homingCommand());
+
+      driveController.x().whileTrue(intake.setPivotVoltage(Volts.of(3)));
+      driveController.y().whileTrue(intake.setPivotVoltage(Volts.of(-3)));
+
+      driveController.rightBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.INTAKE));
+      driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
     }
     
     

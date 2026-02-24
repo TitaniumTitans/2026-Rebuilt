@@ -21,8 +21,10 @@ public interface IntakeIO {
         public double feederSupplyCurrent = 0.0;
     }
 
+    default void updateInputs(IntakeIOInputsAutoLogged inputs) {};
     default void setIntakeVoltage(Voltage voltage) {};
     default void setPivotVoltage(Voltage voltage) {};
     default void setPivotAngle(Angle angle) {};
     default void setFeederVoltage(Voltage voltage) {};
+    default void resetPivotAngle(Angle angle) {};
 }
