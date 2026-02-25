@@ -116,10 +116,5 @@ public class RobotState {
     return poseEstimator.getEstimatedPosition().getRotation();
   }
 
-  @AutoLogOutput(key = "RobotState/Use Auto")
-  public boolean useAuto() {
-    return useAuto.get();
-  }
-
   public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}
 }
