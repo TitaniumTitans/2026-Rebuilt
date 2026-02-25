@@ -93,10 +93,8 @@ public class DriveCommands {
           // Square rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
 
-          double maxLinearSpeed = RobotState.getInstance().isSlowSpeed() ?
-              drive.getSlowLinearSpeedMetersPerSec() : drive.getMaxLinearSpeedMetersPerSec();
-          double maxAngularSpeed = RobotState.getInstance().isSlowSpeed() ?
-              drive.getSlowAngularSpeedRadPerSec() : drive.getMaxAngularSpeedRadPerSec();
+          double maxLinearSpeed = drive.getMaxLinearSpeedMetersPerSec();
+          double maxAngularSpeed = drive.getMaxAngularSpeedRadPerSec();
 
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =

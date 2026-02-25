@@ -44,31 +44,12 @@ public class RobotState {
     return instance;
   }
 
-  public enum CoralLevel {
-    L2,
-    L3,
-    L4
-  }
-
-  @Getter
-  @Setter
-  @AutoLogOutput(key = "RobotState/Coral Height")
-  private CoralLevel coralLevel = CoralLevel.L2;
-
   // Pose estimation
   @Getter
   @AutoLogOutput(key = "RobotState/OdometryPose")
   private Pose2d odometryPose = new Pose2d();
 
   private Rotation2d lastRawGyro = new Rotation2d();
-
-//  @Setter
-//  @Getter
-//  private FieldRelativeSpeeds lastFieldRelativeSpeeds = new FieldRelativeSpeeds();
-
-  @Setter
-  @Getter
-  private boolean slowSpeed = false;
 
   // use for simulation
 //  @Setter
