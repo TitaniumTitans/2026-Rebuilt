@@ -97,11 +97,8 @@ public class RobotContainer {
       driveController.povUp().onTrue(shooter.setHoodPosition(0.9));
       driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
-      driveController.a().whileTrue(shooter.setShooterVoltage(Volts.of(6.0)));
+      driveController.a().whileTrue(shooter.runDashboardRPM());
       driveController.b().onTrue(intake.homingCommand());
-
-      driveController.x().whileTrue(intake.setPivotVoltage(Volts.of(3)));
-      driveController.y().whileTrue(intake.setPivotVoltage(Volts.of(-3)));
 
       driveController.rightBumper().whileTrue(intake.intake());
       driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));

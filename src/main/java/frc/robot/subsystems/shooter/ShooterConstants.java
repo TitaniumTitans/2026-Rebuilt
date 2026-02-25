@@ -28,9 +28,9 @@ public class ShooterConstants {
     public static final ServoHubConfig SERVO_HUB_CONFIG = new ServoHubConfig();
     static {
         SERVO_HUB_CONFIG.channel0.pulseRange(1000, 1500, 2000);
-        SERVO_HUB_CONFIG.channel0.disableBehavior(ServoChannelConfig.BehaviorWhenDisabled.kDoNotSupplyPower);
+        SERVO_HUB_CONFIG.channel0.disableBehavior(ServoChannelConfig.BehaviorWhenDisabled.kSupplyPower);
 
         SERVO_HUB_CONFIG.channel1.pulseRange(1000, 1500, 2000);
-        SERVO_HUB_CONFIG.channel1.disableBehavior(ServoChannelConfig.BehaviorWhenDisabled.kDoNotSupplyPower);
+        SERVO_HUB_CONFIG.channel1.disableBehavior(ServoChannelConfig.BehaviorWhenDisabled.kSupplyPower);
     }
 }
