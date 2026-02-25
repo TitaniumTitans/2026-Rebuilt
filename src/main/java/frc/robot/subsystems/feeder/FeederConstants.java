@@ -1,7 +1,9 @@
 package frc.robot.subsystems.feeder;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 public class FeederConstants {
     public static final int FEEDER_ID = 16;
@@ -9,8 +11,10 @@ public class FeederConstants {
 
     public static final TalonFXConfiguration CONFIG = new TalonFXConfiguration()
             .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withSupplyCurrentLimit(40)
+                    .withSupplyCurrentLimit(60)
                     .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimit(60)
-                    .withStatorCurrentLimitEnable(true));
+                    .withStatorCurrentLimit(120)
+                    .withStatorCurrentLimitEnable(true))
+            .withMotorOutput(new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive));
 }

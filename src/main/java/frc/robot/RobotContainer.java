@@ -15,6 +15,9 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
 import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
+import frc.robot.subsystems.feeder.FeederIO;
+import frc.robot.subsystems.feeder.FeederIOTalonFX;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -31,9 +34,7 @@ public class RobotContainer {
     private final DriveSubsystem swerve;
     private final ShooterSubsystem shooter;
     private final IntakeSubsystem intake;
-
-    private TalonFX indexer = new TalonFX(17);
-    private TalonFX feeder = new TalonFX(16);
+    private final FeederSubsystem feeder;
 
     public RobotContainer()
     {
@@ -49,6 +50,7 @@ public class RobotContainer {
 
               shooter = new ShooterSubsystem(new ShooterIOTalonFX());
               intake = new IntakeSubsystem(new IntakeIOTalonFX());
+              feeder = new FeederSubsystem(new FeederIOTalonFX());
           }
           case SIM -> {
               swerve = new DriveSubsystem(
@@ -61,6 +63,7 @@ public class RobotContainer {
 
               shooter = new ShooterSubsystem(new ShooterIO() {});
               intake = new IntakeSubsystem(new IntakeIO() {});
+              feeder = new FeederSubsystem(new FeederIO() {});
           }
           case REPLAY -> {
               swerve = new DriveSubsystem(
@@ -73,6 +76,7 @@ public class RobotContainer {
 
               shooter = new ShooterSubsystem(new ShooterIO() {});
               intake = new IntakeSubsystem(new IntakeIO() {});
+              feeder = new FeederSubsystem(new FeederIO() {});
           }
           default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
         }
@@ -99,8 +103,10 @@ public class RobotContainer {
       driveController.povUp().onTrue(shooter.setHoodPosition(0.9));
       driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
-      driveController.a().whileTrue(shooter.runDashboardRPM());
-      driveController.b().onTrue(intake.homingCommand());
+      driveController.a().whileTrue(shooter.setShooterVoltage(Volts.of(9.0)));
+      driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
+
+      driveController.x().onTrue(intake.homingCommand());
 
       driveController.rightBumper().whileTrue(intake.intake());
       driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));

@@ -2,6 +2,7 @@ package frc.robot.subsystems.feeder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
@@ -20,7 +21,7 @@ public class FeederIOTalonFX implements FeederIO {
         m_column = new TalonFX(FeederConstants.COLUMN_ID);
 
         m_feeder.getConfigurator().apply(FeederConstants.CONFIG);
-        m_column.getConfigurator().apply(FeederConstants.CONFIG);
+        m_column.getConfigurator().apply(FeederConstants.CONFIG.withMotorOutput(new MotorOutputConfigs()));
 
         feederVoltage = m_feeder.getMotorVoltage();
         feederSupplyCurrent = m_feeder.getSupplyCurrent();
