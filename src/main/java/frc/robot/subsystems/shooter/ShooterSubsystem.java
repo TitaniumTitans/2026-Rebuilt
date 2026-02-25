@@ -45,11 +45,11 @@ public class ShooterSubsystem extends SubsystemBase {
         return runEnd(
                 () -> m_io.setShooterRPM(RPM.of(shooterSpeed.getAsDouble())),
                 () -> m_io.setShooterVoltage(Volts.of(0.0))
-        );
+        ).withName("Run Dashboard RPM");
     }
 
     public Command setHoodPosition(double position) {
-        return runOnce(() -> m_io.setHoodDistance(position));
+        return runOnce(() -> m_io.setHoodDistance(position)).withName("Hood Position");
     }
 }
 

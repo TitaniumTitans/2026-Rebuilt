@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -77,6 +78,7 @@ public class RobotContainer {
         }
 
         configureBindings();
+        configureDashboardCommands();
     }
     
     
@@ -108,5 +110,16 @@ public class RobotContainer {
     public Command getAutonomousCommand()
     {
         return Commands.print("No autonomous command configured");
+    }
+
+    public void configureDashboardCommands() {
+        // manually control the pivot hood
+        SmartDashboard.putData("Hood to %10", shooter.setHoodPosition(0.1));
+        SmartDashboard.putData("Hood to %30", shooter.setHoodPosition(0.3));
+        SmartDashboard.putData("Hood to %50", shooter.setHoodPosition(0.5));
+        SmartDashboard.putData("Hood to %70", shooter.setHoodPosition(0.7));
+        SmartDashboard.putData("Hood to %90", shooter.setHoodPosition(0.9));
+
+        SmartDashboard.putData("Reset Field Oriented", Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d())).withName("Reset Field Orient"));
     }
 }
