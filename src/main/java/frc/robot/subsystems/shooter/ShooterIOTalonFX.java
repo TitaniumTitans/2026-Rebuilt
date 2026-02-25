@@ -119,7 +119,7 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     @Override
     public void updateInputs(ShooterIOInputsAutoLogged inputs) {
-        // refresh all our signals so we get new datas
+        // refresh all our signals so we get new data
         BaseStatusSignal.refreshAll(
                 m_velocityL,
                 m_velocityM,

@@ -5,8 +5,9 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-import static edu.wpi.first.units.Units.Volt;
+import static edu.wpi.first.units.Units.*;
 
 public class ShooterSubsystem extends SubsystemBase {
     // IO layer handles all talking to real hardware
@@ -14,6 +15,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // IO inputs class handles getting data from hardware
     private final ShooterIOInputsAutoLogged m_inputs;
+
+    private final LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("Shooter RPM", 1000);
 
     public ShooterSubsystem(ShooterIO io) {
         m_io = io;
@@ -35,6 +38,13 @@ public class ShooterSubsystem extends SubsystemBase {
                 () -> m_io.setShooterVoltage(voltage),
                 // End conditions
                 () -> m_io.setShooterVoltage(Volt.of(0.0))
+        );
+    }
+
+    public Command runDashboardRPM() {
+        return runEnd(
+                () -> m_io.setShooterRPM(RPM.of(shooterSpeed.getAsDouble())),
+                () -> m_io.setShooterVoltage(Volts.of(0.0))
         );
     }
 

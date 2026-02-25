@@ -45,9 +45,9 @@ public class RobotState {
   }
 
   // Pose estimation
-  @Getter
-  @AutoLogOutput(key = "RobotState/OdometryPose")
-  private Pose2d odometryPose = new Pose2d();
+//  @Getter
+//  @AutoLogOutput(key = "RobotState/OdometryPose")
+//  private Pose2d odometryPose = new Pose2d();
 
   private Rotation2d lastRawGyro = new Rotation2d();
 
@@ -102,7 +102,6 @@ public class RobotState {
   public void addVisionMeasurement(VisionObservation update) {
     poseEstimator.addVisionMeasurement(update.visionPose, update.timestamp, update.stdDevs);
   }
-
 
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
