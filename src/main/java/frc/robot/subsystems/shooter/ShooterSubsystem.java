@@ -16,7 +16,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // IO inputs class handles getting data from hardware
     private final ShooterIOInputsAutoLogged m_inputs;
 
-    private final LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("Shooter RPM", 1000);
+    private final LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("Shooter RPM", 3000);
 
     public ShooterSubsystem(ShooterIO io) {
         m_io = io;

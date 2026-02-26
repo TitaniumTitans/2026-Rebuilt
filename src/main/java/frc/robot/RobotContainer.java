@@ -100,10 +100,10 @@ public class RobotContainer {
           Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
       );
 
-      driveController.povUp().onTrue(shooter.setHoodPosition(0.9));
+      driveController.povUp().onTrue(shooter.setHoodPosition(0.3));
       driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
-      driveController.a().whileTrue(shooter.setShooterVoltage(Volts.of(9.0)));
+      driveController.a().whileTrue(shooter.runDashboardRPM());
       driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
 
       driveController.x().onTrue(intake.homingCommand());

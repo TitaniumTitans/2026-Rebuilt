@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 
+import com.gos.lib.properties.GosDoubleProperty;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +14,7 @@ import static edu.wpi.first.units.Units.*;
 public class IntakeSubsystem extends SubsystemBase {
     public enum Speed {
         STOP(0),
-        INTAKE(0.55);
+        INTAKE(0.55); // 0.55
 
         private final double percentOutput;
 
@@ -27,19 +28,19 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public enum Position {
-        HOMED(130),
-        STOWED(120),
-        INTAKE(-4),
-        AGITATE(20);
+        HOMED(new GosDoubleProperty(false, "Intake/Homed Angle", 130)),
+        STOWED(new GosDoubleProperty(false, "Intake/Stowed Angle", 120)),
+        INTAKE(new GosDoubleProperty(false, "Intake/Intake Angle", 0)),
+        AGITATE(new GosDoubleProperty(false, "Intake/Agitate Angle", 20));
 
-        private final double degrees;
+        private final GosDoubleProperty degrees;
 
-        private Position(double degrees) {
+        private Position(GosDoubleProperty degrees) {
             this.degrees = degrees;
         }
 
         public Angle angle() {
-            return Degrees.of(degrees);
+            return Degrees.of(degrees.getValue());
         }
     }
 
@@ -77,7 +78,10 @@ public class IntakeSubsystem extends SubsystemBase {
                     m_io.setPivotAngle(Position.INTAKE.angle());
                     m_io.setIntakeVoltage(Speed.INTAKE.voltage());
                 },
-                () -> m_io.setIntakeVoltage(Speed.STOP.voltage())
+                () -> {
+                    m_io.setIntakeVoltage(Speed.STOP.voltage());
+                    m_io.setPivotAngle(Position.AGITATE.angle());
+                }
         );
     }
 

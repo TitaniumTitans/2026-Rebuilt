@@ -23,8 +23,8 @@ public class ShooterIOTalonFX implements ShooterIO {
     private final ServoHub m_hub;
 
     // Control modes for closed loop control
-    private final VelocityVoltage m_velVolt = new VelocityVoltage(0.0);
-    private final VelocityTorqueCurrentFOC m_velTorque = new VelocityTorqueCurrentFOC(0.0);
+    private final VelocityVoltage m_velVolt = new VelocityVoltage(0.0).withSlot(1);
+    private final VelocityTorqueCurrentFOC m_velTorque = new VelocityTorqueCurrentFOC(0.0).withSlot(0);
 
     // Status signals are how we read data from the talons
     private final StatusSignal<AngularVelocity> m_velocityL;
@@ -84,19 +84,19 @@ public class ShooterIOTalonFX implements ShooterIO {
 
         // create GoS PID things for motors, lets you update PID on-the-fly
         m_pidL = new Phoenix6TalonPidPropertyBuilder("Shooter Left", false, m_shooterL, 0)
-                .addP(0.0)
+                .addP(50.0)
                 .addI(0.0)
                 .addD(0.0)
                 .addKV(0.0)
                 .build();
         m_pidM = new Phoenix6TalonPidPropertyBuilder("Shooter Middle", false, m_shooterM, 0)
-                .addP(0.0)
+                .addP(50.0)
                 .addI(0.0)
                 .addD(0.0)
                 .addKV(0.0)
                 .build();
         m_pidR = new Phoenix6TalonPidPropertyBuilder("Shooter Right", false, m_shooterR, 0)
-                .addP(0.0)
+                .addP(50.0)
                 .addI(0.0)
                 .addD(0.0)
                 .addKV(0.0)
@@ -172,9 +172,9 @@ public class ShooterIOTalonFX implements ShooterIO {
 
     @Override
     public void setShooterRPM(AngularVelocity velocity) {
-        m_shooterL.setControl(m_velVolt.withVelocity(velocity));
-        m_shooterM.setControl(m_velVolt.withVelocity(velocity));
-        m_shooterR.setControl(m_velVolt.withVelocity(velocity));
+        m_shooterL.setControl(m_velTorque.withVelocity(velocity));
+        m_shooterM.setControl(m_velTorque.withVelocity(velocity));
+        m_shooterR.setControl(m_velTorque.withVelocity(velocity));
     }
 
     @Override

@@ -6,6 +6,9 @@ import com.revrobotics.servohub.ServoChannel;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoHubConfig;
 
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 public class ShooterConstants {
     public static final int SHOOTER_LEFT_ID = 18;
     public static final int SHOOTER_MIDDLE_ID = 19;
@@ -17,13 +20,18 @@ public class ShooterConstants {
 
     public static final TalonFXConfiguration TALON_FX_CONFIGURATION = new TalonFXConfiguration()
             .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withSupplyCurrentLimit(40)
+                    .withSupplyCurrentLimit(70)
                     .withSupplyCurrentLimitEnable(true)
                     .withStatorCurrentLimit(120)
                     .withStatorCurrentLimitEnable(true))
             .withMotorOutput(new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast))
-            .withTorqueCurrent(new TorqueCurrentConfigs());
+            .withTorqueCurrent(new TorqueCurrentConfigs())
+            .withSlot1(new Slot1Configs()
+                    .withKP(0.5)
+                    .withKI(2.0)
+                    .withKD(0.0)
+                    .withKV(12.0 / RPM.of(6000).in(RotationsPerSecond)));
 
     public static final ServoHubConfig SERVO_HUB_CONFIG = new ServoHubConfig();
     static {
