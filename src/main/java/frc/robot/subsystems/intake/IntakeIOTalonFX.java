@@ -41,7 +41,7 @@ public class IntakeIOTalonFX implements IntakeIO {
         intakeSupplyCurrent = m_intake.getSupplyCurrent();
         intakeStatorCurrent = m_intake.getStatorCurrent();
 
-        m_pivotPID = new Phoenix6TalonPidPropertyBuilder("Intake Pivot", false, m_pivot, 0)
+        m_pivotPID = new Phoenix6TalonPidPropertyBuilder("Intake/Pivot/", false, m_pivot, 0)
                 .addP(10)
                 .addI(0)
                 .addD(0)

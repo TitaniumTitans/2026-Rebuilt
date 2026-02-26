@@ -83,23 +83,23 @@ public class ShooterIOTalonFX implements ShooterIO {
         m_shooterR.optimizeBusUtilization();
 
         // create GoS PID things for motors, lets you update PID on-the-fly
-        m_pidL = new Phoenix6TalonPidPropertyBuilder("Shooter Left", false, m_shooterL, 0)
-                .addP(50.0)
-                .addI(0.0)
+        m_pidL = new Phoenix6TalonPidPropertyBuilder("Shooter/Left/", false, m_shooterL, 0)
+                .addP(10.0)
+                .addI(4.0)
                 .addD(0.0)
-                .addKV(0.0)
+                .addKV(0.275)
                 .build();
-        m_pidM = new Phoenix6TalonPidPropertyBuilder("Shooter Middle", false, m_shooterM, 0)
-                .addP(50.0)
-                .addI(0.0)
+        m_pidM = new Phoenix6TalonPidPropertyBuilder("Shooter/Middle/", false, m_shooterM, 0)
+                .addP(10.0)
+                .addI(4.0)
                 .addD(0.0)
-                .addKV(0.0)
+                .addKV(0.275)
                 .build();
-        m_pidR = new Phoenix6TalonPidPropertyBuilder("Shooter Right", false, m_shooterR, 0)
-                .addP(50.0)
-                .addI(0.0)
+        m_pidR = new Phoenix6TalonPidPropertyBuilder("Shooter/Right/", false, m_shooterR, 0)
+                .addP(10.0)
+                .addI(4.0)
                 .addD(0.0)
-                .addKV(0.0)
+                .addKV(0.275)
                 .build();
 
         // servo hub needs to set minimum and maximum pulse width

@@ -6,6 +6,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.gos.lib.properties.PropertyManager;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
