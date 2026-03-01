@@ -12,6 +12,9 @@ import org.littletonrobotics.junction.Logger;
 import static edu.wpi.first.units.Units.*;
 
 public class IntakeSubsystem extends SubsystemBase {
+    private static final GosDoubleProperty m_intakeMultiplier =
+            new GosDoubleProperty(false, "Intake/Intake Speed Multiplier", 1.0);
+
     public enum Speed {
         STOP(0),
         INTAKE(0.55); // 0.55
@@ -23,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         public Voltage voltage() {
-            return Volts.of(percentOutput * 12.0);
+            return Volts.of(percentOutput * 12.0 * m_intakeMultiplier.getValue());
         }
     }
 
