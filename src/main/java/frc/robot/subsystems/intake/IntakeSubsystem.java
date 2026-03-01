@@ -13,11 +13,11 @@ import static edu.wpi.first.units.Units.*;
 
 public class IntakeSubsystem extends SubsystemBase {
     private static final GosDoubleProperty m_intakeMultiplier =
-            new GosDoubleProperty(false, "Intake/Intake Speed Multiplier", 1.0);
+            new GosDoubleProperty(false, "Intake/Intake Speed Multiplier", 0.55);
 
     public enum Speed {
         STOP(0),
-        INTAKE(0.55); // 0.55
+        INTAKE(1.0); // 0.55
 
         private final double percentOutput;
 
