@@ -24,14 +24,12 @@ public interface VisionIO {
     String cameraName = "";
   }
 
-  /**
-   * Update the inputs of a vision system
-   *
-   * @param inputs the inputs to update
-   */
-  default void updateInputs(VisionInputsAutoLogged inputs);
-
-  /**
+    /**
+     * Update the inputs of a vision system
+     *
+     * @param inputs the inputs to update
+     */
+    default void updateInputs(VisionInputsAutoLogged inputs) {}    /**
    * Pass the robot rotation that is measured with the IMU to the vision system This should be updated every loop
    *
    * @param robotRotation Actual rotation of the robot
