@@ -25,6 +25,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.vision.*;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -36,6 +37,7 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final IntakeSubsystem intake;
     private final FeederSubsystem feeder;
+    private final VisionSubsystem vision;
 
     public RobotContainer()
     {
@@ -52,6 +54,9 @@ public class RobotContainer {
               shooter = new ShooterSubsystem(new ShooterIOTalonFX());
               intake = new IntakeSubsystem(new IntakeIOTalonFX());
               feeder = new FeederSubsystem(new FeederIOTalonFX());
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                      new VisionIOPhotonReal("Shooter Left", VisionConstants.LEFT_CAMERA_TRANSFORM, FieldConstants.defaultAprilTagType.getLayout())
+              );
           }
           case SIM -> {
               swerve = new DriveSubsystem(
@@ -65,6 +70,12 @@ public class RobotContainer {
               shooter = new ShooterSubsystem(new ShooterIO() {});
               intake = new IntakeSubsystem(new IntakeIO() {});
               feeder = new FeederSubsystem(new FeederIO() {});
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                      new VisionIOPhotonSimulation("Shooter left",
+                              VisionConstants.LEFT_CAMERA_TRANSFORM,
+                              FieldConstants.defaultAprilTagType.getLayout(),
+                              VisionConstants.SIM_CAMERA_PROPERTIES)
+              );
           }
           case REPLAY -> {
               swerve = new DriveSubsystem(
@@ -78,6 +89,7 @@ public class RobotContainer {
               shooter = new ShooterSubsystem(new ShooterIO() {});
               intake = new IntakeSubsystem(new IntakeIO() {});
               feeder = new FeederSubsystem(new FeederIO() {});
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS, new VisionIO() {});
           }
           default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
         }

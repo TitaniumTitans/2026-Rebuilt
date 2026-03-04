@@ -13,14 +13,14 @@ import static edu.wpi.first.math.util.Units.inchesToMeters;
 
 public class VisionConstants {
   public static final VisionFilterParameters FILTER_PARAMETERS = new VisionFilterParameters(
-      0.05, // 0.5
-      0.5, // 1.5
-      Units.Centimeters.of(21),
-      0.55,
-      Rotation2d.fromDegrees(70),
-      Units.Centimeters.of(805),
-      Units.Centimeters.of(1755),
-      Units.Centimeters.of(35)); // 15
+      0.05, // 0.5, x-y standard deviation
+      0.5, // 1.5, rotation standard deviation
+      Units.Centimeters.of(21), // width of the april tag
+      0.55, // max ambiguity
+      Rotation2d.fromDegrees(70), // camera FOV
+      Units.Centimeters.of(805), //field width
+      Units.Centimeters.of(1755), // field height
+      Units.Centimeters.of(35)); // 15, z off the ground
 
   public static final SimCameraProperties SIM_CAMERA_PROPERTIES = new SimCameraProperties();
 
@@ -43,7 +43,7 @@ public class VisionConstants {
 
   public static final TunableTransform3d RIGHT_CAMERA_TRANSFORM = new TunableTransform3d(
       false,
-      "CameraTransforms/BackCamera",
+      "CameraTransforms/ShooterRightCamera",
       new Transform3d(
         new Translation3d(),
         new Rotation3d()
@@ -52,7 +52,7 @@ public class VisionConstants {
 
   public static final TunableTransform3d LEFT_CAMERA_TRANSFORM = new TunableTransform3d(
       false,
-      "CameraTransforms/LeftCamera",
+      "CameraTransforms/ShooterLeftCamera",
       new Transform3d(
           new Translation3d(),
           new Rotation3d()

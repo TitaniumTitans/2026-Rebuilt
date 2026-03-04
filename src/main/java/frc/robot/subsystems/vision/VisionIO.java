@@ -29,7 +29,7 @@ public interface VisionIO {
    *
    * @param inputs the inputs to update
    */
-  void updateInputs(VisionInputsAutoLogged inputs);
+  default void updateInputs(VisionInputsAutoLogged inputs);
 
   /**
    * Pass the robot rotation that is measured with the IMU to the vision system This should be updated every loop
