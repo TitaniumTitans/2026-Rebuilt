@@ -31,4 +31,9 @@ public final class Constants {
   }
 
   public static final CANBus CANIVORE_BUS = new CANBus("canivore");
+  public static boolean disableHAL = false;
+
+  public static void disableHAL() {
+    disableHAL = true;
+  }
 }
