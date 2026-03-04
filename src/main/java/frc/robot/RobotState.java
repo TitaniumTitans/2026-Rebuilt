@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
@@ -83,8 +84,17 @@ public class RobotState {
           new SwerveModulePosition()
       };
 
+  // Shooter lookup tables
+  private InterpolatingDoubleTreeMap shooterSpeedDistanceMap =
+          new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap shooterHoodDistanceMap =
+          new InterpolatingDoubleTreeMap();
+
   private RobotState() {
     AutoLogOutputManager.addObject(this);
+
+    // setup lookup tables
+    shooterSpeedDistanceMap.put(0.0, 0.0);
   }
 
   public void resetPose(Pose2d pose) {
