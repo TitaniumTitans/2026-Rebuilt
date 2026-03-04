@@ -44,31 +44,12 @@ public class RobotState {
     return instance;
   }
 
-  public enum CoralLevel {
-    L2,
-    L3,
-    L4
-  }
-
-  @Getter
-  @Setter
-  @AutoLogOutput(key = "RobotState/Coral Height")
-  private CoralLevel coralLevel = CoralLevel.L2;
-
   // Pose estimation
-  @Getter
-  @AutoLogOutput(key = "RobotState/OdometryPose")
-  private Pose2d odometryPose = new Pose2d();
+//  @Getter
+//  @AutoLogOutput(key = "RobotState/OdometryPose")
+//  private Pose2d odometryPose = new Pose2d();
 
   private Rotation2d lastRawGyro = new Rotation2d();
-
-//  @Setter
-//  @Getter
-//  private FieldRelativeSpeeds lastFieldRelativeSpeeds = new FieldRelativeSpeeds();
-
-  @Setter
-  @Getter
-  private boolean slowSpeed = false;
 
   // use for simulation
 //  @Setter
@@ -122,7 +103,6 @@ public class RobotState {
     poseEstimator.addVisionMeasurement(update.visionPose, update.timestamp, update.stdDevs);
   }
 
-
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
 //    if (driveSimulation.isPresent()) {
@@ -133,11 +113,6 @@ public class RobotState {
 
   public Rotation2d getRotation() {
     return poseEstimator.getEstimatedPosition().getRotation();
-  }
-
-  @AutoLogOutput(key = "RobotState/Use Auto")
-  public boolean useAuto() {
-    return useAuto.get();
   }
 
   public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}

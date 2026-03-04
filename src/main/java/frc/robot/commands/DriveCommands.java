@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 //import com.gos.lib.properties.GosDoubleProperty;
+import com.gos.lib.properties.GosDoubleProperty;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -45,9 +46,9 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-//  private static final GosDoubleProperty MAX_TURN_SPEED = new GosDoubleProperty(
-//      false, "Drive/Max Turn Speed", 0.7
-//  );
+  private static final GosDoubleProperty maxDriveSpeed = new GosDoubleProperty(
+      false, "Drive/Max Drive Speed", 0.7
+  );
 
   public static double setSensitivity(double x, double sensitivity) {
     return sensitivity * x + ((1.0 - sensitivity) * Math.pow(x, 3.0));
@@ -63,12 +64,13 @@ public class DriveCommands {
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
     // Square magnitude for more precise control
-//    linearMagnitude = linearMagnitude * linearMagnitude;
+    linearMagnitude = linearMagnitude * linearMagnitude;
 
     // Return new linear velocity
     return new Pose2d(new Translation2d(), linearDirection)
         .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
-        .getTranslation();
+        .getTranslation()
+        .times(maxDriveSpeed.getValue());
   }
 
   /**
@@ -86,15 +88,13 @@ public class DriveCommands {
               getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
           // Apply rotation deadband
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND) * maxDriveSpeed.getValue();
 
           // Square rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
 
-          double maxLinearSpeed = RobotState.getInstance().isSlowSpeed() ?
-              drive.getSlowLinearSpeedMetersPerSec() : drive.getMaxLinearSpeedMetersPerSec();
-          double maxAngularSpeed = RobotState.getInstance().isSlowSpeed() ?
-              drive.getSlowAngularSpeedRadPerSec() : drive.getMaxAngularSpeedRadPerSec();
+          double maxLinearSpeed = drive.getMaxLinearSpeedMetersPerSec();
+          double maxAngularSpeed = drive.getMaxAngularSpeedRadPerSec();
 
           // Convert to field relative speeds & send command
           ChassisSpeeds speeds =
