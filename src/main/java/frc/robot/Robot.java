@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import au.grapplerobotics.CanBridge;
 import com.gos.lib.properties.PropertyManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +27,7 @@ public class Robot extends LoggedRobot {
     
     @Override
     public void robotInit() {
+        CanBridge.runTCP();
         PropertyManager.purgeExtraKeys();
 
         // Record metadata
