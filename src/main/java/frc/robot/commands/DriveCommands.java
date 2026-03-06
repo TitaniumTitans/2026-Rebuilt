@@ -9,7 +9,11 @@ package frc.robot.commands;
 
 //import com.gos.lib.properties.GosDoubleProperty;
 import com.gos.lib.properties.GosDoubleProperty;
+import com.gos.lib.properties.pid.PidProperty;
+import com.gos.lib.properties.pid.WpiPidPropertyBuilder;
+import com.gos.lib.properties.pid.WpiProfiledPidPropertyBuilder;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -45,10 +49,17 @@ public class DriveCommands {
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
-
   private static final GosDoubleProperty maxDriveSpeed = new GosDoubleProperty(
       false, "Drive/Max Drive Speed", 0.7
   );
+  private static final ProfiledPIDController TURNING_CONTROLLER = new ProfiledPIDController(
+      ANGLE_KP,
+      0.0,
+      ANGLE_KD,
+      new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+  private static final PidProperty TURNING_CONTROLLER_PROPERTY = new WpiProfiledPidPropertyBuilder(
+      "Drive/Turning PID", false, TURNING_CONTROLLER
+  ).build();
 
   public static double setSensitivity(double x, double sensitivity) {
     return sensitivity * x + ((1.0 - sensitivity) * Math.pow(x, 3.0));
@@ -124,14 +135,8 @@ public class DriveCommands {
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
 
-    // Create PID controller
-    ProfiledPIDController angleController =
-        new ProfiledPIDController(
-            ANGLE_KP,
-            0.0,
-            ANGLE_KD,
-            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
-    angleController.enableContinuousInput(-Math.PI, Math.PI);
+    // Update the GoS PID property values to the controller
+    TURNING_CONTROLLER_PROPERTY.updateIfChanged();
 
     // Construct command
     return Commands.run(
@@ -143,7 +148,7 @@ public class DriveCommands {
               // Calculate angular speed
               Rotation2d rotation = RobotState.getInstance().getRotation();
               double omega =
-                  angleController.calculate(
+                  TURNING_CONTROLLER.calculate(
                       rotation.getRadians(), rotationSupplier.get().getRadians());
 
               // Convert to field relative speeds & send command
@@ -163,7 +168,7 @@ public class DriveCommands {
 
         // Reset PID controller when command starts
         .beforeStarting(
-            () -> angleController.reset(RobotState.getInstance().getRotation().getRadians()));
+            () -> TURNING_CONTROLLER.reset(RobotState.getInstance().getRotation().getRadians()));
   }
 
   /**

@@ -125,5 +125,13 @@ public class RobotState {
     return poseEstimator.getEstimatedPosition().getRotation();
   }
 
+  /** Gets the angle from the robot to a certain point on the field. Used for auto aim */
+  public Rotation2d getPointAtAngle(Translation2d point) {
+    Translation2d robotToPoint = point.minus(getEstimatedPose().getTranslation());
+    Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
+    Logger.recordOutput("RobotState/AngleToPoint", angleToPoint);
+    return angleToPoint;
+  }
+
   public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}
 }
