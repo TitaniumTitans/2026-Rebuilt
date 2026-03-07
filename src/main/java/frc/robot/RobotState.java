@@ -4,21 +4,21 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.subsystems.drive.DriveConstants;
 //import frc.robot.util.AllianceFlipUtil;
 //import frc.robot.util.FieldConstants;
 //import frc.robot.util.FieldRelativeSpeeds;
-import lombok.Getter;
-import lombok.Setter;
 //import org.dyn4j.geometry.Polygon;
 //import org.dyn4j.geometry.Vector2;
 //import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -29,12 +29,7 @@ import org.littletonrobotics.junction.Logger;
 //import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static edu.wpi.first.units.Units.Centimeters;
-import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.*;
 
 public class RobotState {
 
@@ -90,6 +85,29 @@ public class RobotState {
   private InterpolatingDoubleTreeMap shooterHoodDistanceMap =
           new InterpolatingDoubleTreeMap();
 
+  public static class Shot {
+    public final double shooterRPM;
+    public final double hoodPosition;
+
+    public Shot(double shooterRPM, double hoodPosition) {
+      this.shooterRPM = shooterRPM;
+      this.hoodPosition = hoodPosition;
+    }
+  }
+
+  private final InterpolatingTreeMap<Distance, Shot> distanceToShotMap = new InterpolatingTreeMap<>(
+      (startValue, endValue, q) ->
+          InverseInterpolator.forDouble()
+              .inverseInterpolate(startValue.in(Meters), endValue.in(Meters), q.in(Meters)),
+      (startValue, endValue, t) ->
+          new Shot(
+              Interpolator.forDouble()
+                  .interpolate(startValue.shooterRPM, endValue.shooterRPM, t),
+              Interpolator.forDouble()
+                  .interpolate(startValue.hoodPosition, endValue.hoodPosition, t)
+          )
+  );
+
   private RobotState() {
     AutoLogOutputManager.addObject(this);
 
@@ -123,6 +141,14 @@ public class RobotState {
     shooterHoodDistanceMap.put(2.63, 0.3);
     shooterHoodDistanceMap.put(3.26, 0.5);
     shooterHoodDistanceMap.put(3.26, 0.5);
+
+    // WCP values
+    distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.19));
+    distanceToShotMap.put(Inches.of(114.4), new Shot(3275, 0.40));
+    distanceToShotMap.put(Inches.of(165.5), new Shot(3650, 0.48));
+
+    // Our added values
+    distanceToShotMap.put(Meters.of(2.60), new Shot(3200, 0.36));
   }
 
   public void resetPose(Pose2d pose) {
@@ -154,19 +180,23 @@ public class RobotState {
   }
 
   /** Gets the needed hood angle for a certain distance */
+  @AutoLogOutput(key = "RobotState/HoodPercent")
   public double getHoodAngle() {
-    return shooterHoodDistanceMap.get(getDistanceToHubInches());
+//    return shooterHoodDistanceMap.get(getDistanceToHubInches());
+    return distanceToShotMap.get(Meters.of(getDistanceToHubMeters())).hoodPosition;
   }
 
   /** Gets the needed shooter RPM angle for a certain distance */
+  @AutoLogOutput(key = "RobotState/ShooterRPM")
   public double getShooterRPM() {
-    return shooterSpeedDistanceMap.get(getDistanceToHubInches());
+//    return shooterSpeedDistanceMap.get(getDistanceToHubMeters());
+    return distanceToShotMap.get(Meters.of(getDistanceToHubMeters())).shooterRPM;
   }
 
   /** Gets the distance to the hub shooter */
   @AutoLogOutput(key = "RobotState/DistanceToGoalMeters")
-  public double getDistanceToHubInches() {
-    return FieldConstants.Hub.innerCenterPoint.toTranslation2d()
+  public double getDistanceToHubMeters() {
+    return FieldConstants.Hub.goalPoint
         .getDistance(getEstimatedPose().getTranslation());
   }
 

@@ -43,8 +43,8 @@ public class DriveCommands {
   private static final double DEADBAND = 0.15;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_MAX_VELOCITY = 8.0;
-  private static final double ANGLE_MAX_ACCELERATION = 20.0;
+  private static final double ANGLE_MAX_VELOCITY = 12.0; // 8.0
+  private static final double ANGLE_MAX_ACCELERATION = 20.0; // 20.0
   private static final double FF_START_DELAY = 2.0; // Secs
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
@@ -59,7 +59,11 @@ public class DriveCommands {
       new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
   private static final PidProperty TURNING_CONTROLLER_PROPERTY = new WpiProfiledPidPropertyBuilder(
       "Drive/Turning PID", false, TURNING_CONTROLLER
-  ).build();
+  )
+      .addP(ANGLE_KP)
+      .addI(0.0)
+      .addD(ANGLE_KD)
+      .build();
 
   public static double setSensitivity(double x, double sensitivity) {
     return sensitivity * x + ((1.0 - sensitivity) * Math.pow(x, 3.0));

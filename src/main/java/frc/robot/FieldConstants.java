@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.littletonrobotics.junction.Logger;
+
+import static edu.wpi.first.units.Units.Inches;
 
 /**
  * Contains information for location of field element and other useful reference points.
@@ -105,6 +108,12 @@ public class FieldConstants {
                         AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
                         fieldWidth / 2.0,
                         innerHeight);
+
+        public static final Translation2d goalPoint =
+            new Translation2d(Inches.of(182.105), Inches.of(158.845));
+        static {
+            Logger.recordOutput("FieldConstants/Goal", goalPoint);
+        }
 
         public static final Translation2d nearLeftCorner =
                 new Translation2d(topCenterPoint.getX() - width / 2.0, fieldWidth / 2.0 + width / 2.0);
