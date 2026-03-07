@@ -168,7 +168,7 @@ public class RobotContainer {
             () -> driveController.getLeftY(),
             () -> driveController.getLeftX(),
             () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.innerCenterPoint.toTranslation2d())
-        )
+        ).alongWith(shooter.autoAim())
     );
   }
 

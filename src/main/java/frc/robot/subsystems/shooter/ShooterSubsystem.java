@@ -4,6 +4,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -50,6 +51,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command setHoodPosition(double position) {
         return runOnce(() -> m_io.setHoodDistance(position)).withName("Hood Position");
+    }
+
+    public Command autoAim() {
+        return runEnd(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShooterRPM()));
+                m_io.setHoodDistance(RobotState.getInstance().getHoodAngle());
+            },
+            () -> {
+                m_io.setShooterVoltage(Volts.of(0.0));
+                m_io.setHoodDistance(0.1);
+            }).withName("Shooter Auto Aim");
     }
 }
 

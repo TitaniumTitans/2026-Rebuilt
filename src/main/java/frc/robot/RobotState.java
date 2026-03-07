@@ -94,7 +94,35 @@ public class RobotState {
     AutoLogOutputManager.addObject(this);
 
     // setup lookup tables
-    shooterSpeedDistanceMap.put(0.0, 0.0);
+    shooterSpeedDistanceMap.put(1.56, 3000.0);
+    shooterSpeedDistanceMap.put(2.19, 3000.0);
+    shooterSpeedDistanceMap.put(2.94, 3000.0);
+    shooterSpeedDistanceMap.put(3.19, 3250.0);
+    shooterSpeedDistanceMap.put(1.56, 2750.0);
+    shooterSpeedDistanceMap.put(1.32, 2750.0);
+    shooterSpeedDistanceMap.put(1.63, 2750.0);
+    shooterSpeedDistanceMap.put(1.63, 3000.0);
+    shooterSpeedDistanceMap.put(2.14, 3000.0);
+    shooterSpeedDistanceMap.put(2.41, 3000.0);
+    shooterSpeedDistanceMap.put(2.63, 3250.0);
+    shooterSpeedDistanceMap.put(2.63, 3125.0);
+    shooterSpeedDistanceMap.put(3.26, 3500.0);
+    shooterSpeedDistanceMap.put(3.26, 3250.0);
+
+    shooterHoodDistanceMap.put(2.19, 0.5);
+    shooterHoodDistanceMap.put(2.94, 0.5);
+    shooterHoodDistanceMap.put(3.19, 0.5);
+    shooterHoodDistanceMap.put(1.56, 0.1);
+    shooterHoodDistanceMap.put(1.56, 0.1);
+    shooterHoodDistanceMap.put(1.32, 0.1);
+    shooterHoodDistanceMap.put(1.63, 0.3);
+    shooterHoodDistanceMap.put(1.63, 0.1);
+    shooterHoodDistanceMap.put(2.14, 0.3);
+    shooterHoodDistanceMap.put(2.41, 0.3);
+    shooterHoodDistanceMap.put(2.63, 0.3);
+    shooterHoodDistanceMap.put(2.63, 0.3);
+    shooterHoodDistanceMap.put(3.26, 0.5);
+    shooterHoodDistanceMap.put(3.26, 0.5);
   }
 
   public void resetPose(Pose2d pose) {
@@ -123,6 +151,16 @@ public class RobotState {
 
   public Rotation2d getRotation() {
     return poseEstimator.getEstimatedPosition().getRotation();
+  }
+
+  /** Gets the needed hood angle for a certain distance */
+  public double getHoodAngle() {
+    return shooterHoodDistanceMap.get(getDistanceToHubInches());
+  }
+
+  /** Gets the needed shooter RPM angle for a certain distance */
+  public double getShooterRPM() {
+    return shooterSpeedDistanceMap.get(getDistanceToHubInches());
   }
 
   /** Gets the distance to the hub shooter */
