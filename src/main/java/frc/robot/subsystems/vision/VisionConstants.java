@@ -32,18 +32,18 @@ public class VisionConstants {
     SIM_CAMERA_PROPERTIES.setLatencyStdDevMs(10);
   }
 
-  public static final TunableTransform3d SIM_CAMERA_TRANSFORM = new TunableTransform3d(
-      false,
-      "CameraTransforms/BackCamera",
-      new Transform3d(
-          new Translation3d(),
-          new Rotation3d()
-      )
-  );
+//  public static final TunableTransform3d SIM_CAMERA_TRANSFORM = new TunableTransform3d(
+//      false,
+//      "CameraTransforms/BackCamera/",
+//      new Transform3d(
+//          new Translation3d(),
+//          new Rotation3d()
+//      )
+//  );
 
   public static final TunableTransform3d RIGHT_CAMERA_TRANSFORM = new TunableTransform3d(
       false,
-      "CameraTransforms/ShooterRightCamera",
+      "CameraTransforms/ShooterRightCamera/t",
       new Transform3d(
         new Translation3d(),
         new Rotation3d()
@@ -52,7 +52,7 @@ public class VisionConstants {
 
   public static final TunableTransform3d LEFT_CAMERA_TRANSFORM = new TunableTransform3d(
       false,
-      "CameraTransforms/ShooterLeftCamera",
+      "CameraTransforms/ShooterLeftCamera/t",
       new Transform3d(
           new Translation3d(),
           new Rotation3d()

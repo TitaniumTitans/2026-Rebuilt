@@ -62,12 +62,17 @@ public class RobotContainer {
         intake = new IntakeSubsystem(new IntakeIOTalonFX());
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         vision = new VisionSubsystem(
-          VisionConstants.FILTER_PARAMETERS,
-          new VisionIOPhotonReal(
-            "Shooter Left",
-            VisionConstants.LEFT_CAMERA_TRANSFORM,
-            FieldConstants.defaultAprilTagType.getLayout()
-          )
+            VisionConstants.FILTER_PARAMETERS,
+            new VisionIOPhotonReal(
+                "Shooter Left",
+                VisionConstants.LEFT_CAMERA_TRANSFORM,
+                FieldConstants.defaultAprilTagType.getLayout()
+            ),
+            new VisionIOPhotonReal(
+                "Shooter Right",
+                VisionConstants.RIGHT_CAMERA_TRANSFORM,
+                FieldConstants.defaultAprilTagType.getLayout()
+            )
         );
       }
       case SIM -> {
@@ -129,6 +134,9 @@ public class RobotContainer {
       )
     );
 
+    // Default vision command: feed vision updates to pose estimator
+    vision.setDefaultCommand(vision.processVision(RobotState.getInstance()::getEstimatedPose));
+
     // Start button: reset robot pose to origin
     driveController.start().onTrue(
       Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
@@ -152,6 +160,16 @@ public class RobotContainer {
 
     // Left bumper: stow intake
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
+
+    // Right trigger: auto aim
+    driveController.rightTrigger().whileTrue(
+        DriveCommands.joystickDriveAtAngle(
+            swerve,
+            () -> driveController.getLeftY(),
+            () -> driveController.getLeftX(),
+            () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.innerCenterPoint.toTranslation2d())
+        )
+    );
   }
 
   /**

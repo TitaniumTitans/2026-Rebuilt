@@ -125,6 +125,13 @@ public class RobotState {
     return poseEstimator.getEstimatedPosition().getRotation();
   }
 
+  /** Gets the distance to the hub shooter */
+  @AutoLogOutput(key = "RobotState/DistanceToGoalMeters")
+  public double getDistanceToHubInches() {
+    return FieldConstants.Hub.innerCenterPoint.toTranslation2d()
+        .getDistance(getEstimatedPose().getTranslation());
+  }
+
   /** Gets the angle from the robot to a certain point on the field. Used for auto aim */
   public Rotation2d getPointAtAngle(Translation2d point) {
     Translation2d robotToPoint = point.minus(getEstimatedPose().getTranslation());
