@@ -64,5 +64,17 @@ public class ShooterSubsystem extends SubsystemBase {
                 m_io.setHoodDistance(0.1);
             }).withName("Shooter Auto Aim");
     }
+
+    public Command autoAimOnMove() {
+        return runEnd(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShootOnMoveShotData().shot().shooterRPM));
+                m_io.setHoodDistance(RobotState.getInstance().getShootOnMoveShotData().shot().hoodPosition);
+            },
+            () -> {
+                m_io.setShooterVoltage(Volts.of(0.0));
+                m_io.setHoodDistance(0.1);
+            }).withName("Shooter Auto Aim");
+    }
 }
 

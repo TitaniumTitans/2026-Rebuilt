@@ -161,14 +161,24 @@ public class RobotContainer {
     // Left bumper: stow intake
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
 
-    // Right trigger: auto aim
-    driveController.rightTrigger().whileTrue(
+    // Left trigger: auto aim
+    driveController.leftTrigger().whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> driveController.getLeftY(),
             () -> driveController.getLeftX(),
             () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
         ).alongWith(shooter.autoAim())
+    );
+
+    // Right trigger: shoot on move
+    driveController.rightTrigger().whileTrue(
+        DriveCommands.joystickDriveAtAngle(
+            swerve,
+            () -> driveController.getLeftY(),
+            () -> driveController.getLeftX(),
+            () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
+        ).alongWith(shooter.autoAimOnMove())
     );
   }
 

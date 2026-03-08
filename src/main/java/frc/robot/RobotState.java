@@ -6,6 +6,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.subsystems.drive.DriveConstants;
 //import frc.robot.util.AllianceFlipUtil;
@@ -28,6 +30,7 @@ import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.Logger;
 //import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -46,6 +49,10 @@ public class RobotState {
 //  private Pose2d odometryPose = new Pose2d();
 
   private Rotation2d lastRawGyro = new Rotation2d();
+
+  // Shoot on the move
+  private Pose2d lastPose = new Pose2d();
+  private Translation2d fieldRelativeVelocity = new Translation2d();
 
   // use for simulation
 //  @Setter
@@ -78,6 +85,9 @@ public class RobotState {
           new SwerveModulePosition(),
           new SwerveModulePosition()
       };
+
+  private final LoggedNetworkNumber lookaheadTime =
+      new LoggedNetworkNumber("ShootOnMove/LookaheadTime", 0.02);
 
   // Shooter lookup tables
   private InterpolatingDoubleTreeMap shooterSpeedDistanceMap =
@@ -151,6 +161,14 @@ public class RobotState {
     distanceToShotMap.put(Meters.of(2.60), new Shot(3200, 0.36));
   }
 
+  public void updateVelocityPeriodic() {
+    fieldRelativeVelocity = getEstimatedPose()
+        .getTranslation()
+        .minus(lastPose.getTranslation())
+        .div(0.02); // loop cycle
+    lastPose = getEstimatedPose();
+  }
+
   public void resetPose(Pose2d pose) {
     poseEstimator.resetPosition(lastRawGyro, lastWheelPositions, pose);
 
@@ -208,5 +226,73 @@ public class RobotState {
     return angleToPoint;
   }
 
+  private double hoodToRadian(double percent) {
+    return Units.degreesToRadians(38.0 * percent);
+  }
+
+  public ShotData getShootOnMoveShotData() {
+    // uses the derivation from https://www.chiefdelphi.com/t/advice-on-shooting-while-moving/405472/11
+    // static shot parameters
+
+    /*
+    double v = Units.rotationsPerMinuteToRadiansPerSecond(getShooterRPM());
+    double phi_v = getHoodAngle();
+    double phi_h = getPointAtAngle(FieldConstants.Hub.goalPoint).getRadians();
+
+    // robot velocity
+    double v_x = fieldRelativeVelocity.getX();
+    double v_y = fieldRelativeVelocity.getY();
+
+    // calculate offsets to cancel out robot velocity
+    // robot angle
+    double theta_h = Math.atan2(
+        (v * Math.cos(phi_v) * Math.sin(phi_h)) + v_y,
+        (v * Math.cos(phi_v) * Math.sin(phi_h)) + v_x
+    );
+
+    // hood angle
+    double theta_v = Math.atan2(
+        v * Math.sin(phi_v) * Math.cos(theta_h),
+        (v * Math.cos(phi_v) * Math.cos(phi_h)) + v_x
+    );
+
+    // shot rad/sec
+    double v_s = v * (Math.sin(phi_v) / Math.sin(theta_v));
+
+    Logger.recordOutput("ShootOnMove/ShotAngle", Rotation2d.fromRadians(theta_h));
+    Logger.recordOutput("ShootOnMove/ShooterRPM", Units.radiansPerSecondToRotationsPerMinute(v_s));
+    Logger.recordOutput("ShootOnMove/HoodPercent", Units.radiansToDegrees(theta_h) / 38.0);
+
+
+    Logger.recordOutput("ShootOnMove/Robot Velocity", fieldRelativeVelocity);
+    */
+
+    // look ahead to the future goal
+    double lookahead = lookaheadTime.getAsDouble();
+    Translation2d lookaheadPoint = FieldConstants.Hub.goalPoint
+        .minus(fieldRelativeVelocity.times(lookahead));
+    double effectiveDistance = lookaheadPoint.getDistance(getEstimatedPose().getTranslation());
+
+    // Find the angle to the future goal
+    Translation2d robotToPoint = lookaheadPoint.minus(getEstimatedPose().getTranslation());
+    Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
+
+    // Get the new shot data
+    Shot shot = distanceToShotMap.get(Meters.of(effectiveDistance));
+
+    Logger.recordOutput("ShootOnMove/Goal", new Translation3d(lookaheadPoint));
+    Logger.recordOutput("ShootOnMove/Angle", angleToPoint);
+    Logger.recordOutput("ShootOnMove/Hood", shot.hoodPosition);
+    Logger.recordOutput("ShootOnMove/RPM", shot.shooterRPM);
+    Logger.recordOutput("ShootOnMove/EffectiveDistance", Meters.of(effectiveDistance));
+    Logger.recordOutput("ShootOnMove/DeltaGoal", lookaheadPoint.minus(FieldConstants.Hub.goalPoint));
+
+    return new ShotData(
+        angleToPoint,
+        shot
+    );
+  }
+
+  public record ShotData(Rotation2d shotAngle, Shot shot) {}
   public record VisionObservation(Pose2d visionPose, double timestamp, Matrix<N3, N1> stdDevs) {}
 }

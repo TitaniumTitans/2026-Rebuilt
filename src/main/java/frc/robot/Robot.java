@@ -79,7 +79,9 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
-        RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.innerCenterPoint.toTranslation2d());
+        RobotState.getInstance().updateVelocityPeriodic();
+        RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint);
+        RobotState.getInstance().getShootOnMoveShotData();
     }
     
     
