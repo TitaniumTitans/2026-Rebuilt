@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/2026-Rebuilt.iml" filepath="$PROJECT_DIR$/.idea/2026-Rebuilt.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/2026-Rebuilt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/2026-Rebuilt.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/2026-Rebuilt.test.iml" filepath="$PROJECT_DIR$/.idea/modules/2026-Rebuilt.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/GitHub.2026-Rebuilt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/GitHub.2026-Rebuilt.main.iml" />
