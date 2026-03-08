@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
@@ -26,10 +27,8 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
-import frc.robot.utils.FieldConstants;
 import frc.robot.util.AllianceFlipUtil;
-
-import static edu.wpi.first.units.Units.Volts;
+import frc.robot.util.FieldConstants;
 
 /**
  * Container for robot subsystems, commands, and button bindings.
@@ -45,6 +44,9 @@ public class RobotContainer {
   private final IntakeSubsystem intake;
   private final FeederSubsystem feeder;
   private final VisionSubsystem vision;
+
+  // Auto
+//  private final AutoSelector autoSelector;
 
   /**
    * Constructs the robot container.
@@ -121,6 +123,8 @@ public class RobotContainer {
       default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
     }
 
+//    autoSelector = new AutoSelector(swerve);
+
     configureBindings();
     configureDashboardCommands();
   }
@@ -187,6 +191,12 @@ public class RobotContainer {
             () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
         ).alongWith(shooter.autoAimOnMove())
     );
+
+    driveController.povDown().whileTrue(
+        swerve.driveToPose(new AllianceFlipUtil.MaybeFlippedPose2d(
+            new Pose2d(2.5, 5, new Rotation2d())
+        ))
+    );
   }
 
   /**
@@ -214,5 +224,8 @@ public class RobotContainer {
       Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
         .withName("Reset Field Orient")
     );
+
+    // Run current auto
+//    SmartDashboard.putData("Current Auto", autoSelector.getAutoCommand());
   }
 }

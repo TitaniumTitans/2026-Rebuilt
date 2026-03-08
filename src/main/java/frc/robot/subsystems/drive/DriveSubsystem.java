@@ -194,10 +194,8 @@ public class DriveSubsystem extends SubsystemBase {
     runVelocity(speeds, DriveFeedforwards.zeros(4));
   }
 
-  // runs the drivetrainat a set chassis speed
+  // runs the drivetrain at a set chassis speed
   public void runVelocity(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
-    SwerveModuleState[] setpointStates;
-
     // calculate module setpoints
     ChassisSpeeds discretizedSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discretizedSpeeds);

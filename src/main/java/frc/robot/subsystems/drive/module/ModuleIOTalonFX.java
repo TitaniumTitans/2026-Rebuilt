@@ -13,6 +13,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.gos.lib.phoenix6.properties.pid.Phoenix6TalonPidPropertyBuilder;
+import com.gos.lib.properties.pid.PidProperty;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
@@ -39,6 +41,9 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final VelocityVoltage driveRequest;
   private final VelocityTorqueCurrentFOC driveTorqueRequest;
   private final PositionVoltage steerRequest;
+
+  // Property for drive request
+  private final PidProperty drivePidProperty;
 
   // Drive motor signals
   private final StatusSignal<Angle> drivePositionSignal;
@@ -86,6 +91,17 @@ public class ModuleIOTalonFX implements ModuleIO {
       .withEnableFOC(true)
       .withSlot(0)
       .withUpdateFreqHz(0);
+
+    // Initialize pid property
+    drivePidProperty = new Phoenix6TalonPidPropertyBuilder(
+        "Drive/Module" + config.driveId() + "/", false, driveMotor, 1)
+        .addP(48.0)
+        .addI(0.0)
+        .addD(0.0)
+        .addKV(0.645)
+        .addKS(2.95)
+        .addKA(0.0)
+        .build();
 
     // Initialize status signals
     drivePositionSignal = driveMotor.getPosition();
@@ -171,6 +187,9 @@ public class ModuleIOTalonFX implements ModuleIO {
     odometryTimestampQueue.clear();
     odometrySteerPositionQueue.clear();
     odometryDrivePositionQueue.clear();
+
+    // Update PID Property
+    drivePidProperty.updateIfChanged();
   }
 
   @Override
@@ -189,7 +208,6 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveMotor.setControl(
         driveTorqueRequest
             .withVelocity(RadiansPerSecond.of(radsPerSec))
-            .withFeedForward(feedforward)
     );
   }
 
@@ -207,7 +225,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     motorConfig.Feedback.SensorToMechanismRatio = DriveConstants.DRIVE_GEAR_RATIO;
-    motorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.2;
+    motorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.02;
+    motorConfig.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.02;
 
     // Drive current limits
     motorConfig.CurrentLimits = new CurrentLimitsConfigs()
@@ -226,10 +245,10 @@ public class ModuleIOTalonFX implements ModuleIO {
       .withKA(0.0);
 
     // Slot 1: torque current FOC control
-    motorConfig.Slot1.withKP(62.5)
+    motorConfig.Slot1.withKP(0.6)
       .withKD(0.0)
-      .withKS(0.14957)
-      .withKV(0.71149)
+      .withKS(0.8) // 5.5
+      .withKV(0.4) // 15.25
       .withKA(0.0);
 
     driveMotor.getConfigurator().apply(motorConfig);

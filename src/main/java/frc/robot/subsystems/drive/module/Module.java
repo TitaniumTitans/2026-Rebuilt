@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Alert;
 import frc.robot.subsystems.drive.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 public class Module {
   private final ModuleIO io;
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
@@ -69,6 +71,7 @@ public class Module {
 
     // apply the state
     double speedRadsPerSecond = state.speedMetersPerSecond / DriveConstants.WHEEL_RADIUS_METERS;
+    Logger.recordOutput("Drive/Module" + index + "/Velocity Setpoint", RadiansPerSecond.of(speedRadsPerSecond));
     io.setDriveVelocity(speedRadsPerSecond, feedforward);
 
     io.setSteerPosition(state.angle);

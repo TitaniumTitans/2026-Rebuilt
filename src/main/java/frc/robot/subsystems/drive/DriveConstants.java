@@ -25,8 +25,8 @@ public class DriveConstants {
   public static final double ODOMETRY_FREQUENCY = 250;
 
   // Robot dimensions
-  public static final double TRACK_WIDTH_X = Units.inchesToMeters(24.0);
-  public static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+  public static final double TRACK_WIDTH_X = Units.inchesToMeters(19.25);
+  public static final double TRACK_WIDTH_Y = Units.inchesToMeters(17.5);
 
   // Module positions (FL, FR, BL, BR)
   public static final Translation2d[] MODULE_TRANSLATIONS = {
@@ -85,7 +85,7 @@ public class DriveConstants {
       KilogramSquareMeters.of(6),
       new ModuleConfig(
           WHEEL_RADIUS_METERS,
-          MAX_LINEAR_SPEED_MPS,
+          MAX_LINEAR_SPEED_MPS / 4,
           1.2,
           DCMotor.getKrakenX60Foc(1)
               .withReduction(DRIVE_GEAR_RATIO),
