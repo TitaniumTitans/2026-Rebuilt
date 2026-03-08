@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.gos.lib.properties.GosDoubleProperty;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -86,8 +87,8 @@ public class RobotState {
           new SwerveModulePosition()
       };
 
-  private final LoggedNetworkNumber lookaheadTime =
-      new LoggedNetworkNumber("ShootOnMove/LookaheadTime", 0.02);
+  private final GosDoubleProperty lookaheadTime =
+      new GosDoubleProperty(false, "ShootOnMove/LookaheadTime", 1.2);
 
   // Shooter lookup tables
   private InterpolatingDoubleTreeMap shooterSpeedDistanceMap =
@@ -231,44 +232,8 @@ public class RobotState {
   }
 
   public ShotData getShootOnMoveShotData() {
-    // uses the derivation from https://www.chiefdelphi.com/t/advice-on-shooting-while-moving/405472/11
-    // static shot parameters
-
-    /*
-    double v = Units.rotationsPerMinuteToRadiansPerSecond(getShooterRPM());
-    double phi_v = getHoodAngle();
-    double phi_h = getPointAtAngle(FieldConstants.Hub.goalPoint).getRadians();
-
-    // robot velocity
-    double v_x = fieldRelativeVelocity.getX();
-    double v_y = fieldRelativeVelocity.getY();
-
-    // calculate offsets to cancel out robot velocity
-    // robot angle
-    double theta_h = Math.atan2(
-        (v * Math.cos(phi_v) * Math.sin(phi_h)) + v_y,
-        (v * Math.cos(phi_v) * Math.sin(phi_h)) + v_x
-    );
-
-    // hood angle
-    double theta_v = Math.atan2(
-        v * Math.sin(phi_v) * Math.cos(theta_h),
-        (v * Math.cos(phi_v) * Math.cos(phi_h)) + v_x
-    );
-
-    // shot rad/sec
-    double v_s = v * (Math.sin(phi_v) / Math.sin(theta_v));
-
-    Logger.recordOutput("ShootOnMove/ShotAngle", Rotation2d.fromRadians(theta_h));
-    Logger.recordOutput("ShootOnMove/ShooterRPM", Units.radiansPerSecondToRotationsPerMinute(v_s));
-    Logger.recordOutput("ShootOnMove/HoodPercent", Units.radiansToDegrees(theta_h) / 38.0);
-
-
-    Logger.recordOutput("ShootOnMove/Robot Velocity", fieldRelativeVelocity);
-    */
-
     // look ahead to the future goal
-    double lookahead = lookaheadTime.getAsDouble();
+    double lookahead = lookaheadTime.getValue();
     Translation2d lookaheadPoint = FieldConstants.Hub.goalPoint
         .minus(fieldRelativeVelocity.times(lookahead));
     double effectiveDistance = lookaheadPoint.getDistance(getEstimatedPose().getTranslation());
