@@ -25,6 +25,7 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.utils.FieldConstants;
 
 /**
  * Container for robot subsystems, commands, and button bindings.

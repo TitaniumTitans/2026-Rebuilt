@@ -26,12 +26,12 @@ import frc.robot.subsystems.drive.DriveConstants;
 //import org.dyn4j.geometry.Vector2;
 //import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 //import org.ironmaple.utils.mathutils.GeometryConvertor;
+import frc.robot.utils.FieldConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.Logger;
 //import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import static edu.wpi.first.units.Units.*;
 

@@ -7,10 +7,9 @@ package frc.robot;
 
 import au.grapplerobotics.CanBridge;
 import com.gos.lib.properties.PropertyManager;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.littletonrobotics.junction.AutoLogOutputManager;
+import frc.robot.utils.FieldConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
