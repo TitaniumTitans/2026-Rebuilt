@@ -8,6 +8,7 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.gos.lib.properties.PropertyManager;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.util.AllianceFlipUtil;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -101,8 +103,8 @@ public class RobotContainer {
           Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
       );
 
-      driveController.povUp().onTrue(shooter.setHoodPosition(0.3));
-      driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
+//      driveController.povUp().onTrue(shooter.setHoodPosition(0.3));
+//      driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
       driveController.a().whileTrue(shooter.runDashboardRPM());
       driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
@@ -111,6 +113,14 @@ public class RobotContainer {
 
       driveController.rightBumper().whileTrue(intake.intake());
       driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
+
+     driveController.povDown().whileTrue(swerve.driveToPose(
+         new AllianceFlipUtil.MaybeFlippedPose2d(new Pose2d(
+             2.5,
+             5,
+             new Rotation2d()
+         ))
+     ));
     }
     
     

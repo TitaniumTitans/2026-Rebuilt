@@ -8,6 +8,12 @@ package frc.robot.subsystems.drive;
 //import com.pathplanner.lib.path.PathConstraints;
 //import com.pathplanner.lib.util.DriveFeedforwards;
 //import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,6 +35,7 @@ import frc.robot.subsystems.drive.module.ModuleIO;
 //import frc.robot.util.FieldConstants;
 //import frc.robot.util.FieldRelativeSpeeds;
 //import frc.robot.util.MaybeFlippedPose2d;
+import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.Logger;
@@ -40,6 +47,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.subsystems.drive.DriveConstants.ROBOT_CONFIG;
 //import static frc.robot.subsystems.drive.DriveConstants.ROBOT_CONFIG;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -75,39 +83,39 @@ public class DriveSubsystem extends SubsystemBase {
 
 //    RobotState.getInstance().resetPose(new Pose2d());
 
-//    AutoBuilder.configure(
-//        RobotState.getInstance()::getEstimatedPose,
-//        this::resetPose,
-//        this::getChassisSpeeds,
-//        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> runVelocity(speeds, feedforwards),
-//        new PPHolonomicDriveController(
-//            new PIDConstants(6.0, 0.0, 0.01), // 3.0, 0.03
-//            new PIDConstants(6.0, 0.0, 0.01) // 3.0, 0.03
-//        ),
-//        ROBOT_CONFIG,
-//        () -> {
-//          // Boolean supplier that controls when the path will be mirrored for the red alliance
-//          // This will flip the path being followed to the red side of the field.
-//          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-//
-//          var alliance = DriverStation.getAlliance();
-//          if (alliance.isPresent()) {
-//            return alliance.get() == DriverStation.Alliance.Red;
-//          }
-//          return false;
-//        },
-//        this
-//    );
+    AutoBuilder.configure(
+        RobotState.getInstance()::getEstimatedPose,
+        this::resetPose,
+        this::getChassisSpeeds,
+        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> runVelocity(speeds, feedforwards),
+        new PPHolonomicDriveController(
+            new PIDConstants(3.0, 0.0, 0.0), // 3.0, 0.03
+            new PIDConstants(3.0, 0.0, 0.0) // 3.0, 0.03
+        ),
+        ROBOT_CONFIG,
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-//    PathPlannerLogging.setLogActivePathCallback(
-//        (List<Pose2d> path) -> Logger.recordOutput("PathPlanner/ActivePath", path.toArray(Pose2d[]::new))
-//    );
-//    PathPlannerLogging.setLogCurrentPoseCallback(
-//        (Pose2d pose) -> Logger.recordOutput("PathPlanner/CurrentPose", pose)
-//    );
-//    PathPlannerLogging.setLogTargetPoseCallback(
-//        (Pose2d pose) -> Logger.recordOutput("PathPlanner/TargetPose", pose)
-//    );
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this
+    );
+
+    PathPlannerLogging.setLogActivePathCallback(
+        (List<Pose2d> path) -> Logger.recordOutput("PathPlanner/ActivePath", path.toArray(Pose2d[]::new))
+    );
+    PathPlannerLogging.setLogCurrentPoseCallback(
+        (Pose2d pose) -> Logger.recordOutput("PathPlanner/CurrentPose", pose)
+    );
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (Pose2d pose) -> Logger.recordOutput("PathPlanner/TargetPose", pose)
+    );
 
     // Configure SysId
     sysId =
@@ -177,12 +185,12 @@ public class DriveSubsystem extends SubsystemBase {
     gyroDisconnectAlert.set(!gyroInputs.connected && Constants.getMode() != Constants.Mode.SIM);
   }
 
-//  public void runVelocity(ChassisSpeeds speeds) {
-//    runVelocity(speeds, DriveFeedforwards.zeros(4));
-//  }
+  public void runVelocity(ChassisSpeeds speeds) {
+    runVelocity(speeds, DriveFeedforwards.zeros(4));
+  }
 
   // runs the drivetrainat a set chassis speed
-  public void runVelocity(ChassisSpeeds speeds) {
+  public void runVelocity(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
     SwerveModuleState[] setpointStates;
 
     // calculate module setpoints
@@ -199,7 +207,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // send setpoints to module
     for (int i = 0; i < 4; i++) {
-      modules[i].runSetpoint(setpointStates[i]);
+      modules[i].runSetpoint(setpointStates[i], feedforwards.torqueCurrents()[i]);
     }
 
     // log optimal setpoints, runSetpoint mutates the state
@@ -293,14 +301,14 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.MAX_ANGULAR_SPEED * 0.25;
   }
 
-//  public Command driveToPose(MaybeFlippedPose2d pose) {
-//    return Commands.defer(() ->
-//      AutoBuilder.pathfindToPose(
-//          pose.getPose(),
-//          new PathConstraints(1.75, 1.75,
-//              1.75, 1.75)
-//      ), Set.of(this));
-//  }
+  public Command driveToPose(AllianceFlipUtil.MaybeFlippedPose2d pose) {
+    return Commands.defer(() ->
+      AutoBuilder.pathfindToPose(
+          pose.getPose(),
+          new PathConstraints(0.75, 0.75,
+              0.75, 0.75)
+      ), Set.of(this));
+  }
 
   public void resetPose(Pose2d pose) {
     Logger.recordOutput("Pose Reset To", pose);
