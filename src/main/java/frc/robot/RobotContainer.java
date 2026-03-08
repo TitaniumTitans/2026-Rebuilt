@@ -135,7 +135,10 @@ public class RobotContainer {
     );
 
     // Default vision command: feed vision updates to pose estimator
-    vision.setDefaultCommand(vision.processVision(RobotState.getInstance()::getEstimatedPose));
+    vision.setDefaultCommand(
+        vision.processVision(RobotState.getInstance()::getEstimatedPose)
+            .ignoringDisable(true)
+    );
 
     // Start button: reset robot pose to origin
     driveController.start().onTrue(
