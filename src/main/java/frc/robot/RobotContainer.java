@@ -46,7 +46,7 @@ public class RobotContainer {
   private final VisionSubsystem vision;
 
   // Auto
-//  private final AutoSelector autoSelector;
+  private final AutoSelector autoSelector;
 
   /**
    * Constructs the robot container.
@@ -123,7 +123,7 @@ public class RobotContainer {
       default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
     }
 
-//    autoSelector = new AutoSelector(swerve);
+    autoSelector = new AutoSelector(swerve);
 
     configureBindings();
     configureDashboardCommands();
@@ -204,7 +204,8 @@ public class RobotContainer {
    * Currently configured to home the intake.
    */
   public Command getAutonomousCommand() {
-    return intake.homingCommand();
+    return intake.homingCommand()
+        .andThen(autoSelector.getAutoCommand());
   }
 
   /**

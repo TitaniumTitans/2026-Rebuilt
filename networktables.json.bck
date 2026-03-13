@@ -158,5 +158,149 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/Drive/Max Drive Speed",
+    "type": "double",
+    "value": 0.7,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Intake/Homed Angle",
+    "type": "double",
+    "value": 130.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Intake/Stowed Angle",
+    "type": "double",
+    "value": 120.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Intake/Intake Angle",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Intake/Agitate Angle",
+    "type": "double",
+    "value": 20.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ShootOnMove/LookaheadTime",
+    "type": "double",
+    "value": 1.2,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.x(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.y(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.z(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.yaw(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.pitch(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.roll(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.x(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.y(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.z(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.yaw(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.pitch(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.roll(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

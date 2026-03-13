@@ -20,9 +20,9 @@ public class ShooterConstants {
 
     public static final TalonFXConfiguration TALON_FX_CONFIGURATION = new TalonFXConfiguration()
             .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withSupplyCurrentLimit(70)
+                    .withSupplyCurrentLimit(60)
                     .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimit(120)
+                    .withStatorCurrentLimit(100)
                     .withStatorCurrentLimitEnable(true))
             .withMotorOutput(new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast))

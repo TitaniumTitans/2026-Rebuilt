@@ -2,6 +2,7 @@ package frc.robot.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -10,6 +11,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class AutoSelector {
   private final LoggedDashboardChooser<Command> chooser =
       new LoggedDashboardChooser<>("AutoChooser");
+  private final SendableChooser<Command> autoChooser;
 
   public AutoSelector(DriveSubsystem drive) {
     chooser.addDefaultOption("None", Commands.none());
@@ -17,9 +19,12 @@ public class AutoSelector {
     // Testing paths
     chooser.addOption("Linear Test",
         AutoBuilder.buildAuto("LinearTest"));
+
+    AutoBuilder.resetForTesting();
+    autoChooser = AutoBuilder.buildAutoChooser();
   }
 
   public Command getAutoCommand() {
-    return chooser.get();
+    return autoChooser.getSelected();
   }
 }

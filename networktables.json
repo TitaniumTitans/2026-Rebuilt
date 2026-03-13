@@ -198,5 +198,133 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/ShootOnMove/LookaheadTime",
+    "type": "double",
+    "value": 1.2,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.x(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.y(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.z(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.yaw(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.pitch(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterRightCamera/t.roll(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.x(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.y(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.z(in)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.yaw(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.pitch(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/CameraTransforms/ShooterLeftCamera/t.roll(deg)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive/Turning PID.mm.kp",
+    "type": "double",
+    "value": 5.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive/Turning PID.mm.ki",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive/Turning PID.mm.kd",
+    "type": "double",
+    "value": 0.4,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

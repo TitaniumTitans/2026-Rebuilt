@@ -107,12 +107,12 @@ public class ModuleIOTalonFX implements ModuleIO {
     drivePositionSignal = driveMotor.getPosition();
     driveVelocitySignal = driveMotor.getVelocity();
     driveVoltageSignal = driveMotor.getMotorVoltage();
-    driveCurrentSignal = driveMotor.getStatorCurrent();
+    driveCurrentSignal = driveMotor.getSupplyCurrent();
 
     steerPositionSignal = steerMotor.getPosition();
     steerVelocitySignal = steerMotor.getVelocity();
     steerVoltageSignal = steerMotor.getMotorVoltage();
-    steerCurrentSignal = steerMotor.getStatorCurrent();
+    steerCurrentSignal = steerMotor.getSupplyCurrent();
 
     steerAbsolutePositionSignal = encoder.getAbsolutePosition();
 
@@ -236,6 +236,8 @@ public class ModuleIOTalonFX implements ModuleIO {
       .withSupplyCurrentLowerLimit(40)
       .withStatorCurrentLimitEnable(true)
       .withStatorCurrentLimit(100);
+
+//    motorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 120;
 
     // Drive PID and feedforward (Slot 0: voltage control)
     motorConfig.Slot0.withKP(0.25)
