@@ -1,0 +1,141 @@
+{
+ "name":"2026Rebuilt",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{},
+  "poses":{
+   "CenterStart":{
+    "x":{
+     "exp":"3.5990638732910156 m",
+     "val":3.5990638732910156
+    },
+    "y":{
+     "exp":"4.033481121063232 m",
+     "val":4.033481121063232
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "HumanPlayer":{
+    "x":{
+     "exp":"0.8199173808097839 m",
+     "val":0.8199173808097839
+    },
+    "y":{
+     "exp":"0.6878840327262878 m",
+     "val":0.6878840327262878
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "LeftStart":{
+    "x":{
+     "exp":"3.5990638732910156 m",
+     "val":3.5990638732910156
+    },
+    "y":{
+     "exp":"5.538114547729492 m",
+     "val":5.538114547729492
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "RightStart":{
+    "x":{
+     "exp":"3.5990638732910156 m",
+     "val":3.5990638732910156
+    },
+    "y":{
+     "exp":"2.511145830154419 m",
+     "val":2.511145830154419
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"10 in",
+    "val":0.254
+   },
+   "y":{
+    "exp":"9.25 in",
+    "val":0.23495
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-10 in",
+    "val":-0.254
+   },
+   "y":{
+    "exp":"9.25 in",
+    "val":0.23495
+   }
+  },
+  "mass":{
+   "exp":"150 lbs",
+   "val":68.0388555
+  },
+  "inertia":{
+   "exp":"6 kg m ^ 2",
+   "val":6.0
+  },
+  "gearing":{
+   "exp":"5.9",
+   "val":5.9
+  },
+  "radius":{
+   "exp":"2 in",
+   "val":0.0508
+  },
+  "vmax":{
+   "exp":"5800 RPM",
+   "val":607.3745796940267
+  },
+  "tmax":{
+   "exp":"9.37 N * m",
+   "val":9.37
+  },
+  "cof":{
+   "exp":"1.5",
+   "val":1.5
+  },
+  "bumper":{
+   "front":{
+    "exp":"16.5 in",
+    "val":0.4191
+   },
+   "side":{
+    "exp":"16 in",
+    "val":0.4064
+   },
+   "back":{
+    "exp":"16.5 in",
+    "val":0.4191
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":null,
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}
