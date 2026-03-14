@@ -103,8 +103,9 @@ public class DriveSubsystem extends SubsystemBase {
         this::getChassisSpeeds,
         (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
         new PPHolonomicDriveController(
-            new PIDConstants(6.0),
-            new PIDConstants(6.0)
+            new PIDConstants(5.0, 0.3),
+            new PIDConstants(5.0, 0.3\[]
+    )
         ),
         ROBOT_CONFIG,
         () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,

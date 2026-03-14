@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
+import frc.robot.generated.ChoreoVars;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
 import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
@@ -205,6 +206,16 @@ public class RobotContainer {
         swerve.driveToPose(new AllianceFlipUtil.MaybeFlippedPose2d(
             new Pose2d(2.5, 5, new Rotation2d())
         )::getPose)
+    );
+
+    driveController.povUp().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
+    );
+    driveController.povRight().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
+    );
+    driveController.povLeft().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.LeftStart))
     );
   }
 
