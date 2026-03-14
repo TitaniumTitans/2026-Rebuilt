@@ -20,7 +20,6 @@ public class AutoSelector {
     chooser.addOption("Linear Test",
         AutoBuilder.buildAuto("LinearTest"));
 
-    AutoBuilder.resetForTesting();
     autoChooser = AutoBuilder.buildAutoChooser();
   }
 

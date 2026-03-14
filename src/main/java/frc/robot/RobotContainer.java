@@ -6,12 +6,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
@@ -29,6 +32,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
+
+import java.util.Set;
 
 /**
  * Container for robot subsystems, commands, and button bindings.
@@ -137,8 +142,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(
       DriveCommands.joystickDrive(
         swerve,
-        () -> driveController.getLeftY(),
-        () -> driveController.getLeftX(),
+        () -> -driveController.getLeftY(),
+        () -> -driveController.getLeftX(),
         () -> -driveController.getRightX()
       )
     );
@@ -176,8 +181,8 @@ public class RobotContainer {
     driveController.leftTrigger().whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
-            () -> driveController.getLeftY(),
-            () -> driveController.getLeftX(),
+            () -> -driveController.getLeftY(),
+            () -> -driveController.getLeftX(),
             () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
         ).alongWith(shooter.autoAim())
     );
@@ -186,8 +191,8 @@ public class RobotContainer {
     driveController.rightTrigger().whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
-            () -> driveController.getLeftY(),
-            () -> driveController.getLeftX(),
+            () -> -driveController.getLeftY(),
+            () -> -driveController.getLeftX(),
             () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
         ).alongWith(shooter.autoAimOnMove())
     );
@@ -195,7 +200,7 @@ public class RobotContainer {
     driveController.povDown().whileTrue(
         swerve.driveToPose(new AllianceFlipUtil.MaybeFlippedPose2d(
             new Pose2d(2.5, 5, new Rotation2d())
-        ))
+        )::getPose)
     );
   }
 
@@ -204,8 +209,7 @@ public class RobotContainer {
    * Currently configured to home the intake.
    */
   public Command getAutonomousCommand() {
-    return intake.homingCommand()
-        .andThen(autoSelector.getAutoCommand());
+    return autoSelector.getAutoCommand();
   }
 
   /**
@@ -227,6 +231,8 @@ public class RobotContainer {
     );
 
     // Run current auto
-//    SmartDashboard.putData("Current Auto", autoSelector.getAutoCommand());
+    SmartDashboard.putData("Current Auto",
+        AutoCommands.resetPoseAndFollowChoreoPath(swerve, "LinearTest")
+        );
   }
 }

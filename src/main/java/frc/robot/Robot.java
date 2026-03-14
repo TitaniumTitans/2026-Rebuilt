@@ -7,6 +7,11 @@ package frc.robot;
 
 import au.grapplerobotics.CanBridge;
 import com.gos.lib.properties.PropertyManager;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.FieldConstants;
@@ -69,6 +74,10 @@ public class Robot extends LoggedRobot {
         Logger.start();
 
         RobotState.getInstance();
+        Pathfinding.setPathfinder(new LocalADStar());
+        CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+
+        SmartDashboard.putData(CommandScheduler.getInstance());
 
         robotContainer = new RobotContainer();
     }
@@ -81,6 +90,8 @@ public class Robot extends LoggedRobot {
         RobotState.getInstance().updateVelocityPeriodic();
         RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint);
         RobotState.getInstance().getShootOnMoveShotData();
+
+//        Logger.recordOutput("Current Commands", CommandScheduler.);
     }
     
     
