@@ -5,12 +5,16 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ChoreoUtils;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.List;
+
+import static edu.wpi.first.units.Units.Volts;
 
 public class AutoCommands {
   public static Command followChoreoPath(String name) {
@@ -43,6 +47,15 @@ public class AutoCommands {
   public static Command raiseIntake(IntakeSubsystem intakeSubsystem) {
     return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.STOWED);
   }
-  
+
+  public static Command aimAndShoot(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem) {
+    return shooterSubsystem.autoAim()
+        .alongWith(
+            Commands.waitSeconds(1.0)
+                .andThen(feederSubsystem.runFeeder(Volts.of(12.0))
+                )
+        ).withTimeout(5.0);
+
+  }
 
 }
