@@ -4,11 +4,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotState;
+import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ChoreoUtils;
+import frc.robot.util.FieldConstants;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -48,8 +51,14 @@ public class AutoCommands {
     return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.STOWED);
   }
 
-  public static Command aimAndShoot(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem) {
-    return shooterSubsystem.autoAim()
+  public static Command aimAndShoot(DriveSubsystem swerve, ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem) {
+    return DriveCommands.joystickDriveAtAngle(
+            swerve,
+            () -> 0.0,
+            () -> 0.0,
+            () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
+        )
+        .alongWith(shooterSubsystem.autoAim())
         .alongWith(
             Commands.waitSeconds(1.0)
                 .andThen(feederSubsystem.runFeeder(Volts.of(12.0))
