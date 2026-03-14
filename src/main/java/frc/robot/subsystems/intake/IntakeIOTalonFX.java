@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.gos.lib.phoenix6.properties.pid.Phoenix6TalonPidPropertyBuilder;
@@ -29,7 +30,7 @@ public class IntakeIOTalonFX implements IntakeIO {
         m_intake = new TalonFX(IntakeConstants.INTAKE_ID);
 
         m_pivot.getConfigurator().apply(IntakeConstants.PIVOT_CONFIG);
-        m_intake.getConfigurator().apply(IntakeConstants.INTAKE_CONFIG);
+        m_intake.getConfigurator().apply(new TalonFXConfiguration());
 
         // create signals for pivot motor
         pivotAngle = m_pivot.getPosition();

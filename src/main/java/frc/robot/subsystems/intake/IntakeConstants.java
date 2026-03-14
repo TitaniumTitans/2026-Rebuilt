@@ -27,17 +27,24 @@ public class IntakeConstants {
                     .withSensorToMechanismRatio(PIVOT_GEAR_RATIO)
                     .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
             .withCurrentLimits(
-                    new CurrentLimitsConfigs()
-                            .withStatorCurrentLimit(Amps.of(30))
-                            .withStatorCurrentLimitEnable(true)
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(70)
+                    .withSupplyCurrentLimitEnable(true)
             );
 
-    public static final TalonFXConfiguration INTAKE_CONFIG = PIVOT_CONFIG
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(Amps.of(80))
-                .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(Amps.of(60))
-                .withSupplyCurrentLimitEnable(true)
-        );
+//    public static final TalonFXConfiguration INTAKE_CONFIG = PIVOT_CONFIG
+//        .withCurrentLimits(
+//            new CurrentLimitsConfigs()
+//                .withStatorCurrentLimit(Amps.of(80))
+//                .withStatorCurrentLimitEnable(true)
+//                .withSupplyCurrentLimit(Amps.of(60))
+//                .withSupplyCurrentLimitEnable(true)
+//        )
+//        .withMotorOutput(new MotorOutputConfigs()
+//            .withInverted(InvertedValue.Clockwise_Positive)
+//
+//        );
+
 }
