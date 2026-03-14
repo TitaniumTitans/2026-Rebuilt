@@ -27,7 +27,22 @@ public class AutoCommands {
         followChoreoPath(name)
     );
   }
+
   public static Command lowerIntake(IntakeSubsystem intakeSubsystem) {
     return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.INTAKE);
   }
+
+  public static Command runIntake(IntakeSubsystem intakeSubsystem) {
+    return intakeSubsystem.setIntakePower(IntakeSubsystem.Speed.INTAKE);
+  }
+
+  public static Command stopIntake(IntakeSubsystem intakeSubsystem) {
+    return intakeSubsystem.setIntakePower(IntakeSubsystem.Speed.STOP);
+  }
+
+  public static Command raiseIntake(IntakeSubsystem intakeSubsystem) {
+    return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.STOWED);
+  }
+  
+
 }

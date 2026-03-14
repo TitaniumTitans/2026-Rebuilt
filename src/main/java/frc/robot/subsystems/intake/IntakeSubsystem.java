@@ -74,6 +74,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return runOnce(() -> m_io.setPivotAngle(position.angle()));
     }
 
+    public Command setIntakePower(Speed speed) {
+        return runOnce(() -> m_io.setIntakeVoltage(speed.voltage()));
+    }
+
     // runs the standard intake procedure
     public Command intake() {
         return startEnd(
