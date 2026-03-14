@@ -207,6 +207,7 @@ public class DriveSubsystem extends SubsystemBase {
     Logger.recordOutput("SwerveSpeeds/Optimized", discretizedSpeeds);
     Logger.recordOutput("SwerveStates/UsingSetpoints", false);
     Logger.recordOutput("SwerveStates/Actual Setpoints", setpointStates);
+    Logger.recordOutput("PathPlanner/FeedforwardsMetersPerSecondSquared", feedforwards.accelerationsMPSSq());
 
     // Send setpoints to modules
     for (int i = 0; i < 4; i++) {
@@ -319,13 +320,17 @@ public class DriveSubsystem extends SubsystemBase {
     return DriveConstants.MAX_ANGULAR_SPEED * 0.25;
   }
 
-  public Command driveToPose(AllianceFlipUtil.MaybeFlippedPose2d pose) {
-    return Commands.defer(() ->
-      AutoBuilder.pathfindToPose(
-          pose.getPose(),
-          new PathConstraints(0.75, 0.75,
-              0.75, 0.75)
-      ), Set.of(this));
+  public Command driveToPose(Pose2d pose) {
+    return driveToPose(() -> pose);
+  }
+
+  public Command driveToPose(Supplier<Pose2d> pose) {
+    return AutoBuilder.pathfindToPose(
+        pose.get(),
+        new PathConstraints(1.25, 1.25,
+            1.25, 1.25)
+    ).withName("Pathfinding Command")
+        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
   }
 
   /** Resets the robot pose to the specified position. */
