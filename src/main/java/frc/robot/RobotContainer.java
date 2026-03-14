@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -137,6 +138,7 @@ public class RobotContainer {
 
     configureBindings();
     configureDashboardCommands();
+    configureNameCommands();
   }
 
   /**
@@ -250,4 +252,15 @@ public class RobotContainer {
         AutoCommands.resetPoseAndFollowChoreoPath(swerve, "LinearTest")
         );
   }
+
+  public void configureNameCommands() {
+
+    NamedCommands.registerCommand("lowerIntake", AutoCommands.lowerIntake(intake));
+    NamedCommands.registerCommand("runIntake", AutoCommands.runIntake(intake));
+    NamedCommands.registerCommand("stopIntake", AutoCommands.stopIntake(intake));
+    NamedCommands.registerCommand("raiseIntake", AutoCommands.raiseIntake(intake));
+    NamedCommands.registerCommand("aimAndShoot", AutoCommands.aimAndShoot(swerve, shooter, feeder));
+
+  }
+
 }
