@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -51,7 +52,9 @@ public class RobotContainer {
   private final VisionSubsystem vision;
 
   // Auto
-  private final AutoSelector autoSelector;
+//  private final AutoSelector autoSelector;
+
+  private final SendableChooser<Command> autoSelector;
 
   /**
    * Constructs the robot container.
@@ -128,7 +131,8 @@ public class RobotContainer {
       default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
     }
 
-    autoSelector = new AutoSelector(swerve);
+    autoSelector = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoSelector);
 
     configureBindings();
     configureDashboardCommands();
@@ -209,7 +213,7 @@ public class RobotContainer {
    * Currently configured to home the intake.
    */
   public Command getAutonomousCommand() {
-    return autoSelector.getAutoCommand();
+    return autoSelector.getSelected();
   }
 
   /**

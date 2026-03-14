@@ -101,23 +101,13 @@ public class DriveSubsystem extends SubsystemBase {
         RobotState.getInstance()::getEstimatedPose,
         this::resetPose,
         this::getChassisSpeeds,
-        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> runVelocity(speeds, feedforwards),
+        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
         new PPHolonomicDriveController(
-            new PIDConstants(3.0, 0.0, 0.0), // 3.0, 0.03
-            new PIDConstants(3.0, 0.0, 0.0) // 3.0, 0.03
+            new PIDConstants(6.0),
+            new PIDConstants(6.0)
         ),
         ROBOT_CONFIG,
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
+        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
         this
     );
 

@@ -226,7 +226,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     motorConfig.Feedback.SensorToMechanismRatio = DriveConstants.DRIVE_GEAR_RATIO;
     motorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.02;
-    motorConfig.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.02;
+    motorConfig.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.01;
 
     // Drive current limits
     motorConfig.CurrentLimits = new CurrentLimitsConfigs()
@@ -235,7 +235,7 @@ public class ModuleIOTalonFX implements ModuleIO {
       .withSupplyCurrentLowerTime(1.0)
       .withSupplyCurrentLowerLimit(40)
       .withStatorCurrentLimitEnable(true)
-      .withStatorCurrentLimit(100);
+      .withStatorCurrentLimit(120);
 
 //    motorConfig.TorqueCurrent.PeakForwardTorqueCurrent = 120;
 
