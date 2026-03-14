@@ -24,12 +24,26 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
+    public static final ChoreoTraj CenterLBS = new ChoreoTraj(
+        "CenterLBS",
+        OptionalInt.empty(),
+        5.13911,
+        new Pose2d(3.59906, 4.03348, Rotation2d.fromRadians(0)),
+        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0))
+    );
+    public static final ChoreoTraj CenterRBS = new ChoreoTraj(
+        "CenterRBS",
+        OptionalInt.empty(),
+        5.37784,
+        new Pose2d(3.59906, 4.03348, Rotation2d.fromRadians(0)),
+        new Pose2d(6.26736, 2.22095, Rotation2d.fromRadians(0))
+    );
     public static final ChoreoTraj CenterToHP = new ChoreoTraj(
         "CenterToHP",
         OptionalInt.empty(),
-        2.6244,
+        4.97015,
         new Pose2d(3.59906, 4.03348, Rotation2d.fromRadians(0)),
-        new Pose2d(0.81992, 0.68788, Rotation2d.fromRadians(3.14159))
+        new Pose2d(0.62942, 0.75788, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj FeulCenterZone = new ChoreoTraj(
         "FeulCenterZone",
@@ -41,37 +55,65 @@ public record ChoreoTraj(
     public static final ChoreoTraj HPShoot = new ChoreoTraj(
         "HPShoot",
         OptionalInt.empty(),
-        5.52673,
-        new Pose2d(0.81992, 0.68788, Rotation2d.fromRadians(-3.14159)),
+        2.79144,
+        new Pose2d(0.62942, 0.75788, Rotation2d.fromRadians(3.14159)),
         new Pose2d(1.51048, 1.95596, Rotation2d.fromRadians(0.59354))
+    );
+    public static final ChoreoTraj LeftBumpReturn = new ChoreoTraj(
+        "LeftBumpReturn",
+        OptionalInt.empty(),
+        3.40564,
+        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0)),
+        new Pose2d(3.59906, 5.53811, Rotation2d.fromRadians(0))
+    );
+    public static final ChoreoTraj LeftBumpSend = new ChoreoTraj(
+        "LeftBumpSend",
+        OptionalInt.empty(),
+        3.40564,
+        new Pose2d(3.59906, 5.53811, Rotation2d.fromRadians(0)),
+        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0))
+    );
+    public static final ChoreoTraj LeftFuelCenterZone = new ChoreoTraj(
+        "LeftFuelCenterZone",
+        OptionalInt.empty(),
+        3.30779,
+        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0)),
+        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0))
     );
     public static final ChoreoTraj LinearTest = new ChoreoTraj(
         "LinearTest",
         OptionalInt.empty(),
-        1.72414,
+        3.36302,
         new Pose2d(2.5, 5, Rotation2d.fromRadians(0)),
         new Pose2d(2.5, 2.5, Rotation2d.fromRadians(0))
     );
     public static final ChoreoTraj RightBumpReturn = new ChoreoTraj(
         "RightBumpReturn",
         OptionalInt.empty(),
-        1.79455,
+        3.48458,
         new Pose2d(6.26736, 2.22095, Rotation2d.fromRadians(0)),
         new Pose2d(3.59906, 2.51115, Rotation2d.fromRadians(0))
     );
     public static final ChoreoTraj RightBumpSend = new ChoreoTraj(
         "RightBumpSend",
         OptionalInt.empty(),
-        1.79455,
+        3.48458,
         new Pose2d(3.59906, 2.51115, Rotation2d.fromRadians(0)),
         new Pose2d(6.26736, 2.22095, Rotation2d.fromRadians(0))
+    );
+    public static final ChoreoTraj RightFuelCenterZone = new ChoreoTraj(
+        "RightFuelCenterZone",
+        OptionalInt.empty(),
+        3.31266,
+        new Pose2d(6.30404, 2.51115, Rotation2d.fromRadians(0)),
+        new Pose2d(6.30404, 2.51115, Rotation2d.fromRadians(0))
     );
     public static final ChoreoTraj RightToHP = new ChoreoTraj(
         "RightToHP",
         OptionalInt.empty(),
-        2.22686,
+        4.12098,
         new Pose2d(3.59906, 2.51115, Rotation2d.fromRadians(0)),
-        new Pose2d(0.81992, 0.68788, Rotation2d.fromRadians(3.14159))
+        new Pose2d(0.62942, 0.75788, Rotation2d.fromRadians(3.14159))
     );
 
     /**
@@ -79,12 +121,18 @@ public record ChoreoTraj(
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
+        Map.entry("CenterLBS", CenterLBS),
+        Map.entry("CenterRBS", CenterRBS),
         Map.entry("CenterToHP", CenterToHP),
         Map.entry("FeulCenterZone", FeulCenterZone),
         Map.entry("HPShoot", HPShoot),
+        Map.entry("LeftBumpReturn", LeftBumpReturn),
+        Map.entry("LeftBumpSend", LeftBumpSend),
+        Map.entry("LeftFuelCenterZone", LeftFuelCenterZone),
         Map.entry("LinearTest", LinearTest),
         Map.entry("RightBumpReturn", RightBumpReturn),
         Map.entry("RightBumpSend", RightBumpSend),
+        Map.entry("RightFuelCenterZone", RightFuelCenterZone),
         Map.entry("RightToHP", RightToHP)
     );
 

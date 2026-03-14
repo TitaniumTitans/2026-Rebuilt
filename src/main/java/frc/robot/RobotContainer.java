@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
+import frc.robot.generated.ChoreoTraj;
 import frc.robot.generated.ChoreoVars;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.module.ModuleIO;
@@ -76,7 +77,8 @@ public class RobotContainer {
         );
 
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-        intake = new IntakeSubsystem(new IntakeIOTalonFX());
+//        intake = new IntakeSubsystem(new IntakeIOTalonFX());
+        intake = new IntakeSubsystem(new IntakeIO() {});
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         vision = new VisionSubsystem(
             VisionConstants.FILTER_PARAMETERS,
@@ -133,12 +135,12 @@ public class RobotContainer {
       default -> throw new IllegalStateException("Unexpected value: " + Constants.getMode());
     }
 
-    autoSelector = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoSelector);
-
     configureBindings();
     configureDashboardCommands();
     configureNameCommands();
+
+    autoSelector = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoSelector);
   }
 
   /**
@@ -205,9 +207,7 @@ public class RobotContainer {
     );
 
     driveController.povDown().whileTrue(
-        swerve.driveToPose(new AllianceFlipUtil.MaybeFlippedPose2d(
-            new Pose2d(2.5, 5, new Rotation2d())
-        )::getPose)
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoTraj.CenterToHP.endPoseBlue()))
     );
 
     driveController.povUp().whileTrue(
