@@ -113,9 +113,9 @@ public class IntakeSubsystem extends SubsystemBase {
             .andThen(
             Commands.repeatingSequence(
                 setPivotPosition(Position.AGITATE),
-//                Commands.waitSeconds(0.25),
-                setPivotPosition(Position.INTAKE)
-//                Commands.waitSeconds(0.25)
+                Commands.waitSeconds(0.25),
+                setPivotPosition(Position.INTAKE),
+                Commands.waitSeconds(0.25)
             )
         ).finallyDo(() -> {
             m_io.setIntakeVoltage(Volts.of(0.0));

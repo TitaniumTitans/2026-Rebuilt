@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -164,6 +165,8 @@ public class RobotContainer {
             .ignoringDisable(true)
     );
 
+    shooter.setDefaultCommand(shooter.shooterAutoHood());
+
     // Start button: reset robot pose to origin
     driveController.start().onTrue(
       Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
@@ -173,7 +176,12 @@ public class RobotContainer {
 //      driveController.povDown().onTrue(shooter.setHoodPosition(0.1));
 
     // A button: run shooter at dashboard RPM
-    driveController.a().whileTrue(shooter.runDashboardRPM());
+    driveController.a().whileTrue(
+        shooter.setHoodPosition(1.0)
+            .andThen(shooter.runShooterRPM(RPM.of(3750)))
+    ).onFalse(
+        shooter.setHoodPosition(0.0)
+    );
 
     // B button: run feeder at 12V
     driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
@@ -190,8 +198,8 @@ public class RobotContainer {
     // Left bumper: stow intake
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
 
-    // Left trigger: auto aim
-    driveController.leftTrigger().whileTrue(
+    // Right trigger: auto aim
+    driveController.rightTrigger().whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> -driveController.getLeftY(),
@@ -200,15 +208,19 @@ public class RobotContainer {
         ).alongWith(shooter.autoAim())
     );
 
+    // force feed
+    driveController.b().and(driveController.rightTrigger().or(driveController.a()))
+        .whileTrue(intake.agitateCommand());
+
     // Right trigger: shoot on move
-    driveController.rightTrigger().whileTrue(
-        DriveCommands.joystickDriveAtAngle(
-            swerve,
-            () -> -driveController.getLeftY(),
-            () -> -driveController.getLeftX(),
-            () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
-        ).alongWith(shooter.autoAimOnMove())
-    );
+//    driveController.rightTrigger().whileTrue(
+//        DriveCommands.joystickDriveAtAngle(
+//            swerve,
+//            () -> -driveController.getLeftY(),
+//            () -> -driveController.getLeftX(),
+//            () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
+//        ).alongWith(shooter.autoAimOnMove())
+//    );
 
     driveController.povDown().whileTrue(
         swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoTraj.CenterToHP.endPoseBlue()))

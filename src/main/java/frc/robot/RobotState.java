@@ -164,7 +164,7 @@ public class RobotState {
     distanceToShotMap.put(Meters.of(2.60), new Shot(3200, 0.36));
     distanceToShotMap.put(Meters.of(3.8), new Shot(3650, 0.45));
     distanceToShotMap.put(Meters.of(4.8), new Shot(3850, 0.50));
-    distanceToShotMap.put(Meters.of(5.2), new Shot(4250, 0.5));
+    distanceToShotMap.put(Meters.of(5.2), new Shot(4250, 0.55));
   }
 
   public void updateVelocityPeriodic() {
