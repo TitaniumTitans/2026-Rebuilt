@@ -158,11 +158,13 @@ public class RobotState {
     // WCP values
     distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.19));
     distanceToShotMap.put(Inches.of(114.4), new Shot(3275, 0.40));
-    distanceToShotMap.put(Inches.of(165.5), new Shot(3650, 0.48));
+    distanceToShotMap.put(Inches.of(165.5), new Shot(3750, 0.48));
 
     // Our added values
     distanceToShotMap.put(Meters.of(2.60), new Shot(3200, 0.36));
-    distanceToShotMap.put(Meters.of(3.8), new Shot(3600, 0.45));
+    distanceToShotMap.put(Meters.of(3.8), new Shot(3650, 0.45));
+    distanceToShotMap.put(Meters.of(4.8), new Shot(3850, 0.50));
+    distanceToShotMap.put(Meters.of(5.2), new Shot(4250, 0.5));
   }
 
   public void updateVelocityPeriodic() {

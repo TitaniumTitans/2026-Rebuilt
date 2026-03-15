@@ -88,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 },
                 () -> {
                     m_io.setIntakeVoltage(Speed.STOP.voltage());
-                    m_io.setPivotAngle(Position.AGITATE.angle());
+                    m_io.setPivotAngle(Position.INTAKE.angle());
                 }
         );
     }
@@ -109,12 +109,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command agitateCommand() {
-        return Commands.parallel(
-            setIntakePower(Speed.INTAKE),
+        return setIntakePower(Speed.INTAKE)
+            .andThen(
             Commands.repeatingSequence(
                 setPivotPosition(Position.AGITATE),
 //                Commands.waitSeconds(0.25),
                 setPivotPosition(Position.INTAKE)
+//                Commands.waitSeconds(0.25)
             )
         ).finallyDo(() -> {
             m_io.setIntakeVoltage(Volts.of(0.0));

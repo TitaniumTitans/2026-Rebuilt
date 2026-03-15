@@ -263,7 +263,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     motorConfig.Slot0.withKP(90.0)
       .withKD(1.0)
       .withKS(0.0)
-      .withKV(0.0);
+      .withKV(0.2);
     motorConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.0;
 
     steerMotor.getConfigurator().apply(motorConfig);

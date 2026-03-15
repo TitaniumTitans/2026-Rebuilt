@@ -181,6 +181,9 @@ public class RobotContainer {
     // X button: home the intake
     driveController.x().onTrue(intake.homingCommand());
 
+    // Y button: agitate intake
+    driveController.y().whileTrue(intake.agitateCommand());
+
     // Right bumper: deploy and run intake
     driveController.rightBumper().whileTrue(intake.intake());
 
@@ -263,6 +266,7 @@ public class RobotContainer {
   }
 
   public void configureNameCommands() {
+    NamedCommands.registerCommand("homeIntake", intake.homingCommand());
     NamedCommands.registerCommand("lowerIntake", AutoCommands.lowerIntake(intake));
     NamedCommands.registerCommand("runIntake", AutoCommands.runIntake(intake));
     NamedCommands.registerCommand("stopIntake", AutoCommands.stopIntake(intake));

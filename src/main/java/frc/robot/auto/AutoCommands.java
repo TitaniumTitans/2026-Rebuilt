@@ -59,13 +59,14 @@ public class AutoCommands {
             () -> 0.0,
             () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
         )
-        .alongWith(intake.setIntakePower(IntakeSubsystem.Speed.INTAKE))
         .alongWith(shooterSubsystem.autoAim())
         .alongWith(
             Commands.waitSeconds(1.0)
                 .andThen(feederSubsystem.runFeeder(Volts.of(12.0))
+                    .alongWith(intake.agitateCommand())
                 )
-        ).withTimeout(5.0);
+        ).withTimeout(5.0)
+        .andThen(intake.setIntakePower(IntakeSubsystem.Speed.STOP));
 
   }
 
