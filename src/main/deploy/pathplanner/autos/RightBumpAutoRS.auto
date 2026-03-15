@@ -5,9 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RightBumpSend"
+            "name": "resetRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "clearBump"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -15,17 +27,11 @@
           "data": {
             "pathName": "RightFuelCenterZone"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightBumpReturn"
-          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": true
 }

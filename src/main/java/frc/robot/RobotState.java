@@ -33,6 +33,8 @@ import org.littletonrobotics.junction.Logger;
 //import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
+import java.util.function.Supplier;
+
 import static edu.wpi.first.units.Units.*;
 
 public class RobotState {
@@ -160,6 +162,7 @@ public class RobotState {
 
     // Our added values
     distanceToShotMap.put(Meters.of(2.60), new Shot(3200, 0.36));
+    distanceToShotMap.put(Meters.of(3.8), new Shot(3600, 0.45));
   }
 
   public void updateVelocityPeriodic() {
@@ -171,7 +174,11 @@ public class RobotState {
   }
 
   public void resetPose(Pose2d pose) {
-    poseEstimator.resetPosition(lastRawGyro, lastWheelPositions, pose);
+    resetPose(() -> pose);
+  }
+
+  public void resetPose(Supplier<Pose2d> pose) {
+    poseEstimator.resetPosition(lastRawGyro, lastWheelPositions, pose.get());
 
 //    driveSimulation.ifPresent(swerveDriveSimulation -> swerveDriveSimulation.setSimulationWorldPose(pose));
   }

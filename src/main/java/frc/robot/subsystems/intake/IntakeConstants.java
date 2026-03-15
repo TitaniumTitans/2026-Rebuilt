@@ -14,7 +14,7 @@ public class IntakeConstants {
 
     public static final double PIVOT_GEAR_RATIO = 50;
     // 6000 RPM
-    public static final AngularVelocity PIVOT_MAX_SPEED = RPM.of(3000).div(PIVOT_GEAR_RATIO);
+    public static final AngularVelocity PIVOT_MAX_SPEED = RPM.of(5800).div(PIVOT_GEAR_RATIO);
 
     public static final TalonFXConfiguration PIVOT_CONFIG = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs()

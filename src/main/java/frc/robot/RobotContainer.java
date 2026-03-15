@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -251,6 +252,14 @@ public class RobotContainer {
     SmartDashboard.putData("Current Auto",
         AutoCommands.resetPoseAndFollowChoreoPath(swerve, "LinearTest")
         );
+
+    SmartDashboard.putData("Clear Bump?",
+        Commands.run(() -> {
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(swerve.getMaxLinearSpeedMetersPerSec() * 0.75, 0, 0);
+          swerve.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, RobotState.getInstance().getRotation()));
+        }).withTimeout(1.25)
+    );
   }
 
   public void configureNameCommands() {
@@ -260,6 +269,31 @@ public class RobotContainer {
     NamedCommands.registerCommand("raiseIntake", AutoCommands.raiseIntake(intake));
     NamedCommands.registerCommand("aimAndShoot", AutoCommands.aimAndShoot(swerve, shooter, feeder, intake));
 
+    NamedCommands.registerCommand("clearBump",
+        Commands.run(() -> {
+                  ChassisSpeeds speeds =
+                      new ChassisSpeeds(swerve.getMaxLinearSpeedMetersPerSec() * 0.75, 0, 0);
+                  swerve.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, RobotState.getInstance().getRotation()));
+            }
+            )
+            .withTimeout(1.5)
+    );
+
+    NamedCommands.registerCommand("resetRight",
+        Commands.runOnce(
+            () ->RobotState.getInstance().resetPose(
+                () -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart)
+            )
+        )
+    );
+
+    NamedCommands.registerCommand("resetLeft",
+        Commands.runOnce(
+            () ->RobotState.getInstance().resetPose(
+                () -> AllianceFlipUtil.apply(ChoreoVars.Poses.LeftStart)
+            )
+        )
+    );
   }
 
 }

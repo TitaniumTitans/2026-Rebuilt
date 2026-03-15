@@ -107,4 +107,18 @@ public class IntakeSubsystem extends SubsystemBase {
 //                .unless(() -> isHomed)
                 .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
     }
+
+    public Command agitateCommand() {
+        return Commands.parallel(
+            setIntakePower(Speed.INTAKE),
+            Commands.repeatingSequence(
+                setPivotPosition(Position.AGITATE),
+//                Commands.waitSeconds(0.25),
+                setPivotPosition(Position.INTAKE)
+            )
+        ).finallyDo(() -> {
+            m_io.setIntakeVoltage(Volts.of(0.0));
+            m_io.setPivotAngle(Position.INTAKE.angle());
+        });
+    }
 }
