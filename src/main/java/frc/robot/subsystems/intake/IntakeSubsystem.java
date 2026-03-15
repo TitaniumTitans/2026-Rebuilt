@@ -54,6 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(IntakeIO io) {
         m_io = io;
+        m_io.resetPivotAngle(Position.HOMED.angle());
     }
 
     @Override

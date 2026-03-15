@@ -254,12 +254,11 @@ public class RobotContainer {
   }
 
   public void configureNameCommands() {
-
     NamedCommands.registerCommand("lowerIntake", AutoCommands.lowerIntake(intake));
     NamedCommands.registerCommand("runIntake", AutoCommands.runIntake(intake));
     NamedCommands.registerCommand("stopIntake", AutoCommands.stopIntake(intake));
     NamedCommands.registerCommand("raiseIntake", AutoCommands.raiseIntake(intake));
-    NamedCommands.registerCommand("aimAndShoot", AutoCommands.aimAndShoot(swerve, shooter, feeder));
+    NamedCommands.registerCommand("aimAndShoot", AutoCommands.aimAndShoot(swerve, shooter, feeder, intake));
 
   }
 

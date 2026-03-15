@@ -3,6 +3,7 @@ package frc.robot.subsystems.feeder;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
@@ -15,6 +16,8 @@ public class FeederIOTalonFX implements FeederIO {
     private final StatusSignal<Voltage> feederVoltage, columnVoltage;
     private final StatusSignal<Current> feederSupplyCurrent, feederStatorCurrent,
             columnSupplyCurrent, columnStatorCurrent;
+
+    private final VoltageOut voltageOut = new VoltageOut(0.0).withEnableFOC(true);
 
     public FeederIOTalonFX() {
         m_feeder = new TalonFX(FeederConstants.FEEDER_ID);
@@ -67,11 +70,11 @@ public class FeederIOTalonFX implements FeederIO {
 
     @Override
     public void setFeederVoltage(Voltage voltage) {
-        m_feeder.setVoltage(voltage.in(Volts));
+        m_feeder.setControl(voltageOut.withOutput(voltage));
     }
 
     @Override
     public void setColumnVoltage(Voltage voltage) {
-        m_column.setVoltage(voltage.in(Volts));
+        m_column.setControl(voltageOut.withOutput(voltage));
     }
 }

@@ -8,6 +8,7 @@ import frc.robot.RobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.ChoreoUtils;
@@ -51,13 +52,14 @@ public class AutoCommands {
     return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.STOWED);
   }
 
-  public static Command aimAndShoot(DriveSubsystem swerve, ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem) {
+  public static Command aimAndShoot(DriveSubsystem swerve, ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, IntakeSubsystem intake) {
     return DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> 0.0,
             () -> 0.0,
             () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
         )
+        .alongWith(intake.setIntakePower(IntakeSubsystem.Speed.INTAKE))
         .alongWith(shooterSubsystem.autoAim())
         .alongWith(
             Commands.waitSeconds(1.0)
