@@ -42,7 +42,7 @@ public class DriveConstants {
   public static final double MAX_ANGULAR_SPEED = (MAX_LINEAR_SPEED_MPS / DRIVE_BASE_RADIUS);
 
   // Wheel and gear ratios
-  public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(1.967);
+  public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.0);
   public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0);
   public static final double STEER_GEAR_RATIO = (50.0 / 14.0) * (60.0 / 10.0); // 18.75
 

@@ -16,8 +16,8 @@ public class VisionConstants {
       0.5, // 0.5, x-y standard deviation
       1.5, // 1.5, rotation standard deviation
       Units.Centimeters.of(21), // width of the april tag
-      0.55, // max ambiguity
-      Rotation2d.fromDegrees(70), // camera FOV
+      0.75, // max ambiguity
+      Rotation2d.fromDegrees(92), // camera FOV
       Units.Centimeters.of(805), //field width
       Units.Centimeters.of(1755), // field height
       Units.Centimeters.of(35)); // 15, z off the ground

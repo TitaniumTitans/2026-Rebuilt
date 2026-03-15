@@ -77,8 +77,8 @@ public class RobotContainer {
         );
 
         shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-//        intake = new IntakeSubsystem(new IntakeIOTalonFX());
-        intake = new IntakeSubsystem(new IntakeIO() {});
+        intake = new IntakeSubsystem(new IntakeIOTalonFX());
+//        intake = new IntakeSubsystem(new IntakeIO() {});
         feeder = new FeederSubsystem(new FeederIOTalonFX());
         vision = new VisionSubsystem(
             VisionConstants.FILTER_PARAMETERS,

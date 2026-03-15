@@ -27,6 +27,12 @@
           "data": {
             "pathName": "HPShoot"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
+          }
         }
       ]
     }

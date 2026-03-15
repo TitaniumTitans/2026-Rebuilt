@@ -34,17 +34,17 @@ public class IntakeConstants {
                     .withSupplyCurrentLimitEnable(true)
             );
 
-//    public static final TalonFXConfiguration INTAKE_CONFIG = PIVOT_CONFIG
-//        .withCurrentLimits(
-//            new CurrentLimitsConfigs()
-//                .withStatorCurrentLimit(Amps.of(80))
-//                .withStatorCurrentLimitEnable(true)
-//                .withSupplyCurrentLimit(Amps.of(60))
-//                .withSupplyCurrentLimitEnable(true)
-//        )
-//        .withMotorOutput(new MotorOutputConfigs()
-//            .withInverted(InvertedValue.Clockwise_Positive)
-//
-//        );
+    public static final TalonFXConfiguration INTAKE_CONFIG = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(Amps.of(80))
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimit(Amps.of(60))
+                .withSupplyCurrentLimitEnable(true)
+        )
+        .withMotorOutput(new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive)
+
+        );
 
 }

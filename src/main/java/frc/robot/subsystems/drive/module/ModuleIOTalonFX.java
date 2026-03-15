@@ -260,7 +260,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     motorConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     motorConfig.CurrentLimits.withStatorCurrentLimit(60);
     motorConfig.ClosedLoopGeneral.ContinuousWrap = true;
-    motorConfig.Slot0.withKP(80.0)
+    motorConfig.Slot0.withKP(100.0)
       .withKD(1.0)
       .withKS(0.0)
       .withKV(0.0);
