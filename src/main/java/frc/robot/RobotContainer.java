@@ -4,20 +4,20 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
@@ -41,6 +41,8 @@ import frc.robot.util.FieldConstants;
 
 import java.util.Set;
 
+import static edu.wpi.first.units.Units.*;
+
 /**
  * Container for robot subsystems, commands, and button bindings.
  * Instantiates subsystems based on robot mode (REAL/SIM/REPLAY).
@@ -58,6 +60,10 @@ public class RobotContainer {
 
   // Auto
 //  private final AutoSelector autoSelector;
+
+  private final Trigger matchTimeTrigger = new Trigger(() ->
+    isTimeNear(130) || isTimeNear(105) || isTimeNear(55) || isTimeNear(30)
+  );
 
   private final SendableChooser<Command> autoSelector;
 
@@ -149,6 +155,12 @@ public class RobotContainer {
    * Configures driver controller button bindings.
    */
   private void configureBindings() {
+//    matchTimeTrigger
+//        .whileTrue(Commands.runOnce(() -> driveController.setRumble(GenericHID.RumbleType.kBothRumble, 1.0))
+//            .andThen(Commands.print("Rumble!")))
+//        .whileFalse(Commands.runOnce(() -> driveController.setRumble(GenericHID.RumbleType.kBothRumble, 0.0))
+//            .andThen(Commands.print(" No Rumble 3:")));
+
     // Default drive command: joystick control
     swerve.setDefaultCommand(
       DriveCommands.joystickDrive(
@@ -312,4 +324,7 @@ public class RobotContainer {
     );
   }
 
+  private boolean isTimeNear(double seconds) {
+    return (seconds + 3) > DriverStation.getMatchTime() && DriverStation.getMatchTime() < (seconds - 3);
+  }
 }
