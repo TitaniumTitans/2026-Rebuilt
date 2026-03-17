@@ -61,7 +61,7 @@ public class AutoCommands {
         )
         .alongWith(shooterSubsystem.autoAim())
         .alongWith(
-            Commands.waitSeconds(1.0)
+            Commands.waitUntil(shooterSubsystem::flywheelAtRPM)
                 .andThen(feederSubsystem.runFeeder(Volts.of(12.0))
                     .alongWith(intake.agitateCommand())
                 )

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +32,12 @@ public class ShooterSubsystem extends SubsystemBase {
         // update all our input values from our hardware/sim
         m_io.updateInputs(m_inputs);
         Logger.processInputs("shooter", m_inputs);
+    }
+
+    public boolean flywheelAtRPM() {
+        return MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedL.in(RPM), 100)
+            && MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedM.in(RPM), 100)
+            && MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedR.in(RPM), 100);
     }
 
     // Commands are what get bound to buttons

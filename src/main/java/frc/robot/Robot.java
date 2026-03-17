@@ -11,7 +11,9 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.FieldConstants;
@@ -27,6 +29,8 @@ public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     
     private RobotContainer robotContainer;
+
+    private final String autoWinName = "Auto Winner";
     
     
     @Override
@@ -80,6 +84,7 @@ public class Robot extends LoggedRobot {
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         robotContainer = new RobotContainer();
+        SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
     }
     
     
@@ -133,6 +138,20 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null)
         {
             autonomousCommand.cancel();
+        }
+
+        String gameData = DriverStation.getGameSpecificMessage();
+        if (!gameData.isEmpty()) {
+            switch (gameData.charAt(0)) {
+                case 'B':
+                    SmartDashboard.putString(autoWinName, Color.kFirstRed.toHexString());
+                    break;
+                case 'R':
+                    SmartDashboard.putString(autoWinName, Color.kFirstBlue.toHexString());
+                    break;
+                default:
+                    SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
+            }
         }
     }
     

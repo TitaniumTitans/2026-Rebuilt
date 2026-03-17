@@ -18,6 +18,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.drive.DriveConstants;
 //import frc.robot.util.AllianceFlipUtil;
 //import frc.robot.util.FieldConstants;
@@ -98,6 +100,8 @@ public class RobotState {
   private InterpolatingDoubleTreeMap shooterHoodDistanceMap =
           new InterpolatingDoubleTreeMap();
 
+  private final Field2d robotField = new Field2d();
+
   public static class Shot {
     public final double shooterRPM;
     public final double hoodPosition;
@@ -165,6 +169,8 @@ public class RobotState {
     distanceToShotMap.put(Meters.of(3.8), new Shot(3650, 0.45));
     distanceToShotMap.put(Meters.of(4.8), new Shot(3850, 0.50));
     distanceToShotMap.put(Meters.of(5.2), new Shot(4250, 0.55));
+
+    SmartDashboard.putData("RobotState/Field2d", robotField);
   }
 
   public void updateVelocityPeriodic() {
@@ -173,6 +179,8 @@ public class RobotState {
         .minus(lastPose.getTranslation())
         .div(0.02); // loop cycle
     lastPose = getEstimatedPose();
+
+    robotField.setRobotPose(getEstimatedPose());
   }
 
   public void resetPose(Pose2d pose) {

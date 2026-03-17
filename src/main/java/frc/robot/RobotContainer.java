@@ -147,7 +147,11 @@ public class RobotContainer {
     configureDashboardCommands();
     configureNameCommands();
 
-    autoSelector = AutoBuilder.buildAutoChooser();
+    boolean isComp = true;
+
+    autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier((stream) -> isComp
+        ? stream.filter(auto -> auto.getName().endsWith("Comp"))
+        : stream);
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
 
@@ -235,7 +239,7 @@ public class RobotContainer {
 //    );
 
     driveController.povDown().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoTraj.CenterToHP.endPoseBlue()))
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
     );
 
     driveController.povUp().whileTrue(
@@ -245,7 +249,7 @@ public class RobotContainer {
         swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
     );
     driveController.povLeft().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.LeftStart))
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
     );
   }
 
