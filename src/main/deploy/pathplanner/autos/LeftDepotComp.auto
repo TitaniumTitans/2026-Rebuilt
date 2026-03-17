@@ -11,28 +11,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LeftDepot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "lowerIntake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              }
-            ]
+            "pathName": "LeftDepot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "lowerIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "runIntake"
           }
         },
         {

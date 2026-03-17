@@ -11,6 +11,7 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ChoreoUtils;
 import frc.robot.util.FieldConstants;
 import org.json.simple.parser.ParseException;
@@ -57,7 +58,7 @@ public class AutoCommands {
             swerve,
             () -> 0.0,
             () -> 0.0,
-            () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
+            () -> RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint))
         )
         .alongWith(shooterSubsystem.autoAim())
         .alongWith(

@@ -159,18 +159,20 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // Process odometry measurements
-    double[] timestamps = modules[0].getOdometryTimestamps();
-    int timestampLength = Math.min(timestamps.length, gyroInputs.odometryYawTimestamps.length);
-    for (int i = 0; i < timestampLength; i++) {
-      SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
-      for (int j = 0; j < 4; j++) {
-        wheelPositions[j] = modules[j].getOdometryPositions()[i];
-      }
-      RobotState.getInstance()
-        .addOdometryMeasurement(gyroInputs.odometryYawPositions[i],
-          wheelPositions,
-          timestamps[i]);
-    }
+//    double[] timestamps = modules[0].getOdometryTimestamps();
+//    int timestampLength = Math.min(timestamps.length, gyroInputs.odometryYawTimestamps.length);
+//    for (int i = 0; i < timestampLength; i++) {
+//      SwerveModulePosition[] wheelPositions = new SwerveModulePosition[4];
+//      for (int j = 0; j < 4; j++) {
+//        wheelPositions[j] = modules[j].getOdometryPositions()[i];
+//      }
+//      RobotState.getInstance()
+//        .addOdometryMeasurement(gyroInputs.odometryYawPositions[i],
+//          wheelPositions,
+//          timestamps[i]);
+//    }
+
+    RobotState.getInstance().addOdometryMeasurement(gyroInputs.yawPosition, getModulePositions(), Logger.getTimestamp());
 
     // Update WPILib odometry
     wpiOdom.update(getGyroRotation(), getModulePositions());

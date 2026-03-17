@@ -28,6 +28,7 @@ import frc.robot.subsystems.drive.DriveConstants;
 //import org.dyn4j.geometry.Vector2;
 //import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 //import org.ironmaple.utils.mathutils.GeometryConvertor;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.AutoLogOutputManager;
@@ -232,13 +233,13 @@ public class RobotState {
   /** Gets the distance to the hub shooter */
   @AutoLogOutput(key = "RobotState/DistanceToGoalMeters")
   public double getDistanceToHubMeters() {
-    return FieldConstants.Hub.goalPoint
+    return AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)
         .getDistance(getEstimatedPose().getTranslation());
   }
 
   /** Gets the angle from the robot to a certain point on the field. Used for auto aim */
-  public Rotation2d getPointAtAngle(Translation2d point) {
-    Translation2d robotToPoint = point.minus(getEstimatedPose().getTranslation());
+  public Rotation2d getPointAtAngle(Supplier<Translation2d> point) {
+    Translation2d robotToPoint = point.get().minus(getEstimatedPose().getTranslation());
     Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
     Logger.recordOutput("RobotState/AngleToPoint", angleToPoint);
     return angleToPoint;

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -93,7 +94,7 @@ public class Robot extends LoggedRobot {
     {
         CommandScheduler.getInstance().run();
         RobotState.getInstance().updateVelocityPeriodic();
-        RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint);
+        RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)) ;
         RobotState.getInstance().getShootOnMoveShotData();
 
 //        Logger.recordOutput("Current Commands", CommandScheduler.);

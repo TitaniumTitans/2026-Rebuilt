@@ -220,7 +220,7 @@ public class RobotContainer {
             swerve,
             () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
-            () -> RobotState.getInstance().getPointAtAngle(FieldConstants.Hub.goalPoint)
+            () -> RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint))
         ).alongWith(shooter.autoAim())
     );
 
