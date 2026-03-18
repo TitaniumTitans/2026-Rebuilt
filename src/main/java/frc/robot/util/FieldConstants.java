@@ -110,7 +110,7 @@ public class FieldConstants {
                         innerHeight);
 
         public static final Translation2d goalPoint =
-            new Translation2d(Inches.of(182.105), Inches.of(158.845));
+            new Translation2d(Inches.of(182.105 + 5.0), Inches.of(158.845));
         static {
             Logger.recordOutput("FieldConstants/Goal", goalPoint);
         }

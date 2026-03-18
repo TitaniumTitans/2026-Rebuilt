@@ -176,10 +176,10 @@ public class RobotContainer {
     );
 
     // Default vision command: feed vision updates to pose estimator
-//    vision.setDefaultCommand(
-//        vision.processVision(RobotState.getInstance()::getEstimatedPose)
-//            .ignoringDisable(true)
-//    );
+    vision.setDefaultCommand(
+        vision.processVision(RobotState.getInstance()::getEstimatedPose)
+            .ignoringDisable(true)
+    );
 
     shooter.setDefaultCommand(shooter.shooterAutoHood());
 
@@ -215,7 +215,7 @@ public class RobotContainer {
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
 
     // Right trigger: auto aim
-    driveController.rightTrigger().whileTrue(
+    driveController.rightTrigger().and(driveController.leftTrigger().negate()).whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> -driveController.getLeftY(),
@@ -227,6 +227,9 @@ public class RobotContainer {
     // force feed
     driveController.b().and(driveController.rightTrigger().or(driveController.a()))
         .whileTrue(intake.agitateCommand());
+
+    driveController.leftTrigger().and(driveController.rightTrigger())
+        .whileTrue(Commands.run(swerve::stopWithX).alongWith(shooter.autoAim()));
 
     // Right trigger: shoot on move
 //    driveController.rightTrigger().whileTrue(

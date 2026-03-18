@@ -11,45 +11,33 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "lowerIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "runIntake"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "LeftDepot"
+            "pathName": "AltRightToHP"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopIntake"
+            "waitTime": 2.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "DepotScore"
+            "pathName": "HPShoot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "aimAndShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightScoreSend"
           }
         }
       ]

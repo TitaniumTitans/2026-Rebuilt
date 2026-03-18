@@ -104,8 +104,8 @@ public class DriveSubsystem extends SubsystemBase {
         this::getChassisSpeeds,
         (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
         new PPHolonomicDriveController(
-            new PIDConstants(4.0, 0.0),
-            new PIDConstants(4.0, 0.0)
+            new PIDConstants(5.0, 0.0),
+            new PIDConstants(5.0, 0.0)
         ),
         ROBOT_CONFIG,
         () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
@@ -225,6 +225,15 @@ public class DriveSubsystem extends SubsystemBase {
   /** Stops all module motion. */
   public void stop() {
     runVelocity(new ChassisSpeeds());
+  }
+
+  public void stopWithX() {
+    Rotation2d[] headings = new Rotation2d[4];
+    for (int i = 0; i < 4; i++) {
+      headings[i] = DriveConstants.MODULE_TRANSLATIONS[i].getAngle();
+    }
+    kinematics.resetHeadings(headings);
+    stop();
   }
 
   /** Returns the current measured state of all modules. */
