@@ -149,7 +149,7 @@ public class RobotContainer {
 
     boolean isComp = true;
 
-    autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier((stream) -> isComp
+    autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
         : stream);
     SmartDashboard.putData("Auto Chooser", autoSelector);
@@ -176,10 +176,10 @@ public class RobotContainer {
     );
 
     // Default vision command: feed vision updates to pose estimator
-    vision.setDefaultCommand(
-        vision.processVision(RobotState.getInstance()::getEstimatedPose)
-            .ignoringDisable(true)
-    );
+//    vision.setDefaultCommand(
+//        vision.processVision(RobotState.getInstance()::getEstimatedPose)
+//            .ignoringDisable(true)
+//    );
 
     shooter.setDefaultCommand(shooter.shooterAutoHood());
 

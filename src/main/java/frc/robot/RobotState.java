@@ -200,6 +200,12 @@ public class RobotState {
     poseEstimator.updateWithTime(timestamp, heading, modulePositions);
   }
 
+  public void addNormalMeasurement(Rotation2d heading, SwerveModulePosition[] modulePositions) {
+    lastRawGyro = heading;
+    lastWheelPositions = modulePositions;
+    poseEstimator.update(heading, modulePositions);
+  }
+
   public void addVisionMeasurement(VisionObservation update) {
     poseEstimator.addVisionMeasurement(update.visionPose, update.timestamp, update.stdDevs);
   }
