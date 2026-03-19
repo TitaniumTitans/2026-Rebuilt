@@ -180,7 +180,7 @@ public class RobotContainer {
         vision.processVision(RobotState.getInstance()::getEstimatedPose)
             .ignoringDisable(true)
     );
-
+    
     shooter.setDefaultCommand(shooter.shooterAutoHood());
 
     // Start button: reset robot pose to origin
