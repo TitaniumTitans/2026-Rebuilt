@@ -22,7 +22,7 @@ public class ShooterConstants {
             .withCurrentLimits(new CurrentLimitsConfigs()
                     .withSupplyCurrentLimit(60)
                     .withSupplyCurrentLimitEnable(true)
-                    .withStatorCurrentLimit(100)
+                    .withStatorCurrentLimit(120)
                     .withStatorCurrentLimitEnable(true))
             .withMotorOutput(new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Coast))

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
@@ -38,6 +39,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
+import frc.robot.util.HubShiftUtil;
 
 import java.util.Set;
 
@@ -159,6 +161,14 @@ public class RobotContainer {
    * Configures driver controller button bindings.
    */
   private void configureBindings() {
+    // Reset hub shift timer when enabling
+    RobotModeTriggers.teleop().onTrue(Commands.runOnce(HubShiftUtil::initialize));
+    RobotModeTriggers.autonomous().onTrue(Commands.runOnce(HubShiftUtil::initialize));
+    RobotModeTriggers.disabled()
+        .onTrue(Commands.runOnce(HubShiftUtil::initialize).ignoringDisable(true));
+
+    //
+
 //    matchTimeTrigger
 //        .whileTrue(Commands.runOnce(() -> driveController.setRumble(GenericHID.RumbleType.kBothRumble, 1.0))
 //            .andThen(Commands.print("Rumble!")))
@@ -193,7 +203,7 @@ public class RobotContainer {
 
     // A button: run shooter at dashboard RPM
     driveController.a().whileTrue(
-        shooter.setHoodPosition(1.0)
+        shooter.setHoodPosition(0.8)
             .andThen(shooter.runShooterRPM(RPM.of(3750)))
     ).onFalse(
         shooter.setHoodPosition(0.0)
@@ -245,14 +255,19 @@ public class RobotContainer {
         swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
     );
 
-    driveController.povUp().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
-    );
-    driveController.povRight().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
-    );
-    driveController.povLeft().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
+//    driveController.povUp().whileTrue(
+//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
+//    );
+//    driveController.povRight().whileTrue(
+//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
+//    );
+//    driveController.povLeft().whileTrue(
+//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
+//    );
+
+    driveController.povDown().whileTrue(
+        feeder.runFeeder(Volts.of(-12.0))
+            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
     );
   }
 
@@ -333,5 +348,21 @@ public class RobotContainer {
 
   private boolean isTimeNear(double seconds) {
     return (seconds + 3) > DriverStation.getMatchTime() && DriverStation.getMatchTime() < (seconds - 3);
+  }
+
+  public void updateDashboardOutputs() {
+    // Publish match time
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+
+    // Update from HubShiftUtil
+    SmartDashboard.putString(
+        "Shifts/Remaining Shift Time",
+        String.format("%.1f", Math.max(HubShiftUtil.getShiftedShiftInfo().remainingTime(), 0.0)));
+    SmartDashboard.putBoolean("Shifts/Shift Active", HubShiftUtil.getShiftedShiftInfo().active());
+    SmartDashboard.putString(
+        "Shifts/Game State", HubShiftUtil.getShiftedShiftInfo().currentShift().toString());
+    SmartDashboard.putBoolean(
+        "Shifts/Active First?",
+        DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
   }
 }

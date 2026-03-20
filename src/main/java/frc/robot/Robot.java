@@ -97,6 +97,8 @@ public class Robot extends LoggedRobot {
         RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)) ;
         RobotState.getInstance().getShootOnMoveShotData();
 
+        robotContainer.updateDashboardOutputs();
+
 //        Logger.recordOutput("Current Commands", CommandScheduler.);
     }
     
