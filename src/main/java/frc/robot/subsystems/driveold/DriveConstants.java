@@ -1,11 +1,10 @@
-package frc.robot.subsystems.drive;
+package frc.robot.subsystems.driveold;
 
 //import com.pathplanner.lib.config.ModuleConfig;
 //import com.pathplanner.lib.config.RobotConfig;
 //import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -16,7 +15,6 @@ import lombok.Builder;
 //import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 //import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
-import static edu.wpi.first.units.Units.*;
 
 public class DriveConstants {
   public static final double ODOMETRY_FREQUENCY = 250;

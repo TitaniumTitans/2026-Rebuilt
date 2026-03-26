@@ -4,36 +4,23 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.subsystems.driveold.DriveConstants;
 //import frc.robot.util.AllianceFlipUtil;
 //import frc.robot.util.FieldConstants;
 //import frc.robot.util.FieldRelativeSpeeds;
-import lombok.Getter;
-import lombok.Setter;
 //import org.dyn4j.geometry.Polygon;
 //import org.dyn4j.geometry.Vector2;
 //import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 //import org.ironmaple.utils.mathutils.GeometryConvertor;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.AutoLogOutputManager;
-import org.littletonrobotics.junction.Logger;
 //import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static edu.wpi.first.units.Units.Centimeters;
-import static edu.wpi.first.units.Units.Inches;
 
 public class RobotState {
 

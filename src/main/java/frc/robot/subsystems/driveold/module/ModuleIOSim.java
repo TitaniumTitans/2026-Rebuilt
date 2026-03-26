@@ -11,19 +11,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.drive.module;
+package frc.robot.subsystems.driveold.module;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.LinearAcceleration;
 //import frc.robot.util.PhoenixUtil;
 //import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 //import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
-import java.util.Arrays;
-
-import static edu.wpi.first.units.Units.*;
 
 /**
  * Physics sim implementation of module IO. The sim models are configured using a set of module constants from Phoenix.

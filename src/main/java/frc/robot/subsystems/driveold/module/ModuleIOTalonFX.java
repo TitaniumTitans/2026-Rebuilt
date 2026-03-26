@@ -1,11 +1,10 @@
-package frc.robot.subsystems.drive.module;
+package frc.robot.subsystems.driveold.module;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -14,14 +13,12 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.LinearAccelerationUnit;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.drive.PhoenixOdometryThread;
+import frc.robot.subsystems.driveold.DriveConstants;
+import frc.robot.subsystems.driveold.PhoenixOdometryThread;
 
 import java.util.Queue;
 
