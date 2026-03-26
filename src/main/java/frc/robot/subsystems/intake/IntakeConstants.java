@@ -14,7 +14,7 @@ public class IntakeConstants {
 
     public static final double PIVOT_GEAR_RATIO = 50;
     // 6000 RPM
-    public static final AngularVelocity PIVOT_MAX_SPEED = RPM.of(1500).div(PIVOT_GEAR_RATIO);
+    public static final AngularVelocity PIVOT_MAX_SPEED = RPM.of(5800).div(PIVOT_GEAR_RATIO);
 
     public static final TalonFXConfiguration PIVOT_CONFIG = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs()
@@ -27,10 +27,24 @@ public class IntakeConstants {
                     .withSensorToMechanismRatio(PIVOT_GEAR_RATIO)
                     .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor))
             .withCurrentLimits(
-                    new CurrentLimitsConfigs()
-                            .withStatorCurrentLimit(Amps.of(120))
-                            .withStatorCurrentLimitEnable(true)
-                            .withSupplyCurrentLimit(Amps.of(70))
-                            .withSupplyCurrentLimitEnable(true)
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(70)
+                    .withSupplyCurrentLimitEnable(true)
             );
+
+    public static final TalonFXConfiguration INTAKE_CONFIG = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(Amps.of(80))
+                .withStatorCurrentLimitEnable(true)
+                .withSupplyCurrentLimit(Amps.of(60))
+                .withSupplyCurrentLimitEnable(true)
+        )
+        .withMotorOutput(new MotorOutputConfigs()
+            .withInverted(InvertedValue.Clockwise_Positive)
+
+        );
+
 }

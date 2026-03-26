@@ -5,11 +5,19 @@
 
 package frc.robot;
 
+import au.grapplerobotics.CanBridge;
 import com.gos.lib.properties.PropertyManager;
-import edu.wpi.first.wpilibj.TimedRobot;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.littletonrobotics.junction.AutoLogOutputManager;
+import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -22,10 +30,13 @@ public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     
     private RobotContainer robotContainer;
+
+    private final String autoWinName = "Auto Winner";
     
     
     @Override
     public void robotInit() {
+        CanBridge.runTCP();
         PropertyManager.purgeExtraKeys();
 
         // Record metadata
@@ -68,8 +79,13 @@ public class Robot extends LoggedRobot {
         Logger.start();
 
         RobotState.getInstance();
+        Pathfinding.setPathfinder(new LocalADStar());
+        CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+
+        SmartDashboard.putData(CommandScheduler.getInstance());
 
         robotContainer = new RobotContainer();
+        SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
     }
     
     
@@ -77,6 +93,13 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
+        RobotState.getInstance().updateVelocityPeriodic();
+        RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)) ;
+        RobotState.getInstance().getShootOnMoveShotData();
+
+        robotContainer.updateDashboardOutputs();
+
+//        Logger.recordOutput("Current Commands", CommandScheduler.);
     }
     
     
@@ -118,6 +141,20 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null)
         {
             autonomousCommand.cancel();
+        }
+
+        String gameData = DriverStation.getGameSpecificMessage();
+        if (!gameData.isEmpty()) {
+            switch (gameData.charAt(0)) {
+                case 'B':
+                    SmartDashboard.putString(autoWinName, Color.kFirstRed.toHexString());
+                    break;
+                case 'R':
+                    SmartDashboard.putString(autoWinName, Color.kFirstBlue.toHexString());
+                    break;
+                default:
+                    SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
+            }
         }
     }
     

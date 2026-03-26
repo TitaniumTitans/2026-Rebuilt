@@ -54,6 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(IntakeIO io) {
         m_io = io;
+        m_io.resetPivotAngle(Position.HOMED.angle());
     }
 
     @Override
@@ -74,6 +75,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return runOnce(() -> m_io.setPivotAngle(position.angle()));
     }
 
+    public Command setIntakePower(Speed speed) {
+        return runOnce(() -> m_io.setIntakeVoltage(speed.voltage()));
+    }
+
     // runs the standard intake procedure
     public Command intake() {
         return startEnd(
@@ -83,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
                 },
                 () -> {
                     m_io.setIntakeVoltage(Speed.STOP.voltage());
-                    m_io.setPivotAngle(Position.AGITATE.angle());
+                    m_io.setPivotAngle(Position.INTAKE.angle());
                 }
         );
     }
@@ -101,5 +106,20 @@ public class IntakeSubsystem extends SubsystemBase {
                 )
 //                .unless(() -> isHomed)
                 .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
+    }
+
+    public Command agitateCommand() {
+        return setIntakePower(Speed.INTAKE)
+            .andThen(
+            Commands.repeatingSequence(
+                setPivotPosition(Position.AGITATE),
+                Commands.waitSeconds(0.25),
+                setPivotPosition(Position.INTAKE),
+                Commands.waitSeconds(0.25)
+            )
+        ).finallyDo(() -> {
+            m_io.setIntakeVoltage(Volts.of(0.0));
+            m_io.setPivotAngle(Position.INTAKE.angle());
+        });
     }
 }
