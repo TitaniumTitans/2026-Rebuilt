@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftBumpSend"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftFuelCenterZone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftBumpReturn"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": true
+}

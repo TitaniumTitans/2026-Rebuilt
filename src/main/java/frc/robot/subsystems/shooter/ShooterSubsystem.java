@@ -1,9 +1,13 @@
 package frc.robot.subsystems.shooter;
 
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+import frc.robot.util.FieldConstants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -30,6 +34,12 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.processInputs("shooter", m_inputs);
     }
 
+    public boolean flywheelAtRPM() {
+        return MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedL.in(RPM), 100)
+            && MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedM.in(RPM), 100)
+            && MathUtil.isNear(RobotState.getInstance().getShooterRPM(), m_inputs.shooterSpeedR.in(RPM), 100);
+    }
+
     // Commands are what get bound to buttons
     // They use lambas, essentially using a function as data
     public Command setShooterVoltage(Voltage voltage) {
@@ -41,6 +51,13 @@ public class ShooterSubsystem extends SubsystemBase {
         );
     }
 
+    public Command runShooterRPM(AngularVelocity rpm) {
+        return runEnd(
+            () -> m_io.setShooterRPM(rpm),
+            () -> m_io.setShooterVoltage(Volts.of(0.0))
+        ).withName("Run Shooter RPM");
+    }
+
     public Command runDashboardRPM() {
         return runEnd(
                 () -> m_io.setShooterRPM(RPM.of(shooterSpeed.getAsDouble())),
@@ -50,6 +67,41 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command setHoodPosition(double position) {
         return runOnce(() -> m_io.setHoodDistance(position)).withName("Hood Position");
+    }
+
+    public Command autoAim() {
+        return runEnd(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShooterRPM()));
+                m_io.setHoodDistance(RobotState.getInstance().getHoodAngle());
+            },
+            () -> {
+                m_io.setShooterVoltage(Volts.of(0.0));
+                m_io.setHoodDistance(0.1);
+            }).withName("Shooter Auto Aim");
+    }
+
+    public Command autoAimOnMove() {
+        return runEnd(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShootOnMoveShotData().shot().shooterRPM));
+                m_io.setHoodDistance(RobotState.getInstance().getShootOnMoveShotData().shot().hoodPosition);
+            },
+            () -> {
+                m_io.setShooterVoltage(Volts.of(0.0));
+                m_io.setHoodDistance(0.1);
+            }).withName("Shooter Auto Aim");
+    }
+
+    public Command shooterAutoHood() {
+        return run(() -> {
+            if ((RobotState.getInstance().getEstimatedPose().getX() > FieldConstants.LinesVertical.neutralZoneNear) &&
+                (RobotState.getInstance().getEstimatedPose().getX() < FieldConstants.LinesVertical.neutralZoneFar)) {
+                m_io.setHoodDistance(0.8);
+            } else {
+                m_io.setHoodDistance(0.1);
+            }
+        });
     }
 }
 
