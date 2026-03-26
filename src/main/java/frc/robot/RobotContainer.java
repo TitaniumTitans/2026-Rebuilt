@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -74,6 +75,8 @@ public class RobotContainer {
    * Initializes subsystems based on the robot mode and configures bindings.
    */
   public RobotContainer() {
+
+    StatusLogger.disableAutoLogging();
     // Initialize subsystems based on robot mode
     switch (Constants.getMode()) {
       case REAL -> {
@@ -213,7 +216,8 @@ public class RobotContainer {
     driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
 
     // X button: home the intake
-    driveController.x().onTrue(intake.homingCommand());
+    driveController.povUp
+        ().onTrue(intake.homingCommand());
 
     // Y button: agitate intake
     driveController.y().whileTrue(intake.agitateCommand());
@@ -234,8 +238,14 @@ public class RobotContainer {
         ).alongWith(shooter.autoAim())
     );
 
+    // Left Trigger: static shot
+    driveController.x().whileTrue(
+        shooter.setHoodPosition(0.1)
+            .andThen(shooter.runDashboardRPM())
+    );
+
     // force feed
-    driveController.b().and(driveController.rightTrigger().or(driveController.a()))
+    driveController.b().and(driveController.rightTrigger().or(driveController.a()).or(driveController.x()))
         .whileTrue(intake.agitateCommand());
 
     driveController.leftTrigger().and(driveController.rightTrigger())
@@ -251,9 +261,9 @@ public class RobotContainer {
 //        ).alongWith(shooter.autoAimOnMove())
 //    );
 
-    driveController.povDown().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
-    );
+//    driveController.povDown().whileTrue(
+//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
+//    );
 
 //    driveController.povUp().whileTrue(
 //        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
