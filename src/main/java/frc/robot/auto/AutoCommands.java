@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotState;
 import frc.robot.commands.DriveCommands;
-import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -30,9 +30,9 @@ public class AutoCommands {
     }
   }
 
-  public static Command resetPoseAndFollowChoreoPath(DriveSubsystem drive, String name) {
+  public static Command resetPoseAndFollowChoreoPath(Drive drive, String name) {
     return Commands.sequence(
-        drive.resetPoseFactory(ChoreoUtils.getPathStartingPose(name).getPose()),
+        Commands.runOnce(() -> drive.setPose(ChoreoUtils.getPathStartingPose(name).getPose())),
         followChoreoPath(name)
     );
   }
@@ -53,7 +53,7 @@ public class AutoCommands {
     return intakeSubsystem.setPivotPosition(IntakeSubsystem.Position.STOWED);
   }
 
-  public static Command aimAndShoot(DriveSubsystem swerve, ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, IntakeSubsystem intake) {
+  public static Command aimAndShoot(Drive swerve, ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, IntakeSubsystem intake) {
     return DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> 0.0,

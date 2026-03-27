@@ -25,9 +25,8 @@ import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.ChoreoTraj;
 import frc.robot.generated.ChoreoVars;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.*;
-import frc.robot.subsystems.drive.module.ModuleIO;
-import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOTalonFX;
 import frc.robot.subsystems.feeder.FeederSubsystem;
@@ -54,91 +53,61 @@ public class RobotContainer {
   // Driver controller
   private final CommandXboxController driveController = new CommandXboxController(0);
 
-  // Subsystems
-  private final DriveSubsystem swerve;
-  private final ShooterSubsystem shooter;
-  private final IntakeSubsystem intake;
-  private final FeederSubsystem feeder;
-  private final VisionSubsystem vision;
+    private final Drive swerve;
+    private final ShooterSubsystem shooter;
+    private final IntakeSubsystem intake;
+    private final FeederSubsystem feeder;
+    private final VisionSubsystem vision;
+    private final SendableChooser<Command> autoSelector;
 
-  // Auto
-//  private final AutoSelector autoSelector;
+    public RobotContainer()
+    {
+        switch (Constants.getMode()) {
+          case REAL -> {
+              swerve = new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                  new ModuleIOTalonFX(TunerConstants.FrontRight),
+                  new ModuleIOTalonFX(TunerConstants.BackLeft),
+                  new ModuleIOTalonFX(TunerConstants.BackRight)
+              );
 
-  private final Trigger matchTimeTrigger = new Trigger(() ->
-    isTimeNear(130) || isTimeNear(105) || isTimeNear(55) || isTimeNear(30)
-  );
+              shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+              intake = new IntakeSubsystem(new IntakeIOTalonFX());
+              feeder = new FeederSubsystem(new FeederIOTalonFX());
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                  new VisionIOPhotonReal(
+                      "ShooterLeft",
+                      VisionConstants.LEFT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout()));
+          }
+          case SIM -> {
+              swerve = new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {}
+              );
 
-  private final SendableChooser<Command> autoSelector;
-
-  /**
-   * Constructs the robot container.
-   * Initializes subsystems based on the robot mode and configures bindings.
-   */
-  public RobotContainer() {
-
-    StatusLogger.disableAutoLogging();
-    // Initialize subsystems based on robot mode
-    switch (Constants.getMode()) {
-      case REAL -> {
-        // Real robot hardware
-        swerve = new DriveSubsystem(
-          new GyroIOPigeon2(),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[0]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[1]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[2]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[3])
-        );
-
-        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-        intake = new IntakeSubsystem(new IntakeIOTalonFX());
-//        intake = new IntakeSubsystem(new IntakeIO() {});
-        feeder = new FeederSubsystem(new FeederIOTalonFX());
-        vision = new VisionSubsystem(
-            VisionConstants.FILTER_PARAMETERS,
-            new VisionIOPhotonReal(
-                "Shooter Left",
-                VisionConstants.LEFT_CAMERA_TRANSFORM,
-                FieldConstants.defaultAprilTagType.getLayout()
-            ),
-            new VisionIOPhotonReal(
-                "Shooter Right",
-                VisionConstants.RIGHT_CAMERA_TRANSFORM,
-                FieldConstants.defaultAprilTagType.getLayout()
-            )
-        );
-      }
-      case SIM -> {
-        // Simulated hardware
-        swerve = new DriveSubsystem(
-          new GyroIOSim(),
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {}
-        );
-
-        shooter = new ShooterSubsystem(new ShooterIO() {});
-        intake = new IntakeSubsystem(new IntakeIO() {});
-        feeder = new FeederSubsystem(new FeederIO() {});
-        vision = new VisionSubsystem(
-          VisionConstants.FILTER_PARAMETERS,
-          new VisionIOPhotonSimulation(
-            "Shooter left",
-            VisionConstants.LEFT_CAMERA_TRANSFORM,
-            FieldConstants.defaultAprilTagType.getLayout(),
-            VisionConstants.SIM_CAMERA_PROPERTIES
-          )
-        );
-      }
-      case REPLAY -> {
-        // Log replay mode (no hardware)
-        swerve = new DriveSubsystem(
-          new GyroIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {}
-        );
+              shooter = new ShooterSubsystem(new ShooterIO() {});
+              intake = new IntakeSubsystem(new IntakeIO() {});
+              feeder = new FeederSubsystem(new FeederIO() {});
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                  new VisionIOPhotonSimulation(
+                      "LeftShooter",
+                      VisionConstants.LEFT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout(),
+                      VisionConstants.SIM_CAMERA_PROPERTIES));
+          }
+          case REPLAY -> {
+              swerve = new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {}
+              );
 
         shooter = new ShooterSubsystem(new ShooterIO() {});
         intake = new IntakeSubsystem(new IntakeIO() {});
@@ -193,12 +162,12 @@ public class RobotContainer {
         vision.processVision(RobotState.getInstance()::getEstimatedPose)
             .ignoringDisable(true)
     );
-    
+
     shooter.setDefaultCommand(shooter.shooterAutoHood());
 
     // Start button: reset robot pose to origin
     driveController.start().onTrue(
-      Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
+      Commands.runOnce(() -> swerve.setPose(new Pose2d()))
     );
 
 //      driveController.povUp().onTrue(shooter.setHoodPosition(0.3));
