@@ -34,6 +34,7 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -42,6 +43,7 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
 import frc.robot.util.HubShiftUtil;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.wpi.first.units.Units.*;
@@ -59,6 +61,7 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final FeederSubsystem feeder;
     private final VisionSubsystem vision;
+    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("Front");
     private final SendableChooser<Command> autoSelector;
 
     public RobotContainer()
@@ -355,5 +358,20 @@ public class RobotContainer {
     SmartDashboard.putBoolean(
         "Shifts/Active First?",
         DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
+  }
+
+  private Command updateVisionCommand() {
+    return frontLimelight.run(() -> {
+          final Pose2d currentRobotPose = RobotState.getInstance().getEstimatedPose();
+          final Optional<LimelightSubsystem.Measurement> measurement = frontLimelight.getMeasurement(currentRobotPose);
+          measurement.ifPresent(m -> {
+            swerve.addVisionMeasurement(
+                m.poseEstimate.pose,
+                m.poseEstimate.timestampSeconds,
+                m.standardDeviations
+            );
+          });
+        })
+        .ignoringDisable(true);
   }
 }
