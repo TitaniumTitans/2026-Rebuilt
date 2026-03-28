@@ -61,7 +61,7 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final FeederSubsystem feeder;
     private final VisionSubsystem vision;
-    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("Front");
+    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("limelight-front");
     private final SendableChooser<Command> autoSelector;
 
     public RobotContainer()
@@ -147,6 +147,8 @@ public class RobotContainer {
     RobotModeTriggers.autonomous().onTrue(Commands.runOnce(HubShiftUtil::initialize));
     RobotModeTriggers.disabled()
         .onTrue(Commands.runOnce(HubShiftUtil::initialize).ignoringDisable(true));
+
+    frontLimelight.setDefaultCommand(updateVisionCommand());
 
     //
 
@@ -365,10 +367,12 @@ public class RobotContainer {
           final Pose2d currentRobotPose = RobotState.getInstance().getEstimatedPose();
           final Optional<LimelightSubsystem.Measurement> measurement = frontLimelight.getMeasurement(currentRobotPose);
           measurement.ifPresent(m -> {
-            swerve.addVisionMeasurement(
+            RobotState.getInstance().addVisionMeasurement(
+                new RobotState.VisionObservation(
                 m.poseEstimate.pose,
                 m.poseEstimate.timestampSeconds,
                 m.standardDeviations
+                )
             );
           });
         })
