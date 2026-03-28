@@ -121,7 +121,7 @@ public class DriveCommands {
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
-          Rotation2d rotation = drive.getRotation();
+          Rotation2d rotation = RobotState.getInstance().getRotation();
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   speeds, isFlipped ? rotation.plus(new Rotation2d(Math.PI)) : rotation));

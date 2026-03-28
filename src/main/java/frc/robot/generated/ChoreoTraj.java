@@ -150,19 +150,19 @@ public record ChoreoTraj(
         new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708)),
         new Pose2d(2.70733, 2.51324, Rotation2d.fromRadians(0.67021))
     );
-    public static final ChoreoTraj RightToHP = new ChoreoTraj(
-        "RightToHP",
-        OptionalInt.empty(),
-        2.59149,
-        new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(0.66752, 0.75788, Rotation2d.fromRadians(3.14159))
-    );
     public static final ChoreoTraj RightScoreSend = new ChoreoTraj(
         "RightScoreSend",
         OptionalInt.empty(),
         3.16789,
         new Pose2d(1.9126, 2.25779, Rotation2d.fromRadians(0.58679)),
         new Pose2d(6.7091, 2.61227, Rotation2d.fromRadians(0.7854))
+    );
+    public static final ChoreoTraj RightToHP = new ChoreoTraj(
+        "RightToHP",
+        OptionalInt.empty(),
+        2.59149,
+        new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(0.66752, 0.75788, Rotation2d.fromRadians(3.14159))
     );
 
     /**
@@ -188,8 +188,8 @@ public record ChoreoTraj(
         Map.entry("RightBumpSend", RightBumpSend),
         Map.entry("RightFuelCenterZone", RightFuelCenterZone),
         Map.entry("RightScore", RightScore),
-        Map.entry("RightToHP", RightToHP),
-        Map.entry("RightScoreSend", RightScoreSend)
+        Map.entry("RightScoreSend", RightScoreSend),
+        Map.entry("RightToHP", RightToHP)
     );
 
     /**

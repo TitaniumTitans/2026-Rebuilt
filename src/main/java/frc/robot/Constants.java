@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.RobotBase;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -22,6 +23,7 @@ public final class Constants {
     REPLAY
   }
 
+  @AutoLogOutput(key = "RobotMode")
   public static Mode getMode() {
     if (RobotBase.isReal()) {
       return Mode.REAL;

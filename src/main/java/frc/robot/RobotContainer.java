@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -77,17 +78,22 @@ public class RobotContainer {
               feeder = new FeederSubsystem(new FeederIOTalonFX());
               vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
                   new VisionIOPhotonReal(
-                      "ShooterLeft",
+                      "LeftCamera",
                       VisionConstants.LEFT_CAMERA_TRANSFORM,
-                      FieldConstants.defaultAprilTagType.getLayout()));
+                      FieldConstants.defaultAprilTagType.getLayout()),
+                  new VisionIOPhotonReal(
+                      "RightCamera",
+                      VisionConstants.RIGHT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout())
+              );
           }
           case SIM -> {
               swerve = new Drive(
                   new GyroIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {}
+                  new ModuleIOSim(TunerConstants.FrontLeft),
+                  new ModuleIOSim(TunerConstants.FrontRight),
+                  new ModuleIOSim(TunerConstants.BackLeft),
+                  new ModuleIOSim(TunerConstants.BackRight)
               );
 
               shooter = new ShooterSubsystem(new ShooterIO() {});
@@ -95,7 +101,7 @@ public class RobotContainer {
               feeder = new FeederSubsystem(new FeederIO() {});
               vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
                   new VisionIOPhotonSimulation(
-                      "LeftShooter",
+                      "LeftCamera",
                       VisionConstants.LEFT_CAMERA_TRANSFORM,
                       FieldConstants.defaultAprilTagType.getLayout(),
                       VisionConstants.SIM_CAMERA_PROPERTIES));
@@ -121,7 +127,7 @@ public class RobotContainer {
     configureDashboardCommands();
     configureNameCommands();
 
-    boolean isComp = true;
+    boolean isComp = false;
 
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
@@ -243,6 +249,12 @@ public class RobotContainer {
 //    driveController.povLeft().whileTrue(
 //        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
 //    );
+
+    driveController.povLeft().whileTrue(
+        swerve.driveToPose(
+            () -> AllianceFlipUtil.apply(new Pose2d(2.5, 5, new Rotation2d()))
+        )
+    );
 
     driveController.povDown().whileTrue(
         feeder.runFeeder(Volts.of(-12.0))

@@ -14,6 +14,9 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
@@ -37,14 +40,21 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+
+import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
+
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -64,8 +74,22 @@ public class Drive extends SubsystemBase {
   private static final double ROBOT_MASS_KG = 74.088;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 1.2;
-  private static final RobotConfig PP_CONFIG =
-      new RobotConfig(
+  private static final RobotConfig PP_CONFIG;
+
+  private static final PathConstraints CONSTRAINTS =
+      new PathConstraints(FeetPerSecond.of(15), FeetPerSecondPerSecond.of(7.5),
+          DegreesPerSecond.of(360), DegreesPerSecondPerSecond.of(360));
+
+  static {
+    try {
+      PP_CONFIG = RobotConfig.fromGUISettings();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+      /* new RobotConfig(
           ROBOT_MASS_KG,
           ROBOT_MOI,
           new ModuleConfig(
@@ -76,7 +100,7 @@ public class Drive extends SubsystemBase {
                   .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
               TunerConstants.FrontLeft.SlipCurrent,
               1),
-          getModuleTranslations());
+          getModuleTranslations()); */
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -118,7 +142,7 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getPose,
+        RobotState.getInstance()::getEstimatedPose,
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
@@ -127,7 +151,7 @@ public class Drive extends SubsystemBase {
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
-    Pathfinding.setPathfinder(new LocalADStarAK());
+    Pathfinding.setPathfinder(new LocalADStar());
     PathPlannerLogging.setLogActivePathCallback(
         (activePath) -> {
           Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[0]));
@@ -202,6 +226,7 @@ public class Drive extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      RobotState.getInstance().addOdometryMeasurement(rawGyroRotation, modulePositions, sampleTimestamps[i]);
     }
 
     // Update gyro alert
@@ -255,6 +280,29 @@ public class Drive extends SubsystemBase {
     }
     kinematics.resetHeadings(headings);
     stop();
+  }
+
+  public Command driveToPose(Supplier<Pose2d> pose) {
+    return AutoBuilder.pathfindToPose(
+            pose.get(),
+            new PathConstraints(1.25, 1.25,
+                1.25, 1.25)
+        ).withName("Pathfinding Command")
+        .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
+  }
+
+  public Command pathfindThenFollowPath(String pathname) {
+    try {
+      PathPlannerPath path = PathPlannerPath.fromPathFile(pathname);
+
+      return AutoBuilder.pathfindThenFollowPath(
+          path,
+          CONSTRAINTS
+      );
+    } catch (Exception e) {
+      DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+      return Commands.none();
+    }
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */
@@ -326,6 +374,7 @@ public class Drive extends SubsystemBase {
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    RobotState.getInstance().resetPose(pose);
   }
 
   /** Adds a new timestamped vision measurement. */

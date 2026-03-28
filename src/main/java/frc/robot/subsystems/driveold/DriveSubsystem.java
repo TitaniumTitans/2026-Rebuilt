@@ -81,19 +81,19 @@ public class DriveSubsystem extends SubsystemBase {
 
 //    RobotState.getInstance().resetPose(new Pose2d());
 
-    AutoBuilder.configure(
-        RobotState.getInstance()::getEstimatedPose,
-        this::resetPose,
-        this::getChassisSpeeds,
-        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
-        new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0),
-            new PIDConstants(5.0, 0.0)
-        ),
-        ROBOT_CONFIG,
-        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
-        this
-    );
+//    AutoBuilder.configure(
+//        RobotState.getInstance()::getEstimatedPose,
+//        this::resetPose,
+//        this::getChassisSpeeds,
+//        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
+//        new PPHolonomicDriveController(
+//            new PIDConstants(5.0, 0.0),
+//            new PIDConstants(5.0, 0.0)
+//        ),
+//        ROBOT_CONFIG,
+//        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
+//        this
+//    );
 
     PathPlannerLogging.setLogActivePathCallback(
         (List<Pose2d> path) -> Logger.recordOutput("PathPlanner/ActivePath", path.toArray(Pose2d[]::new))
