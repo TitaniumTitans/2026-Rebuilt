@@ -111,8 +111,8 @@ public record ChoreoTraj(
     public static final ChoreoTraj LeftScore = new ChoreoTraj(
         "LeftScore",
         OptionalInt.empty(),
-        1.07078,
-        new Pose2d(3.59906, 5.53811, Rotation2d.fromRadians(0)),
+        1.10517,
+        new Pose2d(3.65064, 5.53811, Rotation2d.fromRadians(0)),
         new Pose2d(2.97698, 5.57866, Rotation2d.fromRadians(-0.7497))
     );
     public static final ChoreoTraj LinearTest = new ChoreoTraj(
@@ -125,29 +125,29 @@ public record ChoreoTraj(
     public static final ChoreoTraj RightBumpReturn = new ChoreoTraj(
         "RightBumpReturn",
         OptionalInt.empty(),
-        2.11762,
-        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708))
+        2.21364,
+        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(3.40906, 2.16115, Rotation2d.fromRadians(0.7854))
     );
     public static final ChoreoTraj RightBumpSend = new ChoreoTraj(
         "RightBumpSend",
         OptionalInt.empty(),
-        2.23946,
-        new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(6.52136, 2.16115, Rotation2d.fromRadians(1.5708))
+        2.21364,
+        new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854))
     );
     public static final ChoreoTraj RightFuelCenterZone = new ChoreoTraj(
         "RightFuelCenterZone",
         OptionalInt.empty(),
-        5.64302,
-        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(1.5708))
+        5.65635,
+        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.26736, 2.16115, Rotation2d.fromRadians(0.7854))
     );
     public static final ChoreoTraj RightScore = new ChoreoTraj(
         "RightScore",
         OptionalInt.empty(),
-        1.30837,
-        new Pose2d(3.60906, 2.16115, Rotation2d.fromRadians(1.5708)),
+        1.12796,
+        new Pose2d(3.40906, 2.16115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(2.70733, 2.51324, Rotation2d.fromRadians(0.67021))
     );
     public static final ChoreoTraj RightScoreSend = new ChoreoTraj(

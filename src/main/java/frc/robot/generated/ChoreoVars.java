@@ -21,9 +21,9 @@ public final class ChoreoVars {
         public static final Pose2d DepotRight = new Pose2d(0.9662853, 5.9000629, Rotation2d.fromRadians(3.1415927));
         public static final Pose2d HumanPlayer = new Pose2d(0.6675174, 0.757884, Rotation2d.fromRadians(3.1415927));
         public static final Pose2d LeftStart = new Pose2d(3.6506387, 5.5381145, Rotation2d.fromRadians(0));
-        public static final Pose2d RightBump = new Pose2d(6.2673612, 2.1611458, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d RightBump = new Pose2d(6.2673612, 2.5611458, Rotation2d.fromRadians(0.7853982));
         public static final Pose2d RightScore = new Pose2d(1.9125968, 2.2577927, Rotation2d.fromRadians(0.5867935));
-        public static final Pose2d RightStart = new Pose2d(3.6090639, 2.1611458, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d RightStart = new Pose2d(3.4090639, 2.5611458, Rotation2d.fromRadians(0.7853982));
     }
 }
 // spotless:on
