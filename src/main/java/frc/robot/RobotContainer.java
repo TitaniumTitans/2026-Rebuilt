@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoCommands;
 import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.RightCenterAutoCommandGroup;
 import frc.robot.generated.ChoreoTraj;
 import frc.robot.generated.ChoreoVars;
 import frc.robot.generated.TunerConstants;
@@ -138,12 +139,13 @@ public class RobotContainer {
 
 //    autoSelector.addOption("Wheel Radius Characterization", swerve);
 
-      autoSelector.addOption("Wheel Radius Characterization",
-          DriveCommands.wheelRadiusCharacterization(swerve));
-      autoSelector.addOption("Simple FF Characterization",
-          DriveCommands.feedforwardCharacterization(swerve));
-      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
+//      autoSelector.addOption("Wheel Radius Characterization",
+//          DriveCommands.wheelRadiusCharacterization(swerve));
+//      autoSelector.addOption("Simple FF Characterization",
+//          DriveCommands.feedforwardCharacterization(swerve));
+//      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
       autoSelector.addOption("CustomRightBumpTest", swerve.followPathCommand("RightBumpSend"));
+      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }

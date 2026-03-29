@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
@@ -178,12 +181,18 @@ public class FollowPathCustomCommand extends Command {
     output.accept(targetSpeeds);
 
     eventScheduler.execute(currentTime);
+    Logger.recordOutput("CustomPath/IsNear", isNear(poseSupplier.get(), targetState.pose));
   }
 
   @Override
   public boolean isFinished() {
     double totalTime = trajectory.getTotalTimeSeconds();
-    return (timer.hasElapsed(totalTime) && isNear(poseSupplier.get(), path.getPathPoses().get(path.numPoints() - 1)))
+    double currentTime = timer.get();
+    var targetState = trajectory.sample(currentTime);
+    if (!controller.isHolonomic() && path.isReversed()) {
+      targetState = targetState.reverse();
+    }
+    return (timer.hasElapsed(totalTime) && isNear(poseSupplier.get(), targetState.pose))
         || !Double.isFinite(totalTime);
   }
 
@@ -240,8 +249,8 @@ public class FollowPathCustomCommand extends Command {
 
   private boolean isNear(Pose2d current, Pose2d goal) {
     return
-        MathUtil.isNear(current.getX(), goal.getX(), Units.inchesToMeters(1.0))
-        && MathUtil.isNear(current.getY(), goal.getY(), Units.inchesToMeters(1.0))
+        MathUtil.isNear(current.getX(), goal.getX(), Units.inchesToMeters(3.0))
+        && MathUtil.isNear(current.getY(), goal.getY(), Units.inchesToMeters(3.0))
         && MathUtil.isNear(current.getRotation().getDegrees(), goal.getRotation().getDegrees(), 5.0);
   }
 }
