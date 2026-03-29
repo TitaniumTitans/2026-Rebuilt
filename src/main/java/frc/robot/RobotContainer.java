@@ -142,6 +142,8 @@ public class RobotContainer {
           DriveCommands.wheelRadiusCharacterization(swerve));
       autoSelector.addOption("Simple FF Characterization",
           DriveCommands.feedforwardCharacterization(swerve));
+      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
+      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCommand("RightBumpSend"));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
