@@ -6,26 +6,19 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoCommands;
-import frc.robot.auto.AutoSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.RightCenterAutoCommandGroup;
-import frc.robot.generated.ChoreoTraj;
 import frc.robot.generated.ChoreoVars;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.*;
@@ -45,7 +38,6 @@ import frc.robot.util.FieldConstants;
 import frc.robot.util.HubShiftUtil;
 
 import java.util.Optional;
-import java.util.Set;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -131,7 +123,7 @@ public class RobotContainer {
     configureDashboardCommands();
     configureNameCommands();
 
-    boolean isComp = false;
+    boolean isComp = true;
 
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
@@ -144,9 +136,8 @@ public class RobotContainer {
 //      autoSelector.addOption("Simple FF Characterization",
 //          DriveCommands.feedforwardCharacterization(swerve));
 //      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
-      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCommand("RightBumpSend"));
-      autoSelector.addOption("RightCenter\][]\"" +
-              ", new RightCenterAutoCommandGroup(swerve, intake));
+      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
+      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }

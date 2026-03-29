@@ -249,8 +249,8 @@ public class FollowPathCustomCommand extends Command {
 
   private boolean isNear(Pose2d current, Pose2d goal) {
     return
-        MathUtil.isNear(current.getX(), goal.getX(), Units.inchesToMeters(3.0))
-        && MathUtil.isNear(current.getY(), goal.getY(), Units.inchesToMeters(3.0))
-        && MathUtil.isNear(current.getRotation().getDegrees(), goal.getRotation().getDegrees(), 5.0);
+        MathUtil.isNear(current.getX(), goal.getX(), Units.inchesToMeters(7.5))
+        && MathUtil.isNear(current.getY(), goal.getY(), Units.inchesToMeters(7.5))
+        && MathUtil.isNear(current.getRotation().getDegrees(), goal.getRotation().getDegrees(), 7.5);
   }
 }

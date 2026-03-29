@@ -66,7 +66,7 @@ public class AutoCommands {
                 .andThen(feederSubsystem.runFeeder(Volts.of(12.0))
                     .alongWith(intake.agitateCommand())
                 )
-        ).withTimeout(5.0)
+        ).withTimeout(7.0)
         .andThen(intake.setIntakePower(IntakeSubsystem.Speed.STOP));
 
   }

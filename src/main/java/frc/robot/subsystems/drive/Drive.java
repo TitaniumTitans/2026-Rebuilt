@@ -11,7 +11,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -19,6 +18,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
@@ -35,7 +35,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -49,7 +48,6 @@ import frc.robot.Constants.Mode;
 import frc.robot.RobotState;
 import frc.robot.commands.FollowPathCustomCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.util.LocalADStarAK;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Lock;
@@ -295,7 +293,7 @@ public class Drive extends SubsystemBase {
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
   }
 
-  public Command followPathCommand(String pathName) {
+  public Command followPathCustomCommand(String pathName) {
     try{
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
@@ -312,6 +310,28 @@ public class Drive extends SubsystemBase {
           () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
           this
           );
+    } catch (Exception e) {
+      DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+      return Commands.none();
+    }
+  }
+
+  public Command followPathCommand(String pathName) {
+    try{
+      PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+      return new FollowPathCommand(
+          path,
+          RobotState.getInstance()::getEstimatedPose,
+          this::getChassisSpeeds,
+          (speeds, feedforwards) -> runVelocity(speeds),
+          new PPHolonomicDriveController(
+              new PIDConstants(5.0), new PIDConstants(5.0)
+          ),
+          PP_CONFIG,
+          () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+          this
+      );
     } catch (Exception e) {
       DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
       return Commands.none();
