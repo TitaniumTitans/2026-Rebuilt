@@ -78,6 +78,9 @@ public class Robot extends LoggedRobot {
         // Start AdvantageKit logger
         Logger.start();
 
+        // disable all other loggers
+
+
         RobotState.getInstance();
         Pathfinding.setPathfinder(new LocalADStar());
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());

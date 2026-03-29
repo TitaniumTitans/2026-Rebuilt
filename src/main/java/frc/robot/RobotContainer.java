@@ -135,6 +135,14 @@ public class RobotContainer {
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
         : stream);
+
+//    autoSelector.addOption("Wheel Radius Characterization", swerve);
+
+      autoSelector.addOption("Wheel Radius Characterization",
+          DriveCommands.wheelRadiusCharacterization(swerve));
+      autoSelector.addOption("Simple FF Characterization",
+          DriveCommands.feedforwardCharacterization(swerve));
+
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
 
@@ -248,10 +256,10 @@ public class RobotContainer {
 //    driveController.povUp().whileTrue(
 //        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
 //    );
-//    driveController.povRight().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
-//    );
-//    driveController.povLeft().whileTrue(
+    driveController.povRight().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
+    );
+//    ]\[driveController.povLeft().whileTrue(
 //        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
 //    );
 
