@@ -8,14 +8,16 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class RightCenterAutoCommandGroup extends SequentialCommandGroup {
   public RightCenterAutoCommandGroup(Drive drive, IntakeSubsystem intake) {
-    super(drive.followPathCustomCommand("RightBumpSend"),
+    super(
+        drive.followPathCustomCommand("RightBumpSend", true)
+            .alongWith(intake.homingCommand()),
         intake.setPivotPosition(IntakeSubsystem.Position.INTAKE),
 //        Commands.waitSeconds(1.0),
         intake.setIntakePower(IntakeSubsystem.Speed.INTAKE),
-        drive.followPathCommand("RightSweepOne"),
+        drive.followPathCommand("RightSweepOne", false),
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
-        drive.followPathCustomCommand("RightBumpReturn"),
+        drive.followPathCustomCommand("RightBumpReturn", false),
         NamedCommands.getCommand("aimAndShoot"));
   }
 }

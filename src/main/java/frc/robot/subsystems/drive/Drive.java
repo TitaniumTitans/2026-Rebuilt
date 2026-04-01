@@ -293,9 +293,15 @@ public class Drive extends SubsystemBase {
         .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming);
   }
 
-  public Command followPathCustomCommand(String pathName) {
+  public Command followPathCustomCommand(String pathName, boolean resetPose) {
     try{
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+      if (resetPose) {
+        RobotState.getInstance().resetPose(
+            path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
+        );
+      }
 
       return new FollowPathCustomCommand(
           path,
@@ -316,9 +322,15 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public Command followPathCommand(String pathName) {
+  public Command followPathCommand(String pathName, boolean resetPose) {
     try{
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+
+      if (resetPose) {
+        RobotState.getInstance().resetPose(
+            path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
+        );
+      }
 
       return new FollowPathCommand(
           path,

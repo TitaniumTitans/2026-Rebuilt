@@ -13,7 +13,7 @@ import static edu.wpi.first.math.util.Units.inchesToMeters;
 
 public class VisionConstants {
   public static final VisionFilterParameters FILTER_PARAMETERS = new VisionFilterParameters(
-      0.25, // 0.5, x-y standard deviation
+      0.125, // 0.5, x-y standard deviation
       0.5, // 1.5, rotation standard deviation
       Units.Centimeters.of(21), // width of the april tag
       0.5, // max ambiguity
