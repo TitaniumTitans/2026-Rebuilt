@@ -138,7 +138,7 @@ public class RobotContainer {
 //          DriveCommands.feedforwardCharacterization(swerve));
 //      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
 //      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
-      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake));
+      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("LeftCenter", new LeftCenterAutoCommandGroup(swerve, intake));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
@@ -202,8 +202,7 @@ public class RobotContainer {
     driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
 
     // X button: home the intake
-    driveController.povUp
-        ().onTrue(intake.homingCommand());
+    driveController.leftStick().onTrue(intake.homingCommand());
 
     // Y button: agitate intake
     driveController.y().whileTrue(intake.agitateCommand());
@@ -247,30 +246,30 @@ public class RobotContainer {
 //        ).alongWith(shooter.autoAimOnMove())
 //    );
 
-//    driveController.povDown().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
-//    );
+    driveController.povDown().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
+    );
 
-//    driveController.povUp().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
-//    );
+    driveController.povUp().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
+    );
     driveController.povRight().whileTrue(
         swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
     );
-//    ]\[driveController.povLeft().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
+    driveController.povLeft().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
+    );
+
+//    driveController.povLeft().whileTrue(
+//        swerve.driveToPose(
+//            () -> AllianceFlipUtil.apply(new Pose2d(2.5, 5, new Rotation2d()))
+//        )
 //    );
 
-    driveController.povLeft().whileTrue(
-        swerve.driveToPose(
-            () -> AllianceFlipUtil.apply(new Pose2d(2.5, 5, new Rotation2d()))
-        )
-    );
-
-    driveController.povDown().whileTrue(
-        feeder.runFeeder(Volts.of(-12.0))
-            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
-    );
+//    driveController.povDown().whileTrue(
+//        feeder.runFeeder(Volts.of(-12.0))
+//            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
+//    );
   }
 
   /**

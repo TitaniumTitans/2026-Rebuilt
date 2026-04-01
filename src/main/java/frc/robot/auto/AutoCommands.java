@@ -68,7 +68,7 @@ public class AutoCommands {
                         Commands.waitSeconds(1.0)
                             .andThen(intake.agitateCommand()))
                 )
-        ).withTimeout(7.0)
+        ).withTimeout(6.0)
         .andThen(intake.setIntakePower(IntakeSubsystem.Speed.STOP));
 
   }

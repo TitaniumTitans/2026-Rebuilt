@@ -17,6 +17,8 @@ public class LeftCenterAutoCommandGroup extends SequentialCommandGroup {
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
         drive.followPathCustomCommand("LeftBumpReturn", false),
-        NamedCommands.getCommand("aimAndShoot"));
+        NamedCommands.getCommand("aimAndShoot")
+            .withTimeout(7.0),
+        drive.followPathCustomCommand("LeftBumpSendTwo", false));
   }
 }
