@@ -20,24 +20,24 @@
         "y": 2.56
       },
       "prevControl": {
-        "x": 3.7921970278701824,
-        "y": 2.373452338795283
+        "x": 3.819907160507337,
+        "y": 2.5162666631093593
       },
       "nextControl": {
-        "x": 2.519420248163498,
-        "y": 2.7831286758883014
+        "x": 2.9632791077542007,
+        "y": 2.57795745488177
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.364866666666667,
-        "y": 2.5635888888888894
+        "x": 2.988511111111111,
+        "y": 2.56
       },
       "prevControl": {
-        "x": 2.8403514306555073,
-        "y": 2.580461934617016
+        "x": 3.23842464728501,
+        "y": 2.5665745294171836
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.819178082191779,
       "rotationDegrees": -135.0
     }
   ],
@@ -69,9 +69,27 @@
   "eventMarkers": [
     {
       "name": "stopIntake",
-      "waypointRelativePos": 0.7445544554455533,
+      "waypointRelativePos": 0.41821782178218536,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "stopIntake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "spinupFlywheel"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

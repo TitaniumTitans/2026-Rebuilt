@@ -346,6 +346,8 @@ public class RobotContainer {
             )
         )
     );
+
+    NamedCommands.registerCommand("spinupFlywheel", shooter.spinupFlywheel());
   }
 
   private boolean isTimeNear(double seconds) {

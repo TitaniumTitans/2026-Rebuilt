@@ -69,6 +69,15 @@ public class ShooterSubsystem extends SubsystemBase {
         return runOnce(() -> m_io.setHoodDistance(position)).withName("Hood Position");
     }
 
+    public Command spinupFlywheel() {
+        return run(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShooterRPM()));
+                m_io.setHoodDistance(RobotState.getInstance().getHoodAngle());
+            }
+        );
+    }
+
     public Command autoAim() {
         return runEnd(
             () -> {

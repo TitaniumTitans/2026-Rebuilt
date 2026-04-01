@@ -23,6 +23,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +36,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -298,9 +300,16 @@ public class Drive extends SubsystemBase {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
       if (resetPose) {
-        RobotState.getInstance().resetPose(
-            path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
-        );
+        Pose2d startPose = path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose());
+        Pose2d currentPose = RobotState.getInstance().getEstimatedPose();
+
+        if ( MathUtil.isNear(startPose.getX(), currentPose.getX(), Units.inchesToMeters(7.5))
+            && MathUtil.isNear(startPose.getY(), currentPose.getY(), Units.inchesToMeters(7.5))
+            && MathUtil.isNear(startPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 7.5)) {
+          RobotState.getInstance().resetPose(
+              path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
+          );
+        }
       }
 
       return new FollowPathCustomCommand(
@@ -327,9 +336,16 @@ public class Drive extends SubsystemBase {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
       if (resetPose) {
-        RobotState.getInstance().resetPose(
-            path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
-        );
+        Pose2d startPose = path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose());
+        Pose2d currentPose = RobotState.getInstance().getEstimatedPose();
+
+        if ( MathUtil.isNear(startPose.getX(), currentPose.getX(), Units.inchesToMeters(7.5))
+            && MathUtil.isNear(startPose.getY(), currentPose.getY(), Units.inchesToMeters(7.5))
+            && MathUtil.isNear(startPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 7.5)) {
+          RobotState.getInstance().resetPose(
+              path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
+          );
+        }
       }
 
       return new FollowPathCommand(

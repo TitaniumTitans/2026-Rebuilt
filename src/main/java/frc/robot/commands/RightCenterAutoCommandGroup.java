@@ -18,6 +18,7 @@ public class RightCenterAutoCommandGroup extends SequentialCommandGroup {
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
         drive.followPathCustomCommand("RightBumpReturn", false),
-        NamedCommands.getCommand("aimAndShoot"));
+        NamedCommands.getCommand("aimAndShoot"),
+        drive.followPathCustomCommand("rightBumpSendTwo", false));
   }
 }
