@@ -58,6 +58,11 @@ public class DriveCommands {
       0.0,
       ANGLE_KD,
       new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+
+  static {
+    TURNING_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
+  }
+
   private static final PidProperty TURNING_CONTROLLER_PROPERTY = new WpiProfiledPidPropertyBuilder(
       "Drive/Turning PID", false, TURNING_CONTROLLER
   )
