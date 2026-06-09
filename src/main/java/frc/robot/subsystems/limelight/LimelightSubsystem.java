@@ -1,6 +1,8 @@
 package frc.robot.subsystems.limelight;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -18,6 +20,10 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public LimelightSubsystem(String name) {
     this.name = name;
+  }
+
+  public void setPipeline(int pipeline) {
+    LimelightHelpers.setPipelineIndex(name, pipeline);
   }
 
   public Optional<Measurement> getMeasurement(Pose2d currentRobotPose) {
@@ -46,6 +52,14 @@ public class LimelightSubsystem extends SubsystemBase {
     Logger.recordOutput("Limelight/" + name + "/poseEstimate", poseEstimate_MegaTag2.pose);
 
     return Optional.of(new Measurement(poseEstimate_MegaTag2, standardDeviations));
+  }
+
+  public Optional<Double> getHumanAimbot() {
+    Optional<LimelightHelpers.RawDetection> detection =  Arrays.stream(LimelightHelpers.getRawDetections(name))
+        .filter(match -> match.classId == 0)
+        .findFirst();
+
+    return detection.map(rawDetection -> rawDetection.txnc);
   }
 
   public static class Measurement {

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.auto.AutoCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.HumanAimbotCommand;
 import frc.robot.commands.LeftCenterAutoCommandGroup;
 import frc.robot.commands.RightCenterAutoCommandGroup;
 import frc.robot.generated.ChoreoVars;
@@ -235,6 +236,9 @@ public class RobotContainer {
 
     driveController.leftTrigger().and(driveController.rightTrigger())
         .whileTrue(Commands.run(swerve::stopWithX).alongWith(shooter.autoAim()));
+
+    driveController.leftTrigger()
+        .whileTrue(new HumanAimbotCommand(swerve, frontLimelight));
 
     // Right trigger: shoot on move
 //    driveController.rightTrigger().whileTrue(
