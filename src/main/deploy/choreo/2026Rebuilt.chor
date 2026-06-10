@@ -89,6 +89,20 @@
      "val":3.141592653589793
     }
    },
+   "LeftBump":{
+    "x":{
+     "exp":"RightBump.x",
+     "val":6.267361164093018
+    },
+    "y":{
+     "exp":"5.3 m",
+     "val":5.3
+    },
+    "heading":{
+     "exp":"-RightBump.heading",
+     "val":-0.7853981633974483
+    }
+   },
    "LeftStart":{
     "x":{
      "exp":"3.450638732910157 m",
