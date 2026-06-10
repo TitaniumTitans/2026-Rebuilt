@@ -87,6 +87,13 @@ public record ChoreoTraj(
         new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854)),
         new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854))
     );
+    public static final ChoreoTraj LeftFuelCenterZoneCC = new ChoreoTraj(
+        "LeftFuelCenterZoneCC",
+        OptionalInt.empty(),
+        5.49783,
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854))
+    );
     public static final ChoreoTraj LeftScore = new ChoreoTraj(
         "LeftScore",
         OptionalInt.empty(),
@@ -115,8 +122,8 @@ public record ChoreoTraj(
         new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854))
     );
-    public static final ChoreoTraj RightFuelCenterZone = new ChoreoTraj(
-        "RightFuelCenterZone",
+    public static final ChoreoTraj RightFuelCenterZoneCC = new ChoreoTraj(
+        "RightFuelCenterZoneCC",
         OptionalInt.empty(),
         5.41382,
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854)),
@@ -143,12 +150,12 @@ public record ChoreoTraj(
         new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(0.81821, 0.75788, Rotation2d.fromRadians(3.14159))
     );
-    public static final ChoreoTraj LeftFuelCenterZoneCC = new ChoreoTraj(
-        "LeftFuelCenterZoneCC",
+    public static final ChoreoTraj RightFuelCenterZone = new ChoreoTraj(
+        "RightFuelCenterZone",
         OptionalInt.empty(),
-        5.49783,
-        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854)),
-        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854))
+        5.34036,
+        new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854))
     );
 
     /**
@@ -165,15 +172,16 @@ public record ChoreoTraj(
         Map.entry("LeftBumpSend", LeftBumpSend),
         Map.entry("LeftDepot", LeftDepot),
         Map.entry("LeftFuelCenterZone", LeftFuelCenterZone),
+        Map.entry("LeftFuelCenterZoneCC", LeftFuelCenterZoneCC),
         Map.entry("LeftScore", LeftScore),
         Map.entry("LinearTest", LinearTest),
         Map.entry("RightBumpReturn", RightBumpReturn),
         Map.entry("RightBumpSend", RightBumpSend),
-        Map.entry("RightFuelCenterZone", RightFuelCenterZone),
+        Map.entry("RightFuelCenterZoneCC", RightFuelCenterZoneCC),
         Map.entry("RightScore", RightScore),
         Map.entry("RightScoreSend", RightScoreSend),
         Map.entry("RightToHP", RightToHP),
-        Map.entry("LeftFuelCenterZoneCC", LeftFuelCenterZoneCC)
+        Map.entry("RightFuelCenterZone", RightFuelCenterZone)
     );
 
     /**

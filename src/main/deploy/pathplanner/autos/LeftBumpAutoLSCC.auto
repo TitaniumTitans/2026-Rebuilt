@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightBumpSend"
+            "pathName": "LeftBumpSend"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightFuelCenterZone"
+            "pathName": "LeftFuelCenterZoneCC"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightBumpReturn"
+            "pathName": "LeftBumpReturn"
           }
         }
       ]
