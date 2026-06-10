@@ -83,9 +83,9 @@ public record ChoreoTraj(
     public static final ChoreoTraj LeftFuelCenterZone = new ChoreoTraj(
         "LeftFuelCenterZone",
         OptionalInt.empty(),
-        8.49135,
-        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0)),
-        new Pose2d(6.16235, 5.53811, Rotation2d.fromRadians(0))
+        5.48991,
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854))
     );
     public static final ChoreoTraj LeftScore = new ChoreoTraj(
         "LeftScore",
@@ -143,6 +143,13 @@ public record ChoreoTraj(
         new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(0.81821, 0.75788, Rotation2d.fromRadians(3.14159))
     );
+    public static final ChoreoTraj LeftFuelCenterZoneCC = new ChoreoTraj(
+        "LeftFuelCenterZoneCC",
+        OptionalInt.empty(),
+        5.49783,
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(6.26736, 5.3, Rotation2d.fromRadians(-0.7854))
+    );
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -165,7 +172,8 @@ public record ChoreoTraj(
         Map.entry("RightFuelCenterZone", RightFuelCenterZone),
         Map.entry("RightScore", RightScore),
         Map.entry("RightScoreSend", RightScoreSend),
-        Map.entry("RightToHP", RightToHP)
+        Map.entry("RightToHP", RightToHP),
+        Map.entry("LeftFuelCenterZoneCC", LeftFuelCenterZoneCC)
     );
 
     /**
