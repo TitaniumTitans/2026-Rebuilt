@@ -17,10 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.auto.AutoCommands;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.HumanAimbotCommand;
-import frc.robot.commands.LeftCenterAutoCommandGroup;
-import frc.robot.commands.RightCenterAutoCommandGroup;
+import frc.robot.commands.*;
 import frc.robot.generated.ChoreoVars;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.*;
@@ -141,6 +138,8 @@ public class RobotContainer {
 //      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
       autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("LeftCenter", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("RightCenterCC", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("LeftCenterCC", new LeftCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
