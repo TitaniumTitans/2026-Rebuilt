@@ -21,7 +21,7 @@ public class RightCenterAutoCommandGroup extends SequentialCommandGroup {
         drive.followPathCommand("RightSweepOne", false),
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
-        drive.followPathCustomCommand("RightBumpReturn", false),
+        drive.followPathCommand("RightBumpReturn", false),
         AutoCommands.aimAndShoot(drive, shooter, feeder, intake)
             .withTimeout(8.0)
             .withName("AutoShooting"),
