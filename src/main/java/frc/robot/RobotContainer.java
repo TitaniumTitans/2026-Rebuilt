@@ -127,6 +127,7 @@ public class RobotContainer {
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
         : stream);
+//      autoSelector = new SendableChooser<>();
 
 //    autoSelector.addOption("Wheel Radius Characterization", swerve);
 
@@ -136,6 +137,7 @@ public class RobotContainer {
 //          DriveCommands.feedforwardCharacterization(swerve));
 //      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
 //      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
+      autoSelector.addOption("RightSweep", swerve.followPathCommand("RightCenter", true));
       autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("LeftCenter", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("RightCenterCC", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));

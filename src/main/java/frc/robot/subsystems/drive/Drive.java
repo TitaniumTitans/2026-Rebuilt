@@ -41,12 +41,15 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.commands.FollowPathCustomCommand;
 import frc.robot.generated.TunerConstants;
@@ -339,9 +342,10 @@ public class Drive extends SubsystemBase {
         Pose2d startPose = path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose());
         Pose2d currentPose = RobotState.getInstance().getEstimatedPose();
 
-        if ( MathUtil.isNear(startPose.getX(), currentPose.getX(), Units.inchesToMeters(7.5))
+        if (!(MathUtil.isNear(startPose.getX(), currentPose.getX(), Units.inchesToMeters(7.5))
             && MathUtil.isNear(startPose.getY(), currentPose.getY(), Units.inchesToMeters(7.5))
-            && MathUtil.isNear(startPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 7.5)) {
+            && MathUtil.isNear(startPose.getRotation().getDegrees(), currentPose.getRotation().getDegrees(), 7.5))
+        || RobotBase.isSimulation()) {
           RobotState.getInstance().resetPose(
               path.getStartingHolonomicPose().orElse(RobotState.getInstance().getEstimatedPose())
           );

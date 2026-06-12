@@ -111,37 +111,44 @@ public record ChoreoTraj(
     public static final ChoreoTraj RightFuelCenterZone = new ChoreoTraj(
         "RightFuelCenterZone",
         OptionalInt.empty(),
-        5.34036,
+        3.08891,
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854))
     );
     public static final ChoreoTraj RightFuelCenterZoneCC = new ChoreoTraj(
         "RightFuelCenterZoneCC",
         OptionalInt.empty(),
-        5.41382,
+        2.66725,
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(6.26736, 2.56115, Rotation2d.fromRadians(0.7854))
     );
     public static final ChoreoTraj RightScore = new ChoreoTraj(
         "RightScore",
         OptionalInt.empty(),
-        0.74664,
+        1.19914,
         new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
         new Pose2d(2.69314, 2.51324, Rotation2d.fromRadians(0.67021))
     );
     public static final ChoreoTraj RightScoreSend = new ChoreoTraj(
         "RightScoreSend",
         OptionalInt.empty(),
-        3.17751,
+        1.50342,
         new Pose2d(1.82745, 2.34294, Rotation2d.fromRadians(0.58679)),
         new Pose2d(6.7091, 2.61227, Rotation2d.fromRadians(0.7854))
+    );
+    public static final ChoreoTraj RightSweep = new ChoreoTraj(
+        "RightSweep",
+        OptionalInt.empty(),
+        14.2391,
+        new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(2.80668, 2.57001, Rotation2d.fromRadians(0.73782))
     );
     public static final ChoreoTraj RightToHP = new ChoreoTraj(
         "RightToHP",
         OptionalInt.empty(),
-        2.55921,
+        1.26668,
         new Pose2d(3.40906, 2.56115, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(0.81821, 0.75788, Rotation2d.fromRadians(3.14159))
+        new Pose2d(0.76741, 0.75788, Rotation2d.fromRadians(3.14159))
     );
 
     /**
@@ -165,6 +172,7 @@ public record ChoreoTraj(
         Map.entry("RightFuelCenterZoneCC", RightFuelCenterZoneCC),
         Map.entry("RightScore", RightScore),
         Map.entry("RightScoreSend", RightScoreSend),
+        Map.entry("RightSweep", RightSweep),
         Map.entry("RightToHP", RightToHP)
     );
 

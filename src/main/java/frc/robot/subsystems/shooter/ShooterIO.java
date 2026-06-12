@@ -21,7 +21,23 @@ public interface ShooterIO {
     }
 
     // Required method to update all the logged inputs
-    default void updateInputs(ShooterIOInputsAutoLogged inputs) {};
+    default void updateInputs(ShooterIOInputsAutoLogged inputs) {
+        inputs.shooterSpeedL = RPM.of(0);
+        inputs.shooterSpeedM = RPM.of(0);
+        inputs.shooterSpeedR = RPM.of(0);
+
+        inputs.shooterVoltageL = Volts.of(0.0);
+        inputs.shooterVoltageM = Volts.of(0.0);
+        inputs.shooterVoltageR = Volts.of(0.0);
+
+        inputs.shooterStatorCurrentL = Amps.of(0.0);
+        inputs.shooterStatorCurrentM = Amps.of(0.0);
+        inputs.shooterStatorCurrentR = Amps.of(0.0);
+
+        inputs.shooterSupplyCurrentL = Amps.of(0.0);
+        inputs.shooterSupplyCurrentM = Amps.of(0.0);
+        inputs.shooterSupplyCurrentR = Amps.of(0.0);
+    }
 
     // Any hardware output, usually motor voltage and PID control
     default void setShooterVoltage(Voltage voltage) {};
