@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShootingConstants;
-import frc.robot.Constants.SuperstructureConstants;
+//import frc.robot.Constants.SuperstructureConstants;
 
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Seconds;
@@ -39,11 +39,11 @@ import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 /**
  * Some static utility methods for calculating shooter values.
  */
-public class ShootingCalculator {
+public class ShotCalculator {
     /**
      * The NetworkTables table name for the shooting calculator.
      */
-    public static String SHOOTING_CALCULATOR_TABLE_NAME = SuperstructureConstants.SHOOTER_SUPERSTRUCTURE_TABLE_NAME + "/Shooting Calculator";
+    public static String SHOOTING_CALCULATOR_TABLE_NAME = /* SuperstructureConstants.SHOOTER_SUPERSTRUCTURE_TABLE_NAME + */ "/Shooting Calculator";
     public static String SHOOTING_CALCULATOR_MODELED_TABLE_NAME = SHOOTING_CALCULATOR_TABLE_NAME + "/Modeled";
     public static String SHOOTING_CALCULATOR_INTERPOLATED_TABLE_NAME = SHOOTING_CALCULATOR_TABLE_NAME + "/Interpolated";
     public static String SHOOTING_CALCULATOR_INTERPOLATED_WHILE_MOVE_TABLE_NAME = SHOOTING_CALCULATOR_TABLE_NAME + "/Interpolated While Move";
@@ -114,7 +114,7 @@ public class ShootingCalculator {
         SignalLogger.writeStruct(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Target Pose", Pose3d.struct, targetPose);
 
         // Figure out where the turret is since it isn't centered on the robot
-        Pose3d exitPose = solveExitPose(robotPose, values.getTurretAngle(), values.getHoodAngle());
+        Pose3d exitPose = robotPose; // solveExitPose(robotPose, values.getTurretAngle(), values.getHoodAngle());
 
         // ----- FIRST CALCULATION (NO VELOCITY) -----
         // This stage is mainly just to calculate how long the ball will be in the air for
@@ -128,9 +128,9 @@ public class ShootingCalculator {
         LinearVelocity gamepieceSpeed = solveGamepieceSpeed(gamepieceTranslation, gamepieceTheta);
 
         // ----- RE-CALCUlATION (WITH VELOCITY) -----
-        for (int i = 0; i < SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS; i++) {
+        for (int i = 0; i < 10 /* SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS */; i++) {
             // Recalculate the exit pose of the ball
-            exitPose = solveExitPose(robotPose, turretAngle, gamepieceTheta);
+            exitPose = exitPose; //solveExitPose(robotPose, turretAngle, gamepieceTheta);
 
             // Figure out how long the gamepiece will be in the air for
             Time time = calculateTimeTillScore(gamepieceTranslation, gamepieceTheta, gamepieceSpeed);
@@ -163,7 +163,7 @@ public class ShootingCalculator {
 
         // Set the ShooterValues into the simulation class
         // Theoretically this could be removed in favor of doing the gamepiece -> mechanism calculations backwards but I don't have time for that right now
-        ShooterSim.setValues(gamepieceSpeed, gamepieceTheta);
+//        ShooterSim.setValues(gamepieceSpeed, gamepieceTheta);
 
         return values;
     }
@@ -185,7 +185,7 @@ public class ShootingCalculator {
 
         // Figure out where the turret is since it isn't centered on the robot
         // The rotational component of this pose should just stay the rotation of the drivetrain
-        Pose3d turretPose = robotPose.plus(SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM);
+        Pose3d turretPose = robotPose; //.plus(SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM);
 
         interpolatedTurretPosePublisher.set(turretPose);
 
@@ -362,6 +362,39 @@ public class ShootingCalculator {
 
         return curValue;
     }
+
+//    /**
+//     * Gets the pose where the ball will exit the shooter.
+//     *
+//     * @param robotPose
+//     *            the pose of the robot
+//     * @param thetaTurret
+//     *            the angle of the turret, where 0 is facing towards the intake, ccw positive
+//     * @param thetaHood
+//     *            the angle of the shooter hood, ranging from 37 to 69 degrees
+//     * @return
+//     *         the pose of where the ball leaves the shooter
+//     */
+    /* public static Pose3d solveExitPose(Pose3d robotPose, Angle thetaTurret, Angle thetaHood) {
+        // calculate the distance from the center of the turret pivot to where the ball is launched from
+        Distance xHoodOffset = SuperstructureConstants.TURRET_BASE_TO_HOOD_PIVOT.getMeasureX().minus(SuperstructureConstants.HOOD_PIVOT_TO_GAMEPIECE_LAUNCH_RADIUS.times(Math.sin(thetaHood.in(Radians))));
+        // use this to calculate the offset due to the hood and turret from the center of the turret pivot
+        Distance xPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureX().plus(xHoodOffset.times(Math.cos(thetaTurret.in(Radians))));
+        Distance yPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureY().plus(xHoodOffset.times(Math.sin(thetaTurret.in(Radians))));
+        Distance zPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureZ()
+                .plus(SuperstructureConstants.TURRET_BASE_TO_HOOD_PIVOT.getMeasureZ())
+                .plus(SuperstructureConstants.HOOD_PIVOT_TO_GAMEPIECE_LAUNCH_RADIUS.times(Math.cos(thetaHood.in(Radians))));
+        // calculate the transform rotated by the robots pose
+        // this assumes the robotpose ccw is positive
+
+        // xMod = xcos(a) - ysin(a)
+        Distance xModifiedPos = xPos.times(Math.cos(robotPose.getRotation().getZ())).minus(yPos.times(Math.sin(robotPose.getRotation().getZ())));
+        // yMod = xsin(a)+ycos(a)
+        Distance yModifiedPos = xPos.times(Math.sin(robotPose.getRotation().getZ())).plus(yPos.times(Math.cos(robotPose.getRotation().getZ())));
+
+        Transform3d modifieTransformTurret = new Transform3d(xModifiedPos, yModifiedPos, zPos, new Rotation3d());
+        return robotPose.plus(modifieTransformTurret);
+    } */
 
     public static Angle solveOutputAngleFromVelocity(LinearVelocity outputVelocity, Translation2d translationToTarget) {
         // \arctan\left(\frac{\left(v^{2}+\sqrt{v^{4}-g^{2}d_{x}^{2}-2gv^{2}d_{y}}\right)}{g\cdot d_{x}}\right)
