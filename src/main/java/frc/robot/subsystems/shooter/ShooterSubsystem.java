@@ -32,6 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
         // update all our input values from our hardware/sim
         m_io.updateInputs(m_inputs);
         Logger.processInputs("shooter", m_inputs);
+
+        Logger.recordOutput("Shooter/Shooter RPM", m_inputs.shooterSpeedL.in(RPM));
     }
 
     public boolean flywheelAtRPM() {
@@ -67,6 +69,15 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command setHoodPosition(double position) {
         return runOnce(() -> m_io.setHoodDistance(position)).withName("Hood Position");
+    }
+
+    public Command spinupFlywheel() {
+        return run(
+            () -> {
+                m_io.setShooterRPM(RPM.of(RobotState.getInstance().getShooterRPM()));
+                m_io.setHoodDistance(RobotState.getInstance().getHoodAngle());
+            }
+        );
     }
 
     public Command autoAim() {

@@ -1,52 +1,35 @@
-package frc.robot.subsystems.drive;
+package frc.robot.subsystems.driveold;
 
 
-//import com.gos.lib.GetAllianceUtil;
-//import com.pathplanner.lib.auto.AutoBuilder;
-//import com.pathplanner.lib.config.PIDConstants;
-//import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-//import com.pathplanner.lib.path.PathConstraints;
-//import com.pathplanner.lib.util.DriveFeedforwards;
-//import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.RobotState;
-import frc.robot.subsystems.drive.module.Module;
-import frc.robot.subsystems.drive.module.ModuleIO;
-//import frc.robot.util.AlgaePositions;
-//import frc.robot.util.FieldConstants;
-//import frc.robot.util.FieldRelativeSpeeds;
-//import frc.robot.util.MaybeFlippedPose2d;
-import frc.robot.util.AllianceFlipUtil;
+import frc.robot.subsystems.driveold.module.Module;
+import frc.robot.subsystems.driveold.module.ModuleIO;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
 import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.subsystems.drive.DriveConstants.ROBOT_CONFIG;
+import static frc.robot.subsystems.driveold.DriveConstants.ROBOT_CONFIG;
 //import static frc.robot.subsystems.drive.DriveConstants.ROBOT_CONFIG;
 
 /**
@@ -98,19 +81,19 @@ public class DriveSubsystem extends SubsystemBase {
 
 //    RobotState.getInstance().resetPose(new Pose2d());
 
-    AutoBuilder.configure(
-        RobotState.getInstance()::getEstimatedPose,
-        this::resetPose,
-        this::getChassisSpeeds,
-        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
-        new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0),
-            new PIDConstants(5.0, 0.0)
-        ),
-        ROBOT_CONFIG,
-        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
-        this
-    );
+//    AutoBuilder.configure(
+//        RobotState.getInstance()::getEstimatedPose,
+//        this::resetPose,
+//        this::getChassisSpeeds,
+//        (ChassisSpeeds speeds, DriveFeedforwards feedforwards) -> this.runVelocity(speeds, feedforwards),
+//        new PPHolonomicDriveController(
+//            new PIDConstants(5.0, 0.0),
+//            new PIDConstants(5.0, 0.0)
+//        ),
+//        ROBOT_CONFIG,
+//        () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
+//        this
+//    );
 
     PathPlannerLogging.setLogActivePathCallback(
         (List<Pose2d> path) -> Logger.recordOutput("PathPlanner/ActivePath", path.toArray(Pose2d[]::new))

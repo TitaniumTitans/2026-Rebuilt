@@ -20,7 +20,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.subsystems.driveold.DriveConstants;
 //import frc.robot.util.AllianceFlipUtil;
 //import frc.robot.util.FieldConstants;
 //import frc.robot.util.FieldRelativeSpeeds;
@@ -100,6 +100,8 @@ public class RobotState {
           new InterpolatingDoubleTreeMap();
   private InterpolatingDoubleTreeMap shooterHoodDistanceMap =
           new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap hoodPercentToAngle =
+          new InterpolatingDoubleTreeMap();
 
   private final Field2d robotField = new Field2d();
 
@@ -159,6 +161,14 @@ public class RobotState {
     shooterHoodDistanceMap.put(2.63, 0.3);
     shooterHoodDistanceMap.put(3.26, 0.5);
     shooterHoodDistanceMap.put(3.26, 0.5);
+
+    // turn servo output into angle
+    // 3.75" is max servo arm extension
+    hoodPercentToAngle.put(0.0 / 3.75, 25.0);
+    hoodPercentToAngle.put(0.5625 / 3.75, 37.0);
+    hoodPercentToAngle.put(1.5 / 3.75, 52.0);
+    hoodPercentToAngle.put(2.25 / 3.75, 52.0);
+    hoodPercentToAngle.put(1.5 / 3.75, 56.0);
 
     // WCP values
     distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.19));
@@ -222,18 +232,30 @@ public class RobotState {
     return poseEstimator.getEstimatedPosition().getRotation();
   }
 
-  /** Gets the needed hood angle for a certain distance */
+  /** Gets the needed hood angle at the robot's current distance */
   @AutoLogOutput(key = "RobotState/HoodPercent")
   public double getHoodAngle() {
 //    return shooterHoodDistanceMap.get(getDistanceToHubInches());
     return distanceToShotMap.get(Meters.of(getDistanceToHubMeters())).hoodPosition;
   }
 
-  /** Gets the needed shooter RPM angle for a certain distance */
+  /** Gets the needed hood angle at the robot's current distance */
+  public double getHoodAngle(Distance distance) {
+//    return shooterHoodDistanceMap.get(getDistanceToHubInches());
+    return distanceToShotMap.get(distance).hoodPosition;
+  }
+
+  /** Gets the needed shooter RPM angle at the robot's current distance */
   @AutoLogOutput(key = "RobotState/ShooterRPM")
   public double getShooterRPM() {
 //    return shooterSpeedDistanceMap.get(getDistanceToHubMeters());
     return distanceToShotMap.get(Meters.of(getDistanceToHubMeters())).shooterRPM;
+  }
+
+  /** Gets the needed shooter RPM angle for a certain distance */
+  public double getShooterRPM(Distance distance) {
+//    return shooterSpeedDistanceMap.get(getDistanceToHubMeters());
+    return distanceToShotMap.get(distance).shooterRPM;
   }
 
   /** Gets the distance to the hub shooter */
@@ -241,6 +263,10 @@ public class RobotState {
   public double getDistanceToHubMeters() {
     return AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)
         .getDistance(getEstimatedPose().getTranslation());
+  }
+
+  public double getHoodToAngle(double hoodPercent) {
+    return hoodPercentToAngle.get(hoodPercent);
   }
 
   /** Gets the angle from the robot to a certain point on the field. Used for auto aim */

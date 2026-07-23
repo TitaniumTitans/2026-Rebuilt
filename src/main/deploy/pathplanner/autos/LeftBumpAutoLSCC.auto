@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CenterLBS"
+            "pathName": "LeftBumpSend"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeftFuelCenterZone"
+            "pathName": "LeftFuelCenterZoneCC"
           }
         },
         {

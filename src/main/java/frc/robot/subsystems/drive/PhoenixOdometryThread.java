@@ -13,6 +13,8 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
+import frc.robot.subsystems.driveold.DriveConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -64,7 +66,7 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(StatusSignal<Angle> signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    DriveSubsystem.odometryLock.lock();
+    Drive.odometryLock.lock();
     try {
       BaseStatusSignal[] newSignals = new BaseStatusSignal[phoenixSignals.length + 1];
       System.arraycopy(phoenixSignals, 0, newSignals, 0, phoenixSignals.length);
@@ -73,7 +75,7 @@ public class PhoenixOdometryThread extends Thread {
       phoenixQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      DriveSubsystem.odometryLock.unlock();
+      Drive.odometryLock.unlock();
     }
     return queue;
   }
@@ -82,13 +84,13 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(DoubleSupplier signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    DriveSubsystem.odometryLock.lock();
+    Drive.odometryLock.lock();
     try {
       genericSignals.add(signal);
       genericQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      DriveSubsystem.odometryLock.unlock();
+      Drive.odometryLock.unlock();
     }
     return queue;
   }
@@ -96,11 +98,11 @@ public class PhoenixOdometryThread extends Thread {
   /** Returns a new queue that returns timestamp values for each sample. */
   public Queue<Double> makeTimestampQueue() {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
-    DriveSubsystem.odometryLock.lock();
+    Drive.odometryLock.lock();
     try {
       timestampQueues.add(queue);
     } finally {
-      DriveSubsystem.odometryLock.unlock();
+      Drive.odometryLock.unlock();
     }
     return queue;
   }
@@ -127,7 +129,7 @@ public class PhoenixOdometryThread extends Thread {
       }
 
       // Save new data to queues
-      DriveSubsystem.odometryLock.lock();
+      Drive.odometryLock.lock();
       try {
         // Sample timestamp is current FPGA time minus average CAN latency
         // Default timestamps from Phoenix are NOT compatible with
@@ -152,7 +154,7 @@ public class PhoenixOdometryThread extends Thread {
           timestampQueues.get(i).offer(timestamp);
         }
       } finally {
-        DriveSubsystem.odometryLock.unlock();
+        Drive.odometryLock.unlock();
       }
     }
   }

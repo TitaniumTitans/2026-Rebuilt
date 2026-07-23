@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class AutoSelector {
@@ -15,7 +15,7 @@ public class AutoSelector {
 //      new LoggedDashboardChooser<>("AutoChooser");
   private final SendableChooser<Command> autoChooser;
 
-  public AutoSelector(DriveSubsystem drive) {
+  public AutoSelector(Drive drive) {
 //    chooser.addDefaultOption("None", Commands.none());
 
     // Testing paths

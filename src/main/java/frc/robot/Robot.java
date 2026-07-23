@@ -78,6 +78,9 @@ public class Robot extends LoggedRobot {
         // Start AdvantageKit logger
         Logger.start();
 
+        // disable all other loggers
+
+
         RobotState.getInstance();
         Pathfinding.setPathfinder(new LocalADStar());
         CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
@@ -143,19 +146,19 @@ public class Robot extends LoggedRobot {
             autonomousCommand.cancel();
         }
 
-        String gameData = DriverStation.getGameSpecificMessage();
-        if (!gameData.isEmpty()) {
-            switch (gameData.charAt(0)) {
-                case 'B':
-                    SmartDashboard.putString(autoWinName, Color.kFirstRed.toHexString());
-                    break;
-                case 'R':
-                    SmartDashboard.putString(autoWinName, Color.kFirstBlue.toHexString());
-                    break;
-                default:
-                    SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
-            }
-        }
+//        String gameData = DriverStation.getGameSpecificMessage();
+//        if (!gameData.isEmpty()) {
+//            switch (gameData.charAt(0)) {
+//                case 'B':
+//                    SmartDashboard.putString(autoWinName, Color.kFirstRed.toHexString());
+//                    break;
+//                case 'R':
+//                    SmartDashboard.putString(autoWinName, Color.kFirstBlue.toHexString());
+//                    break;
+//                default:
+//                    SmartDashboard.putString(autoWinName, Color.kGray.toHexString());
+//            }
+//        }
     }
     
     

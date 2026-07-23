@@ -29,8 +29,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotState;
-import frc.robot.subsystems.drive.DriveConstants;
-import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.driveold.DriveConstants;
+//import frc.robot.subsystems.driveold.DriveSubsystem;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -57,6 +58,11 @@ public class DriveCommands {
       0.0,
       ANGLE_KD,
       new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+
+  static {
+    TURNING_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
+  }
+
   private static final PidProperty TURNING_CONTROLLER_PROPERTY = new WpiProfiledPidPropertyBuilder(
       "Drive/Turning PID", false, TURNING_CONTROLLER
   )
@@ -92,7 +98,7 @@ public class DriveCommands {
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
    */
   public static Command joystickDrive(
-      DriveSubsystem drive,
+      Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
@@ -134,7 +140,7 @@ public class DriveCommands {
    * absolute rotation with a joystick.
    */
   public static Command joystickDriveAtAngle(
-      DriveSubsystem drive,
+      Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
@@ -180,7 +186,7 @@ public class DriveCommands {
    *
    * <p>This command should only be used in voltage control mode.
    */
-  public static Command feedforwardCharacterization(DriveSubsystem drive) {
+  public static Command feedforwardCharacterization(Drive drive) {
     List<Double> velocitySamples = new LinkedList<>();
     List<Double> voltageSamples = new LinkedList<>();
     Timer timer = new Timer();
@@ -239,7 +245,7 @@ public class DriveCommands {
   }
 
   /** Measures the robot's wheel radius by spinning in a circle. */
-  public static Command wheelRadiusCharacterization(DriveSubsystem drive) {
+  public static Command wheelRadiusCharacterization(Drive drive) {
     SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
     WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
 
@@ -269,14 +275,14 @@ public class DriveCommands {
             Commands.runOnce(
                 () -> {
                   state.positions = drive.getWheelRadiusCharacterizationPositions();
-                  state.lastAngle = drive.getGyroRotation();
+                  state.lastAngle = drive.getRotation();
                   state.gyroDelta = 0.0;
                 }),
 
             // Update gyro delta
             Commands.run(
                     () -> {
-                      var rotation = drive.getGyroRotation();
+                      var rotation = drive.getRotation();
                       state.gyroDelta += Math.abs(rotation.minus(state.lastAngle).getRadians());
                       state.lastAngle = rotation;
                     })

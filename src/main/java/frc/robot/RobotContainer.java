@@ -6,34 +6,28 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.auto.AutoCommands;
-import frc.robot.auto.AutoSelector;
-import frc.robot.commands.DriveCommands;
-import frc.robot.generated.ChoreoTraj;
+import frc.robot.commands.*;
 import frc.robot.generated.ChoreoVars;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.*;
-import frc.robot.subsystems.drive.module.ModuleIO;
-import frc.robot.subsystems.drive.module.ModuleIOTalonFX;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOTalonFX;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -42,7 +36,7 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.FieldConstants;
 import frc.robot.util.HubShiftUtil;
 
-import java.util.Set;
+import java.util.Optional;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -54,91 +48,67 @@ public class RobotContainer {
   // Driver controller
   private final CommandXboxController driveController = new CommandXboxController(0);
 
-  // Subsystems
-  private final DriveSubsystem swerve;
-  private final ShooterSubsystem shooter;
-  private final IntakeSubsystem intake;
-  private final FeederSubsystem feeder;
-  private final VisionSubsystem vision;
+    private final Drive swerve;
+    private final ShooterSubsystem shooter;
+    private final IntakeSubsystem intake;
+    private final FeederSubsystem feeder;
+    private final VisionSubsystem vision;
+//    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("limelight-front");
+    private final SendableChooser<Command> autoSelector;
 
-  // Auto
-//  private final AutoSelector autoSelector;
+    public RobotContainer()
+    {
+        switch (Constants.getMode()) {
+          case REAL -> {
+              swerve = new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                  new ModuleIOTalonFX(TunerConstants.FrontRight),
+                  new ModuleIOTalonFX(TunerConstants.BackLeft),
+                  new ModuleIOTalonFX(TunerConstants.BackRight)
+              );
 
-  private final Trigger matchTimeTrigger = new Trigger(() ->
-    isTimeNear(130) || isTimeNear(105) || isTimeNear(55) || isTimeNear(30)
-  );
+              shooter = new ShooterSubsystem(new ShooterIOTalonFX());
+              intake = new IntakeSubsystem(new IntakeIOTalonFX());
+              feeder = new FeederSubsystem(new FeederIOTalonFX());
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                  new VisionIOPhotonReal(
+                      "LeftCamera",
+                      VisionConstants.LEFT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout()),
+                  new VisionIOPhotonReal(
+                      "RightCamera",
+                      VisionConstants.RIGHT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout())
+              );
+          }
+          case SIM -> {
+              swerve = new Drive(
+                  new GyroIO() {},
+                  new ModuleIOSim(TunerConstants.FrontLeft),
+                  new ModuleIOSim(TunerConstants.FrontRight),
+                  new ModuleIOSim(TunerConstants.BackLeft),
+                  new ModuleIOSim(TunerConstants.BackRight)
+              );
 
-  private final SendableChooser<Command> autoSelector;
-
-  /**
-   * Constructs the robot container.
-   * Initializes subsystems based on the robot mode and configures bindings.
-   */
-  public RobotContainer() {
-
-    StatusLogger.disableAutoLogging();
-    // Initialize subsystems based on robot mode
-    switch (Constants.getMode()) {
-      case REAL -> {
-        // Real robot hardware
-        swerve = new DriveSubsystem(
-          new GyroIOPigeon2(),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[0]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[1]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[2]),
-          new ModuleIOTalonFX(DriveConstants.MODULE_CONSTANTS[3])
-        );
-
-        shooter = new ShooterSubsystem(new ShooterIOTalonFX());
-        intake = new IntakeSubsystem(new IntakeIOTalonFX());
-//        intake = new IntakeSubsystem(new IntakeIO() {});
-        feeder = new FeederSubsystem(new FeederIOTalonFX());
-        vision = new VisionSubsystem(
-            VisionConstants.FILTER_PARAMETERS,
-            new VisionIOPhotonReal(
-                "Shooter Left",
-                VisionConstants.LEFT_CAMERA_TRANSFORM,
-                FieldConstants.defaultAprilTagType.getLayout()
-            ),
-            new VisionIOPhotonReal(
-                "Shooter Right",
-                VisionConstants.RIGHT_CAMERA_TRANSFORM,
-                FieldConstants.defaultAprilTagType.getLayout()
-            )
-        );
-      }
-      case SIM -> {
-        // Simulated hardware
-        swerve = new DriveSubsystem(
-          new GyroIOSim(),
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {}
-        );
-
-        shooter = new ShooterSubsystem(new ShooterIO() {});
-        intake = new IntakeSubsystem(new IntakeIO() {});
-        feeder = new FeederSubsystem(new FeederIO() {});
-        vision = new VisionSubsystem(
-          VisionConstants.FILTER_PARAMETERS,
-          new VisionIOPhotonSimulation(
-            "Shooter left",
-            VisionConstants.LEFT_CAMERA_TRANSFORM,
-            FieldConstants.defaultAprilTagType.getLayout(),
-            VisionConstants.SIM_CAMERA_PROPERTIES
-          )
-        );
-      }
-      case REPLAY -> {
-        // Log replay mode (no hardware)
-        swerve = new DriveSubsystem(
-          new GyroIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {},
-          new ModuleIO() {}
-        );
+              shooter = new ShooterSubsystem(new ShooterIO() {});
+              intake = new IntakeSubsystem(new IntakeIO() {});
+              feeder = new FeederSubsystem(new FeederIO() {});
+              vision = new VisionSubsystem(VisionConstants.FILTER_PARAMETERS,
+                  new VisionIOPhotonSimulation(
+                      "LeftCamera",
+                      VisionConstants.LEFT_CAMERA_TRANSFORM,
+                      FieldConstants.defaultAprilTagType.getLayout(),
+                      VisionConstants.SIM_CAMERA_PROPERTIES));
+          }
+          case REPLAY -> {
+              swerve = new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {}
+              );
 
         shooter = new ShooterSubsystem(new ShooterIO() {});
         intake = new IntakeSubsystem(new IntakeIO() {});
@@ -157,6 +127,22 @@ public class RobotContainer {
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
         : stream);
+//      autoSelector = new SendableChooser<>();
+
+//    autoSelector.addOption("Wheel Radius Characterization", swerve);
+
+//      autoSelector.addOption("Wheel Radius Characterization",
+//          DriveCommands.wheelRadiusCharacterization(swerve));
+//      autoSelector.addOption("Simple FF Characterization",
+//          DriveCommands.feedforwardCharacterization(swerve));
+//      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
+//      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
+      autoSelector.addOption("RightSweep", swerve.followPathCommand("RightCenter", true));
+      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("LeftCenter", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("RightCenterCC", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("LeftCenterCC", new LeftCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
 
@@ -169,6 +155,8 @@ public class RobotContainer {
     RobotModeTriggers.autonomous().onTrue(Commands.runOnce(HubShiftUtil::initialize));
     RobotModeTriggers.disabled()
         .onTrue(Commands.runOnce(HubShiftUtil::initialize).ignoringDisable(true));
+
+//    frontLimelight.setDefaultCommand(updateVisionCommand());
 
     //
 
@@ -193,12 +181,12 @@ public class RobotContainer {
         vision.processVision(RobotState.getInstance()::getEstimatedPose)
             .ignoringDisable(true)
     );
-    
+
     shooter.setDefaultCommand(shooter.shooterAutoHood());
 
     // Start button: reset robot pose to origin
     driveController.start().onTrue(
-      Commands.runOnce(() -> RobotState.getInstance().resetPose(new Pose2d()))
+      Commands.runOnce(() -> swerve.setPose(new Pose2d()))
     );
 
 //      driveController.povUp().onTrue(shooter.setHoodPosition(0.3));
@@ -216,8 +204,7 @@ public class RobotContainer {
     driveController.b().whileTrue(feeder.runFeeder(Volts.of(12.0)));
 
     // X button: home the intake
-    driveController.povUp
-        ().onTrue(intake.homingCommand());
+    driveController.leftStick().onTrue(intake.homingCommand());
 
     // Y button: agitate intake
     driveController.y().whileTrue(intake.agitateCommand());
@@ -251,6 +238,9 @@ public class RobotContainer {
     driveController.leftTrigger().and(driveController.rightTrigger())
         .whileTrue(Commands.run(swerve::stopWithX).alongWith(shooter.autoAim()));
 
+//    driveController.leftTrigger()
+//        .whileTrue(new HumanAimbotCommand(swerve, frontLimelight));
+
     // Right trigger: shoot on move
 //    driveController.rightTrigger().whileTrue(
 //        DriveCommands.joystickDriveAtAngle(
@@ -261,24 +251,30 @@ public class RobotContainer {
 //        ).alongWith(shooter.autoAimOnMove())
 //    );
 
-//    driveController.povDown().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
-//    );
-
-//    driveController.povUp().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
-//    );
-//    driveController.povRight().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
-//    );
-//    driveController.povLeft().whileTrue(
-//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
-//    );
-
     driveController.povDown().whileTrue(
-        feeder.runFeeder(Volts.of(-12.0))
-            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
     );
+
+    driveController.povUp().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
+    );
+    driveController.povRight().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.RightStart))
+    );
+    driveController.povLeft().whileTrue(
+        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltLeftStart))
+    );
+
+//    driveController.povLeft().whileTrue(
+//        swerve.driveToPose(
+//            () -> AllianceFlipUtil.apply(new Pose2d(2.5, 5, new Rotation2d()))
+//        )
+//    );
+
+//    driveController.povDown().whileTrue(
+//        feeder.runFeeder(Volts.of(-12.0))
+//            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
+//    );
   }
 
   /**
@@ -354,6 +350,8 @@ public class RobotContainer {
             )
         )
     );
+
+    NamedCommands.registerCommand("spinupFlywheel", shooter.spinupFlywheel());
   }
 
   private boolean isTimeNear(double seconds) {
@@ -375,4 +373,21 @@ public class RobotContainer {
         "Shifts/Active First?",
         DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
   }
+
+//  private Command updateVisionCommand() {
+//    return frontLimelight.run(() -> {
+//          final Pose2d currentRobotPose = RobotState.getInstance().getEstimatedPose();
+//          final Optional<LimelightSubsystem.Measurement> measurement = frontLimelight.getMeasurement(currentRobotPose);
+//          measurement.ifPresent(m -> {
+//            RobotState.getInstance().addVisionMeasurement(
+//                new RobotState.VisionObservation(
+//                m.poseEstimate.pose,
+//                m.poseEstimate.timestampSeconds,
+//                m.standardDeviations
+//                )
+//            );
+//          });
+//        })
+//        .ignoringDisable(true);
+//  }
 }

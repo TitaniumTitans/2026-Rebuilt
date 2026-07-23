@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.165200000000001,
+        "y": 5.53
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.058011111111111,
+        "y": 4.337077777777778
+      },
+      "isLocked": false,
+      "linkedName": "LeftBumpSend"
+    },
+    {
+      "anchor": {
+        "x": 7.6268666666666665,
+        "y": 4.424777777777778
+      },
+      "prevControl": {
+        "x": 7.641196034641009,
+        "y": 3.913696986692919
+      },
+      "nextControl": {
+        "x": 7.597633333333333,
+        "y": 5.467433333333334
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.6268666666666665,
+        "y": 6.324944444444444
+      },
+      "prevControl": {
+        "x": 7.587888888888891,
+        "y": 5.379733333333332
+      },
+      "nextControl": {
+        "x": 7.637167190719158,
+        "y": 6.574732152717377
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.165200000000001,
+        "y": 5.53
+      },
+      "prevControl": {
+        "x": 6.884772222222224,
+        "y": 6.158516666666667
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LeftBumpSendReturn"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.764383561643825,
+      "rotationDegrees": 35.0
+    },
+    {
+      "waypointRelativePos": 1.0232876712328625,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 135.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -45.0
+  },
+  "useDefaultConstraints": true
+}
