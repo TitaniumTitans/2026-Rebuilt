@@ -28,13 +28,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShootingConstants;
 //import frc.robot.Constants.SuperstructureConstants;
+import static edu.wpi.first.units.Units.*;
 
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 
 /**
  * Some static utility methods for calculating shooter values.
@@ -196,8 +191,8 @@ public class ShotCalculator {
 
         // Calculate the mechanism values
         Angle turretAngle = solveTurretAngle(turretPose.toPose2d(), targetPose.toPose2d());
-        Angle hoodAngle = ShootingConstants.HOOD_ANGLE_BY_DISTANCE.get(targetDistance);
-        AngularVelocity flywheelSpeed = ShootingConstants.FLYWHEEL_VELOCITY_BY_DISTANCE.get(targetDistance);
+        Angle hoodAngle = Degrees.of(RobotState.getInstance().getHoodToAngle(RobotState.getInstance().getHoodAngle(targetDistance)));
+        AngularVelocity flywheelSpeed = RPM.of(RobotState.getInstance().getShooterRPM(targetDistance));
 
         // Set the ShooterValues accordingly
         values.setTurretAngle(turretAngle);
@@ -336,13 +331,13 @@ public class ShotCalculator {
         ShooterValues curValue = solveInterpolated(adjustedPose, targetPose);
 
         // used for logging
-        double[] timeTillScoreArray = new double[SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS];
-        Pose3d[] adjustedPoses = new Pose3d[SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS];
+        double[] timeTillScoreArray = new double[ShootingConstants.SHOOTER_CALCLATOR_SHOT_ITERATION];
+        Pose3d[] adjustedPoses = new Pose3d[ShootingConstants.SHOOTER_CALCLATOR_SHOT_ITERATION];
 
         // iterate through the amount of calculations
-        for (int i = 0; i < SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS; i++) {
+        for (int i = 0; i < ShootingConstants.SHOOTER_CALCLATOR_SHOT_ITERATION; i++) {
             // use this to find the output angle assuming the ball perfectly hits the target
-            Translation2d translationToTarget = solveGamepieceTranslation(solveExitPose(adjustedPose, curValue.getTurretAngle(), curValue.getHoodAngle()), targetPose);
+            Translation2d translationToTarget = solveGamepieceTranslation(adjustedPose /* solveExitPose(adjustedPose, curValue.getTurretAngle(), curValue.getHoodAngle()) */, targetPose);
 
             time = ShootingConstants.TIME_TO_SCORE_BY_DISTANCE.get(translationToTarget.getMeasureX());
 

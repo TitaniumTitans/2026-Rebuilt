@@ -121,34 +121,6 @@ public final class Constants {
     }
 
     /**
-     * An interpolation table used for hood angle by gamepiece velocity.
-     */
-    public static final InterpolatingMeasureTreeMap<Angle, AngleUnit, Angle, AngleUnit> HOOD_ANGLE_BY_GAMEPIECE_THETA = new InterpolatingMeasureTreeMap<>();
-
-    static {
-      // Add values to the interpolation table
-      HOOD_ANGLE_BY_GAMEPIECE_THETA.put(Degrees.of(37.0), Degrees.of(1.0));
-      HOOD_ANGLE_BY_GAMEPIECE_THETA.put(Degrees.of(69.5), Degrees.of(32.0));
-    }
-
-    /**
-     * An interpolation table used for flywheel speed by distance, for basic shoot-from-anywhere.
-     */
-    public static final InterpolatingMeasureTreeMap<Distance, DistanceUnit, AngularVelocity, AngularVelocityUnit> FLYWHEEL_VELOCITY_BY_DISTANCE = new InterpolatingMeasureTreeMap<>();
-
-    static {
-      // Add values to the interpolation table
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(1.9), RotationsPerSecond.of(26.5));
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(2.58), RotationsPerSecond.of(30));
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(3.29), RotationsPerSecond.of(31.6));
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(4.5), RotationsPerSecond.of(34.5));
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(5.29), RotationsPerSecond.of(38));
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(6.48), RotationsPerSecond.of(44));
-      // Extrapolated with a linreg
-      FLYWHEEL_VELOCITY_BY_DISTANCE.put(Meters.of(20), RotationsPerSecond.of(91));
-    }
-
-    /**
      * An interpolation table used for hood angle by distance, for basic shoot-from-anywhere.
      */
     public static final InterpolatingMeasureTreeMap<Distance, DistanceUnit, Angle, AngleUnit> HOOD_ANGLE_BY_DISTANCE = new InterpolatingMeasureTreeMap<>();
@@ -221,6 +193,8 @@ public final class Constants {
      */
     // currently forcing the intercept to 0, might change later
     public static final double LINREG_FLYWHEEL_B = 0;
+
+    public static final int SHOOTER_CALCLATOR_SHOT_ITERATION = 3;
 
     /**
      * The minimum angle to shoot at.
