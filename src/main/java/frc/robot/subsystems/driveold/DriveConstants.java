@@ -45,7 +45,7 @@ public class DriveConstants {
 
   // Wheel and gear ratios
   public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(2.0);
-  public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0);
+  public static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
   public static final double STEER_GEAR_RATIO = (50.0 / 14.0) * (60.0 / 10.0); // 18.75
 
   // Traction coefficient
