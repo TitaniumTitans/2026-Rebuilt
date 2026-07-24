@@ -139,6 +139,17 @@ public final class Constants {
 
     public static final InterpolatingMeasureTreeMap<Distance, DistanceUnit, Time, TimeUnit> TIME_TO_SCORE_BY_DISTANCE = new InterpolatingMeasureTreeMap<>();
 
+    /**
+     * An interpolation table used for hood angle by gamepiece velocity.
+     */
+    public static final InterpolatingMeasureTreeMap<Angle, AngleUnit, Angle, AngleUnit> HOOD_ANGLE_BY_GAMEPIECE_THETA = new InterpolatingMeasureTreeMap<>();
+
+    static {
+      // Add values to the interpolation table
+      HOOD_ANGLE_BY_GAMEPIECE_THETA.put(Degrees.of(37.0), Degrees.of(1.0));
+      HOOD_ANGLE_BY_GAMEPIECE_THETA.put(Degrees.of(69.5), Degrees.of(32.0));
+    }
+
     static {
       // for high arc
       // TIME_TO_SCORE_BY_DISTANCE.put(Meters.of(1.9), Seconds.of(0.77133478759));

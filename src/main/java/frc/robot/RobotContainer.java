@@ -221,8 +221,8 @@ public class RobotContainer {
             swerve,
             () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
-            () -> RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint))
-        ).alongWith(shooter.autoAim())
+            () -> RobotState.getInstance().getShootOnMoveShotData().shotAngle()
+        ).alongWith(shooter.autoAimOnMove())
     );
 
     // Left Trigger: static shot

@@ -4,14 +4,12 @@ import com.gos.lib.properties.GosDoubleProperty;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
@@ -58,7 +56,7 @@ public class RobotState {
 
   // Shoot on the move
   private Pose2d lastPose = new Pose2d();
-  private Translation2d fieldRelativeVelocity = new Translation2d();
+  private ChassisSpeeds fieldRelativeVelocity = new ChassisSpeeds();
 
   // use for simulation
 //  @Setter
@@ -101,6 +99,8 @@ public class RobotState {
   private InterpolatingDoubleTreeMap shooterHoodDistanceMap =
           new InterpolatingDoubleTreeMap();
   private InterpolatingDoubleTreeMap hoodPercentToAngle =
+          new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap hoodAngleToPercent =
           new InterpolatingDoubleTreeMap();
 
   private final Field2d robotField = new Field2d();
@@ -170,6 +170,12 @@ public class RobotState {
     hoodPercentToAngle.put(2.25 / 3.75, 52.0);
     hoodPercentToAngle.put(1.5 / 3.75, 56.0);
 
+    hoodAngleToPercent.put(25.0, 0.0 / 3.75);
+    hoodAngleToPercent.put(37.0, 0.5625 / 3.75);
+    hoodAngleToPercent.put(52.0, 1.5 / 3.75);
+    hoodAngleToPercent.put(52.0, 2.25 / 3.75);
+    hoodAngleToPercent.put(56.0, 1.5 / 3.75);
+
     // WCP values
     distanceToShotMap.put(Inches.of(52.0), new Shot(2800, 0.19));
     distanceToShotMap.put(Inches.of(114.4), new Shot(3275, 0.40));
@@ -184,12 +190,8 @@ public class RobotState {
     SmartDashboard.putData("RobotState/Field2d", robotField);
   }
 
-  public void updateVelocityPeriodic() {
-    fieldRelativeVelocity = getEstimatedPose()
-        .getTranslation()
-        .minus(lastPose.getTranslation())
-        .div(0.02); // loop cycle
-    lastPose = getEstimatedPose();
+  public void updateVelocityPeriodic(ChassisSpeeds speeds) {
+    fieldRelativeVelocity = speeds;
 
     robotField.setRobotPose(getEstimatedPose());
   }
@@ -283,28 +285,30 @@ public class RobotState {
 
   public ShotData getShootOnMoveShotData() {
     // look ahead to the future goal
-    double lookahead = lookaheadTime.getValue();
-    Translation2d lookaheadPoint = FieldConstants.Hub.goalPoint
-        .minus(fieldRelativeVelocity.times(lookahead));
-    double effectiveDistance = lookaheadPoint.getDistance(getEstimatedPose().getTranslation());
+//    double lookahead = lookaheadTime.getValue();
+//    Translation2d lookaheadPoint = FieldConstants.Hub.goalPoint
+//        .minus(fieldRelativeVelocity.times(lookahead));
+//    double effectiveDistance = lookaheadPoint.getDistance(getEstimatedPose().getTranslation());
+//
+//    // Find the angle to the future goal
+//    Translation2d robotToPoint = lookaheadPoint.minus(getEstimatedPose().getTranslation());
+//    Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
+//
+//    // Get the new shot data
+//    Shot shot = distanceToShotMap.get(Meters.of(effectiveDistance));
+//
+//    Logger.recordOutput("ShootOnMove/Goal", new Translation3d(lookaheadPoint));
+//    Logger.recordOutput("ShootOnMove/Angle", angleToPoint);
+//    Logger.recordOutput("ShootOnMove/Hood", shot.hoodPosition);
+//    Logger.recordOutput("ShootOnMove/RPM", shot.shooterRPM);
+//    Logger.recordOutput("ShootOnMove/EffectiveDistance", Meters.of(effectiveDistance));
+//    Logger.recordOutput("ShootOnMove/DeltaGoal", lookaheadPoint.minus(FieldConstants.Hub.goalPoint));
 
-    // Find the angle to the future goal
-    Translation2d robotToPoint = lookaheadPoint.minus(getEstimatedPose().getTranslation());
-    Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
-
-    // Get the new shot data
-    Shot shot = distanceToShotMap.get(Meters.of(effectiveDistance));
-
-    Logger.recordOutput("ShootOnMove/Goal", new Translation3d(lookaheadPoint));
-    Logger.recordOutput("ShootOnMove/Angle", angleToPoint);
-    Logger.recordOutput("ShootOnMove/Hood", shot.hoodPosition);
-    Logger.recordOutput("ShootOnMove/RPM", shot.shooterRPM);
-    Logger.recordOutput("ShootOnMove/EffectiveDistance", Meters.of(effectiveDistance));
-    Logger.recordOutput("ShootOnMove/DeltaGoal", lookaheadPoint.minus(FieldConstants.Hub.goalPoint));
+    ShooterValues shotValues = ShotCalculator.solve(new Pose3d(getEstimatedPose()), new Pose3d(AllianceFlipUtil.apply(FieldConstants.Hub.innerCenterPoint), new Rotation3d()), fieldRelativeVelocity);
 
     return new ShotData(
-        angleToPoint,
-        shot
+        Rotation2d.fromDegrees(shotValues.getTurretAngle().in(Degree)),
+        new Shot(shotValues.getFlywheelSpeed().in(RPM), hoodAngleToPercent.get(shotValues.getHoodAngle().in(Degree)))
     );
   }
 

@@ -96,7 +96,6 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic()
     {
         CommandScheduler.getInstance().run();
-        RobotState.getInstance().updateVelocityPeriodic();
         RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint)) ;
         RobotState.getInstance().getShootOnMoveShotData();
 
