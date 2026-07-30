@@ -1,0 +1,4 @@
+{
+    "wpilib.selectDefaultSimulateExtension": false,
+    "java.debug.settings.onBuildFailureProceed": true
+}

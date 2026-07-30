@@ -1,7 +1,11 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/RobotState/Field2d": "Field2d",
+      "/SmartDashboard/Scheduler": "Scheduler"
     }
   },
   "NetworkTables Info": {

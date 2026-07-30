@@ -2,7 +2,7 @@ package frc.robot;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.SignalLogger;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShootingConstants;
+import frc.robot.Constants.FieldConstants.ShootingZones;
+
 //import frc.robot.Constants.SuperstructureConstants;
 import static edu.wpi.first.units.Units.*;
 
@@ -106,10 +108,11 @@ public class ShotCalculator {
         ShooterValues values = new ShooterValues();
 
         targetPosePublisher.set(targetPose);
-        SignalLogger.writeStruct(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Target Pose", Pose3d.struct, targetPose);
+        Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Target Pose", targetPose);
 
         // Figure out where the turret is since it isn't centered on the robot
-        Pose3d exitPose = robotPose; // solveExitPose(robotPose, values.getTurretAngle(), values.getHoodAngle());
+        Pose3d exitPose = solveExitPose(robotPose, values.getHoodAngle());
+        Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Exit Pose", exitPose);
 
         // ----- FIRST CALCULATION (NO VELOCITY) -----
         // This stage is mainly just to calculate how long the ball will be in the air for
@@ -123,24 +126,24 @@ public class ShotCalculator {
         LinearVelocity gamepieceSpeed = solveGamepieceSpeed(gamepieceTranslation, gamepieceTheta);
 
         // ----- RE-CALCUlATION (WITH VELOCITY) -----
-        for (int i = 0; i < 10 /* SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS */; i++) {
+        for (int i = 0; i < 3 /* SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS */; i++) {
             // Recalculate the exit pose of the ball
-            exitPose = exitPose; //solveExitPose(robotPose, turretAngle, gamepieceTheta);
+            exitPose = solveExitPose(robotPose, gamepieceTheta);
 
             // Figure out how long the gamepiece will be in the air for
             Time time = calculateTimeTillScore(gamepieceTranslation, gamepieceTheta, gamepieceSpeed);
             timeTillScorePublisher.set(time.in(Seconds));
-            SignalLogger.writeValue(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Time Till Score", time);
+            Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Time Till Score", time);
 
             // Add the velocity vector of the robot
             // We're effectively trying to figure out where the turret will be at the end of the ball's travel
             Transform3d velocityAsTransform = new Transform3d(robotVelocity.vxMetersPerSecond, robotVelocity.vyMetersPerSecond, 0.0, new Rotation3d());
             Pose3d modifiedTurretedPose = exitPose.transformBy(velocityAsTransform.times(time.in(Seconds)));
             modifiedTurretPosePublisher.set(modifiedTurretedPose);
-            SignalLogger.writeStruct(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Modified Turret Pose", Pose3d.struct, modifiedTurretedPose);
+            Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Modified Turret Pose", modifiedTurretedPose);
 
             // Solve again, hood angle stays the same
-            turretAngle = solveTurretAngle(modifiedTurretedPose.toPose2d(), targetPose.toPose2d());
+            turretAngle = RobotState.getInstance().getPointAtAngle(() -> modifiedTurretedPose.toPose2d(), () -> targetPose.toPose2d().getTranslation()).getMeasure();
             gamepieceTranslation = solveGamepieceTranslation(modifiedTurretedPose, targetPose);
             gamepieceTheta = calculateHoodAngle(gamepieceTranslation);
             gamepieceSpeed = solveGamepieceSpeed(gamepieceTranslation, gamepieceTheta);
@@ -150,6 +153,8 @@ public class ShotCalculator {
         modifiedTranslationPublisher.set(gamepieceTranslation);
         gamepieceThetaPublisher.set(gamepieceTheta.in(Radians));
         gamepieceSpeedPublisher.set(gamepieceSpeed.in(MetersPerSecond));
+
+        Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Modelled Turret Angle", turretAngle);
 
         // Set the ShooterValues accordingly
         values.setTurretAngle(turretAngle);
@@ -313,7 +318,7 @@ public class ShotCalculator {
         double a = .5 * ShootingConstants.GAMEPIECE_G.in(MetersPerSecondPerSecond);
         double b = yVelocity;
         double c = -gamepieceTranslation.getY();
-        System.out.println("A:" + a + " B:" + b + " C:" + c + " V:" + gamepieceSpeed.in(MetersPerSecond) + " Theta:" + gamepieceTheta.in(Degrees));
+        // System.out.println("A:" + a + " B:" + b + " C:" + c + " V:" + gamepieceSpeed.in(MetersPerSecond) + " Theta:" + gamepieceTheta.in(Degrees));
         // calculate quadratic formula to solve kinematics deltaY = Yinitial + Vyt + at^2
         double t = (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
         return Seconds.of(t);
@@ -370,26 +375,16 @@ public class ShotCalculator {
 //     * @return
 //     *         the pose of where the ball leaves the shooter
 //     */
-    /* public static Pose3d solveExitPose(Pose3d robotPose, Angle thetaTurret, Angle thetaHood) {
-        // calculate the distance from the center of the turret pivot to where the ball is launched from
-        Distance xHoodOffset = SuperstructureConstants.TURRET_BASE_TO_HOOD_PIVOT.getMeasureX().minus(SuperstructureConstants.HOOD_PIVOT_TO_GAMEPIECE_LAUNCH_RADIUS.times(Math.sin(thetaHood.in(Radians))));
-        // use this to calculate the offset due to the hood and turret from the center of the turret pivot
-        Distance xPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureX().plus(xHoodOffset.times(Math.cos(thetaTurret.in(Radians))));
-        Distance yPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureY().plus(xHoodOffset.times(Math.sin(thetaTurret.in(Radians))));
-        Distance zPos = SuperstructureConstants.ROBOT_TO_TURRET_BASE_TRANSFORM.getMeasureZ()
-                .plus(SuperstructureConstants.TURRET_BASE_TO_HOOD_PIVOT.getMeasureZ())
-                .plus(SuperstructureConstants.HOOD_PIVOT_TO_GAMEPIECE_LAUNCH_RADIUS.times(Math.cos(thetaHood.in(Radians))));
-        // calculate the transform rotated by the robots pose
-        // this assumes the robotpose ccw is positive
-
-        // xMod = xcos(a) - ysin(a)
-        Distance xModifiedPos = xPos.times(Math.cos(robotPose.getRotation().getZ())).minus(yPos.times(Math.sin(robotPose.getRotation().getZ())));
-        // yMod = xsin(a)+ycos(a)
-        Distance yModifiedPos = xPos.times(Math.sin(robotPose.getRotation().getZ())).plus(yPos.times(Math.cos(robotPose.getRotation().getZ())));
-
-        Transform3d modifieTransformTurret = new Transform3d(xModifiedPos, yModifiedPos, zPos, new Rotation3d());
-        return robotPose.plus(modifieTransformTurret);
-    } */
+     public static Pose3d solveExitPose(Pose3d robotPose, Angle thetaHood) {
+        double xMeters = -ShootingConstants.SHOOTER_BACK_DISTANCE.in(Meters);
+        double zMeters = ShootingConstants.SHOOTER_UP_DISTANCE.in(Meters);
+        double heading = robotPose.getRotation().getZ();
+        return robotPose.plus(new Transform3d(
+            xMeters,// * Math.cos(heading), 
+            0.0, //-xMeters * Math.sin(heading), 
+            zMeters, 
+        new Rotation3d()));
+    }
 
     public static Angle solveOutputAngleFromVelocity(LinearVelocity outputVelocity, Translation2d translationToTarget) {
         // \arctan\left(\frac{\left(v^{2}+\sqrt{v^{4}-g^{2}d_{x}^{2}-2gv^{2}d_{y}}\right)}{g\cdot d_{x}}\right)

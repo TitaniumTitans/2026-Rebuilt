@@ -279,6 +279,13 @@ public class RobotState {
     return angleToPoint;
   }
 
+  /** Gets the angle from the robot to a certain point on the field. Used for auto aim */
+  public Rotation2d getPointAtAngle(Supplier<Pose2d> robotPose, Supplier<Translation2d> point) {
+    Translation2d robotToPoint = point.get().minus(robotPose.get().getTranslation());
+    Rotation2d angleToPoint = new Rotation2d(robotToPoint.getX(), robotToPoint.getY());
+    return angleToPoint;
+  }
+
   private double hoodToRadian(double percent) {
     return Units.degreesToRadians(38.0 * percent);
   }

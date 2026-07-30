@@ -216,6 +216,16 @@ public class RobotContainer {
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
 
     // Right trigger: auto aim
+    driveController.leftTrigger().and(driveController.rightTrigger().negate()).whileTrue(
+        DriveCommands.joystickDriveAtAngle(
+            swerve,
+            () -> -driveController.getLeftY(),
+            () -> -driveController.getLeftX(),
+            () -> RobotState.getInstance().getPointAtAngle(() -> AllianceFlipUtil.apply(FieldConstants.Hub.goalPoint))
+        ).alongWith(shooter.autoAim())
+    );
+
+    // Right trigger: auto aim
     driveController.rightTrigger().and(driveController.leftTrigger().negate()).whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,

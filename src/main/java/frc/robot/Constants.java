@@ -232,5 +232,9 @@ public final class Constants {
      * A set of values to shoot from the center by the tower.
      */
     public static final ShooterValues STATIC_SHOOT_CENTER = new ShooterValues(RotationsPerSecond.of(33), Degrees.of(5), Degrees.of(0));
+
+    // rowan added constants
+    public static final Distance SHOOTER_BACK_DISTANCE = Inches.of(8.5);
+    public static final Distance SHOOTER_UP_DISTANCE = Inches.of(25);
   }
 }
