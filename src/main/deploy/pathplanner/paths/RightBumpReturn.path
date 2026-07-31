@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.988442858121412,
-        "y": 2.5345649455053363
+        "x": 5.988443010717381,
+        "y": 2.5345621313834203
       },
       "isLocked": false,
       "linkedName": "RightBumpSendReturn"
@@ -108,7 +108,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": -145.0
   },
   "useDefaultConstraints": true
 }

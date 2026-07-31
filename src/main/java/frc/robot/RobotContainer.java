@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -124,6 +126,8 @@ public class RobotContainer {
 
     boolean isComp = true;
 
+
+
     autoSelector = AutoBuilder.buildAutoChooserWithOptionsModifier(stream -> isComp
         ? stream.filter(auto -> auto.getName().endsWith("Comp"))
         : stream);
@@ -142,6 +146,8 @@ public class RobotContainer {
       autoSelector.addOption("SingleLeftCenterInward", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("SingleRightCenterCCOutward", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
       autoSelector.addOption("SingleLeftCenterCCOutward", new LeftCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("LeftHugHub", new LeftCenterHugHub(swerve, intake, shooter, feeder));
+      autoSelector.addOption("RightHugHub", new RightCenterHugHub(swerve, intake, shooter, feeder));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }

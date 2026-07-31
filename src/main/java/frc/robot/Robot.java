@@ -6,10 +6,12 @@
 package frc.robot;
 
 import au.grapplerobotics.CanBridge;
+import com.ctre.phoenix6.SignalLogger;
 import com.gos.lib.properties.PropertyManager;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,6 +54,9 @@ public class Robot extends LoggedRobot {
                 case 1 -> "Uncommitted changes";
                 default -> "Unknown";
             });
+
+        SignalLogger.stop();
+        StatusLogger.disableAutoLogging();
 
         // Set up data receivers & replay source
         switch (Constants.getMode()) {

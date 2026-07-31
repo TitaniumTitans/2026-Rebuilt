@@ -7,7 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightCenter"
+            "pathName": "RightBumpSend"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightHugHub"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightHugReturn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightBumpReturn"
           }
         }
       ]

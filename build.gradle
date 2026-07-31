@@ -28,6 +28,7 @@ deploy {
             team = project.frc.getTeamNumber()
             debug = project.frc.getDebugOrDefault(false)
 
+
             artifacts {
                 // First part is artifact name, 2nd is artifact type
                 // getTargetTypeClass is a shortcut to get the class type using a string
@@ -56,6 +57,7 @@ def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 
 // Set to true to use debug for JNI.
 wpi.java.debugJni = false
+def deleteOldFiles = true
 
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
