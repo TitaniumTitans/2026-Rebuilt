@@ -267,9 +267,9 @@ public class RobotContainer {
 //        ).alongWith(shooter.autoAimOnMove())
 //    );
 
-    driveController.povDown().whileTrue(
-        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
-    );
+//    driveController.povDown().whileTrue(
+//        swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.AltRightStart))
+//    );
 
     driveController.povUp().whileTrue(
         swerve.driveToPose(() -> AllianceFlipUtil.apply(ChoreoVars.Poses.CenterStart))
@@ -287,10 +287,10 @@ public class RobotContainer {
 //        )
 //    );
 
-//    driveController.povDown().whileTrue(
-//        feeder.runFeeder(Volts.of(-12.0))
-//            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
-//    );
+    driveController.povDown().whileTrue(
+        feeder.runFeeder(Volts.of(-12.0))
+            .alongWith(shooter.runShooterRPM(RPM.of(-3000)))
+    );
   }
 
   /**
