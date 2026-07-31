@@ -315,7 +315,7 @@ public class RobotState {
 
     return new ShotData(
         Rotation2d.fromDegrees(shotValues.getTurretAngle().in(Degree)),
-        new Shot(shotValues.getFlywheelSpeed().in(RPM), hoodAngleToPercent.get(shotValues.getHoodAngle().in(Degree)))
+        new Shot(shotValues.getFlywheelSpeed().in(RPM), shotValues.getHoodPercent())
     );
   }
 

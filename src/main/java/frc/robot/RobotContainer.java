@@ -216,7 +216,7 @@ public class RobotContainer {
     driveController.leftBumper().onTrue(intake.setPivotPosition(IntakeSubsystem.Position.STOWED));
 
     // Right trigger: auto aim
-    driveController.leftTrigger().and(driveController.rightTrigger().negate()).whileTrue(
+    driveController.rightTrigger().and(driveController.leftTrigger().negate()).whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> -driveController.getLeftY(),
@@ -226,7 +226,7 @@ public class RobotContainer {
     );
 
     // Right trigger: auto aim
-    driveController.rightTrigger().and(driveController.leftTrigger().negate()).whileTrue(
+    driveController.leftTrigger().and(driveController.rightTrigger().negate()).whileTrue(
         DriveCommands.joystickDriveAtAngle(
             swerve,
             () -> -driveController.getLeftY(),
@@ -242,7 +242,7 @@ public class RobotContainer {
     );
 
     // force feed
-    driveController.b().and(driveController.rightTrigger().or(driveController.a()).or(driveController.x()))
+    driveController.b().and(driveController.rightTrigger().or(driveController.a()).or(driveController.x()).or(driveController.leftTrigger()))
         .whileTrue(intake.agitateCommand());
 
     driveController.leftTrigger().and(driveController.rightTrigger())

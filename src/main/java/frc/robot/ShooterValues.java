@@ -17,6 +17,7 @@ public class ShooterValues {
     private AngularVelocity flywheelSpeed;
     private Angle turretAngle;
     private Angle hoodAngle;
+    private double hoodPercent;
 
     /**
      * Creates a new ShooterValues with zero values.
@@ -25,6 +26,7 @@ public class ShooterValues {
         flywheelSpeed = RadiansPerSecond.of(0);
         turretAngle = Radians.of(0);
         hoodAngle = Radians.of(0);
+        hoodPercent = 0.1;
     }
 
     /**
@@ -110,6 +112,11 @@ public class ShooterValues {
         return this;
     }
 
+    public ShooterValues setHoodPercent(double hoodPercent) {
+        this.hoodPercent = hoodPercent;
+        return this;
+    }
+
     /**
      * Gets the flywheel speed.
      *
@@ -138,6 +145,10 @@ public class ShooterValues {
      */
     public Angle getHoodAngle() {
         return hoodAngle;
+    }
+
+    public double getHoodPercent() {
+        return hoodPercent;
     }
 
     @Override

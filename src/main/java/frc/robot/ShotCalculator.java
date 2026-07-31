@@ -3,6 +3,7 @@ package frc.robot;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -90,6 +91,8 @@ public class ShotCalculator {
             .getIntegerTopic(SHOOTING_CALCULATOR_INTERPOLATED_WHILE_MOVE_TABLE_NAME + "/Time To Compute")
             .publish();
 
+    private static final LoggedNetworkNumber fudgeFactor = new LoggedNetworkNumber("SOTM Fudge Factor", 1.1);
+
     /**
      * Solves shooter values for a given robot pose and target.
      * <p>
@@ -124,6 +127,8 @@ public class ShotCalculator {
         Angle turretAngle = solveTurretAngle(exitPose.toPose2d(), targetPose.toPose2d());
         Angle gamepieceTheta = calculateHoodAngle(gamepieceTranslation);
         LinearVelocity gamepieceSpeed = solveGamepieceSpeed(gamepieceTranslation, gamepieceTheta);
+        AngularVelocity shooterRPM = RPM.of(0);
+        double hoodPercent = 0.1;
 
         // ----- RE-CALCUlATION (WITH VELOCITY) -----
         for (int i = 0; i < 3 /* SuperstructureConstants.SHOOTING_CALCULATOR_ITERATIONS */; i++) {
@@ -131,7 +136,7 @@ public class ShotCalculator {
             exitPose = solveExitPose(robotPose, gamepieceTheta);
 
             // Figure out how long the gamepiece will be in the air for
-            Time time = calculateTimeTillScore(gamepieceTranslation, gamepieceTheta, gamepieceSpeed);
+            Time time = calculateTimeTillScore(gamepieceTranslation, gamepieceTheta, gamepieceSpeed).times(fudgeFactor.getAsDouble());
             timeTillScorePublisher.set(time.in(Seconds));
             Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/Time Till Score", time);
 
@@ -147,9 +152,12 @@ public class ShotCalculator {
             gamepieceTranslation = solveGamepieceTranslation(modifiedTurretedPose, targetPose);
             gamepieceTheta = calculateHoodAngle(gamepieceTranslation);
             gamepieceSpeed = solveGamepieceSpeed(gamepieceTranslation, gamepieceTheta);
+            shooterRPM = RPM.of(RobotState.getInstance().getShooterRPM(Meters.of(gamepieceTranslation.getX())));
+            hoodPercent = RobotState.getInstance().getHoodAngle(Meters.of(gamepieceTranslation.getX()));
         }
 
-        modifiedTargetPosePublisher.set(exitPose.plus(new Transform3d(gamepieceTranslation.getX() * Math.cos(turretAngle.in(Radians)), gamepieceTranslation.getX() * Math.sin(turretAngle.in(Radians)), gamepieceTranslation.getY(), new Rotation3d())));
+        Logger.recordOutput(SHOOTING_CALCULATOR_MODELED_TABLE_NAME + "/gamepiece Transform", new Transform3d(gamepieceTranslation.getX() * Math.cos(turretAngle.in(Radians)), gamepieceTranslation.getX() * Math.sin(turretAngle.in(Radians)), gamepieceTranslation.getY(), new Rotation3d()));
+        modifiedTargetPosePublisher.set(exitPose.plus(new Transform3d(gamepieceTranslation.getX() /* Math.cos(turretAngle.in(Radians))*/, gamepieceTranslation.getX() /** Math.sin(turretAngle.in(Radians))*/, gamepieceTranslation.getY(), new Rotation3d())));
         modifiedTranslationPublisher.set(gamepieceTranslation);
         gamepieceThetaPublisher.set(gamepieceTheta.in(Radians));
         gamepieceSpeedPublisher.set(gamepieceSpeed.in(MetersPerSecond));
@@ -160,6 +168,8 @@ public class ShotCalculator {
         values.setTurretAngle(turretAngle);
         values.setGamepieceTheta(gamepieceTheta);
         values.setGamepieceSpeed(gamepieceSpeed);
+        values.setFlywheelSpeed(shooterRPM);
+        values.setHoodPercent(hoodPercent);
 
         // Set the ShooterValues into the simulation class
         // Theoretically this could be removed in favor of doing the gamepiece -> mechanism calculations backwards but I don't have time for that right now
