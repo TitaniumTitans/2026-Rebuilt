@@ -15,7 +15,7 @@ public class RightCenterAutoCCCommandGroup extends SequentialCommandGroup {
         intake.setPivotPosition(IntakeSubsystem.Position.INTAKE),
 //        Commands.waitSeconds(1.0),
         intake.setIntakePower(IntakeSubsystem.Speed.INTAKE),
-        drive.followPathCommand("RightSweepOne", false),
+        drive.followPathCommand("RightSweepAlt", false),
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
         drive.followPathCustomCommand("RightBumpReturn", false),

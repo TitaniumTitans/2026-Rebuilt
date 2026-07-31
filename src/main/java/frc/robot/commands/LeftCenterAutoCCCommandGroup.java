@@ -15,7 +15,7 @@ public class LeftCenterAutoCCCommandGroup extends SequentialCommandGroup {
         intake.setPivotPosition(IntakeSubsystem.Position.INTAKE),
 //        Commands.waitSeconds(1.0),
         intake.setIntakePower(IntakeSubsystem.Speed.INTAKE),
-        drive.followPathCommand("LeftSweepOne", false),
+        drive.followPathCommand("LeftSweepAlt", false),
 //        intake.setIntakePower(IntakeSubsystem.Speed.STOP),
 //        Commands.waitSeconds(1.0),
         drive.followPathCustomCommand("LeftBumpReturn", false),

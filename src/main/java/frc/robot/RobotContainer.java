@@ -138,10 +138,10 @@ public class RobotContainer {
 //      autoSelector.addOption("CustomLinearTest", swerve.followPathCommand("LinearPath"));
 //      autoSelector.addOption("CustomRightBumpTest", swerve.followPathCustomCommand("RightBumpSend"));
       autoSelector.addOption("RightSweep", swerve.followPathCommand("RightCenter", true));
-      autoSelector.addOption("RightCenter", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
-      autoSelector.addOption("LeftCenter", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
-      autoSelector.addOption("RightCenterCC", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
-      autoSelector.addOption("LeftCenterCC", new LeftCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("SingleRightCenterInward", new RightCenterAutoCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("SingleLeftCenterInward", new LeftCenterAutoCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("SingleRightCenterCCOutward", new RightCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
+      autoSelector.addOption("SingleLeftCenterCCOutward", new LeftCenterAutoCCCommandGroup(swerve, intake, shooter, feeder));
 
     SmartDashboard.putData("Auto Chooser", autoSelector);
   }
