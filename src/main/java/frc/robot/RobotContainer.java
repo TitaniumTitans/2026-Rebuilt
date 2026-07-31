@@ -53,7 +53,7 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final FeederSubsystem feeder;
     private final VisionSubsystem vision;
-//    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("limelight-front");
+    private final LimelightSubsystem frontLimelight = new LimelightSubsystem("limelight-front");
     private final SendableChooser<Command> autoSelector;
 
     public RobotContainer()
@@ -156,7 +156,7 @@ public class RobotContainer {
     RobotModeTriggers.disabled()
         .onTrue(Commands.runOnce(HubShiftUtil::initialize).ignoringDisable(true));
 
-//    frontLimelight.setDefaultCommand(updateVisionCommand());
+    frontLimelight.setDefaultCommand(updateVisionCommand());
 
     //
 
@@ -384,20 +384,20 @@ public class RobotContainer {
         DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
   }
 
-//  private Command updateVisionCommand() {
-//    return frontLimelight.run(() -> {
-//          final Pose2d currentRobotPose = RobotState.getInstance().getEstimatedPose();
-//          final Optional<LimelightSubsystem.Measurement> measurement = frontLimelight.getMeasurement(currentRobotPose);
-//          measurement.ifPresent(m -> {
-//            RobotState.getInstance().addVisionMeasurement(
-//                new RobotState.VisionObservation(
-//                m.poseEstimate.pose,
-//                m.poseEstimate.timestampSeconds,
-//                m.standardDeviations
-//                )
-//            );
-//          });
-//        })
-//        .ignoringDisable(true);
-//  }
+  private Command updateVisionCommand() {
+    return frontLimelight.run(() -> {
+          final Pose2d currentRobotPose = RobotState.getInstance().getEstimatedPose();
+          final Optional<LimelightSubsystem.Measurement> measurement = frontLimelight.getMeasurement(currentRobotPose);
+          measurement.ifPresent(m -> {
+            RobotState.getInstance().addVisionMeasurement(
+                new RobotState.VisionObservation(
+                m.poseEstimate.pose,
+                m.poseEstimate.timestampSeconds,
+                m.standardDeviations
+                )
+            );
+          });
+        })
+        .ignoringDisable(true);
+  }
 }
