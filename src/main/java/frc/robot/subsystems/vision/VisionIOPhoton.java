@@ -13,6 +13,7 @@ import frc.robot.subsystems.vision.VisionInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -168,16 +169,25 @@ public abstract class VisionIOPhoton implements VisionIO {
      */
     private Pose3d[] retrieveMultiTagEstimates(PhotonPipelineResult latestResult) {
         // Retrieve the camera pose in field space represented as transform
-        Transform3d bestMultiPose = latestResult.getMultiTagResult().get().estimatedPose.best;
-        Transform3d alternateMultiPose = latestResult.getMultiTagResult().get().estimatedPose.alt;
+//        Transform3d bestMultiPose = latestResult.getMultiTagResult().get().estimatedPose.best;
+//        Transform3d alternateMultiPose = latestResult.getMultiTagResult().get().estimatedPose.alt;
 
-        logRotationDiff(new Pose3d().transformBy(bestMultiPose));
+        Optional<MultiTargetPNPResult> resultOptional = latestResult.getMultiTagResult();
 
-        // Convert to field space robot pose and return
-        return new Pose3d[] {
-                new Pose3d().transformBy(bestMultiPose).transformBy(cameraToRobotTransform),
-                new Pose3d().transformBy(alternateMultiPose).transformBy(cameraToRobotTransform)
-        };
+        if (resultOptional.isPresent()) {
+
+            Transform3d bestMultiPose = resultOptional.get().estimatedPose.best;
+            Transform3d alternateMultiPose = resultOptional.get().estimatedPose.alt;
+
+            logRotationDiff(new Pose3d().transformBy(bestMultiPose));
+
+            // Convert to field space robot pose and return
+            return new Pose3d[]{
+                    new Pose3d().transformBy(bestMultiPose).transformBy(cameraToRobotTransform),
+                    new Pose3d().transformBy(alternateMultiPose).transformBy(cameraToRobotTransform)
+            };
+        }
+        return new Pose3d[0];
     }
 
     /**

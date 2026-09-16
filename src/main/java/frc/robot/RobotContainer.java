@@ -81,8 +81,12 @@ public class RobotContainer {
                   new VisionIOPhotonReal(
                       "RightCamera",
                       VisionConstants.RIGHT_CAMERA_TRANSFORM,
-                      FieldConstants.defaultAprilTagType.getLayout())
-              );
+                      FieldConstants.defaultAprilTagType.getLayout()),
+                  new VisionIOPhotonReal(
+                          "FrontCamera",
+                          VisionConstants.FRONT_CAMERA_TRANSFORM,
+                          FieldConstants.defaultAprilTagType.getLayout())
+                  );
           }
           case SIM -> {
               swerve = new Drive(

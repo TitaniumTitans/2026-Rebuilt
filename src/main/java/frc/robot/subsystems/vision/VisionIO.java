@@ -11,7 +11,7 @@ public interface VisionIO {
   class VisionInputs {
     boolean hasResults = false;
 
-    /** Ambiguity ration of the target, 0 is no ambiguity (good), 1 is maximum ambiguity (bad) */
+    /** Ambiguity ratio of the target, 0 is no ambiguity (good), 1 is maximum ambiguity (bad), -1 for invalid or multitag */
     double ambiguityRatio = 0;
 
     int[] visibleTagIDs = {-1};

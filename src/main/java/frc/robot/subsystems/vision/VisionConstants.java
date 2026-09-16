@@ -58,4 +58,12 @@ public class VisionConstants {
           new Rotation3d()
       )
   );
+  public static final TunableTransform3d FRONT_CAMERA_TRANSFORM = new TunableTransform3d(
+          false,
+          "CameraTransforms/ShooterFrontCamera/t",
+          new Transform3d(
+                  new Translation3d(),
+                  new Rotation3d()
+          )
+  );
 }
