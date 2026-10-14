@@ -344,6 +344,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopIntake", AutoCommands.stopIntake(intake));
     NamedCommands.registerCommand("raiseIntake", AutoCommands.raiseIntake(intake));
     NamedCommands.registerCommand("aimAndShoot", AutoCommands.aimAndShoot(swerve, shooter, feeder, intake));
+      NamedCommands.registerCommand("aimAndShootAlt", AutoCommands.aimAndShootAlt(swerve, shooter, feeder, intake));
+    NamedCommands.registerCommand("runIntakeAlt", AutoCommands.runIntakeAlt(intake));
 
     NamedCommands.registerCommand("clearBump",
         Commands.run(() -> {
